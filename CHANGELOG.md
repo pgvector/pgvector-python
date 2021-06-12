@@ -1,4 +1,4 @@
-## 0.1.1 (unreleased)
+## 0.1.1 (2021-06-12)
 
 - Added `l2_distance`, `max_inner_product`, and `cosine_distance` for SQLAlchemy
 
