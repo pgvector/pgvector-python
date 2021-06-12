@@ -22,16 +22,18 @@ class Item(Base):
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
+
 def create_items():
     vectors = [
-      [1, 1, 1],
-      [2, 2, 2],
-      [1, 1, 2]
+        [1, 1, 1],
+        [2, 2, 2],
+        [1, 1, 2]
     ]
     session = Session(engine)
     for i, v in enumerate(vectors):
         session.add(Item(id=i + 1, factors=v))
     session.commit()
+
 
 class TestSqlalchemy(object):
     def setup_method(self, test_method):
@@ -52,7 +54,9 @@ class TestSqlalchemy(object):
         metadata.drop_all(engine)
         metadata.create_all(engine)
 
-        index = Index('my_core_index', item_table.c.factors,
+        index = Index(
+            'my_core_index',
+            item_table.c.factors,
             postgresql_using='ivfflat',
             postgresql_with={'lists': 1},
             postgresql_ops={'factors': 'vector_l2_ops'}
