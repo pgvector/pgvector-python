@@ -50,6 +50,22 @@ index = Index(
 index.create(engine)
 ```
 
+Insert a vector
+
+```python
+item = Item(factors=[1, 2, 3])
+session.add(item)
+session.commit()
+```
+
+Get the nearest neighbors to a vector
+
+```python
+session.query(Item).order_by(Item.factors.l2_distance([3, 1, 2])).limit(5).all()
+```
+
+Also supports `max_inner_product` and `cosine_distance`
+
 ## Psycopg 2
 
 Register the vector type with your connection or cursor
@@ -60,14 +76,14 @@ from pgvector.psycopg2 import register_vector
 register_vector(conn)
 ```
 
-Insert a Numpy array as a vector
+Insert a vector
 
 ```python
 factors = np.array([1, 2, 3])
 cur.execute('INSERT INTO item (factors) VALUES (%s)', (factors,))
 ```
 
-Get the nearest neighbors
+Get the nearest neighbors to a vector
 
 ```python
 cur.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,))

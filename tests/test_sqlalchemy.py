@@ -22,8 +22,23 @@ class Item(Base):
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
+def create_items():
+    vectors = [
+      [1, 1, 1],
+      [2, 2, 2],
+      [1, 1, 2]
+    ]
+    session = Session(engine)
+    for i, v in enumerate(vectors):
+        session.add(Item(id=i + 1, factors=v))
+    session.commit()
 
 class TestSqlalchemy(object):
+    def setup_method(self, test_method):
+        with Session(engine) as session:
+            session.query(Item).delete()
+            session.commit()
+
     def test_core(self):
         metadata = MetaData()
 
@@ -62,6 +77,24 @@ class TestSqlalchemy(object):
             assert np.array_equal(items[1].factors, np.array([4, 5, 6]))
             assert items[1].factors.dtype == np.float32
             assert items[2].factors is None
+
+    def test_l2_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.factors.l2_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_max_inner_product(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.factors.max_inner_product([1, 1, 1])).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_cosine_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.factors.cosine_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 2, 3]
 
     def test_bad_dimensions(self):
         item = Item(factors=[1, 2])

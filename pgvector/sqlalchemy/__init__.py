@@ -21,3 +21,13 @@ class Vector(UserDefinedType):
         def process(value):
             return cast_vector(value)
         return process
+
+    class comparator_factory(UserDefinedType.Comparator):
+        def l2_distance(self, other):
+            return self.op('<->')(other)
+
+        def max_inner_product(self, other):
+            return self.op('<#>')(other)
+
+        def cosine_distance(self, other):
+            return self.op('<=>')(other)
