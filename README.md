@@ -49,9 +49,15 @@ Also supports `max_inner_product` and `cosine_distance`
 Add an approximate index
 
 ```python
-index = Index('my_index', Item.factors, postgresql_using='ivfflat')
+index = Index('my_index', Item.factors,
+    postgresql_using='ivfflat',
+    postgresql_with={'lists': 100},
+    postgresql_ops={'factors': 'vector_l2_ops'}
+)
 index.create(engine)
 ```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Psycopg 2
 

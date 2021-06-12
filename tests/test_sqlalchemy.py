@@ -52,7 +52,11 @@ class TestSqlalchemy(object):
         metadata.drop_all(engine)
         metadata.create_all(engine)
 
-        index = Index('my_core_index', item_table.c.factors, postgresql_using='ivfflat', postgresql_with={'lists': 1})
+        index = Index('my_core_index', item_table.c.factors,
+            postgresql_using='ivfflat',
+            postgresql_with={'lists': 1},
+            postgresql_ops={'factors': 'vector_l2_ops'}
+        )
         index.create(engine)
 
     def test_orm(self):
