@@ -13,6 +13,7 @@ jobs:
         database: pgvector_python_test
     - run: |
         sudo apt-get update && sudo apt-get install postgresql-server-dev-13
+        cd /tmp
         git clone --branch v0.1.6 https://github.com/ankane/pgvector.git
         cd pgvector
         make
