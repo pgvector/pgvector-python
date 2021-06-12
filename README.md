@@ -21,33 +21,13 @@ And follow the instructions for your database library:
 
 ## SQLAlchemy
 
-Use the vector type
+Add a vector column
 
 ```python
 from pgvector.sqlalchemy import Vector
 
-# Core
-item_table = Table(
-    'item',
-    metadata,
-    Column('factors', Vector(3))
-)
-
-# ORM
 class Item(Base):
     factors = Column(Vector(3))
-```
-
-Add an index
-
-```python
-index = Index(
-    'my_index',
-    item_table.c.factors, # or Item.factors for ORM
-    postgresql_using='ivfflat',
-    postgresql_with={'lists': 100}
-)
-index.create(engine)
 ```
 
 Insert a vector
@@ -65,6 +45,13 @@ session.query(Item).order_by(Item.factors.l2_distance([3, 1, 2])).limit(5).all()
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
+
+Add an approximate index
+
+```python
+index = Index('my_index', Item.factors, postgresql_using='ivfflat')
+index.create(engine)
+```
 
 ## Psycopg 2
 
