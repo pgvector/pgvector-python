@@ -8,8 +8,6 @@ from sqlalchemy.orm import declarative_base, Session
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test', future=True)
 with engine.connect() as con:
     con.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    con.execute(text('DROP TABLE IF EXISTS core_item'))
-    con.execute(text('DROP TABLE IF EXISTS orm_item'))
 
 Base = declarative_base()
 
