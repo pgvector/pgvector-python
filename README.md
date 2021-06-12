@@ -2,6 +2,8 @@
 
 [pgvector](https://github.com/ankane/pgvector) support for Python
 
+Great for online recommendations :tada:
+
 Supports [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy) and [Psycopg 2](https://github.com/psycopg/psycopg2)
 
 [![Build Status](https://github.com/ankane/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-python/actions)
@@ -18,6 +20,11 @@ And follow the instructions for your database library:
 
 - [SQLAlchemy](#sqlalchemy)
 - [Psycopg 2](#psycopg-2)
+
+Or check out some examples:
+
+- [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
+- [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
 
 ## SQLAlchemy
 
