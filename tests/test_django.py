@@ -60,10 +60,32 @@ with connection.cursor() as cursor:
     cursor.execute('\n'.join(sql_statements))
 
 
-class TestDjango(object):
-    def test_works(self):
-        item = Item(factors=[1, 2, 3])
+def create_items():
+    vectors = [
+        [1, 1, 1],
+        [2, 2, 2],
+        [1, 1, 2]
+    ]
+    for i, v in enumerate(vectors):
+        item = Item(id=i + 1, factors=v)
         item.save()
-        items = Item.objects.order_by(L2Distance('factors', [3, 1, 2]))[:5]
-        assert items[0].id == 1
-        assert np.array_equal(items[0].factors, np.array([1, 2, 3]))
+
+
+class TestDjango(object):
+    def setup_method(self, test_method):
+        Item.objects.all().delete()
+
+    def test_l2_distance(self):
+        create_items()
+        items = Item.objects.order_by(L2Distance('factors', [1, 1, 1]))
+        assert [v.id for v in items] == [1, 3, 2]
+
+    def test_max_inner_product(self):
+        create_items()
+        items = Item.objects.order_by(MaxInnerProduct('factors', [1, 1, 1]))
+        assert [v.id for v in items] == [2, 3, 1]
+
+    def test_cosine_distance(self):
+        create_items()
+        items = Item.objects.order_by(CosineDistance('factors', [1, 1, 1]))
+        assert [v.id for v in items] == [1, 2, 3]
