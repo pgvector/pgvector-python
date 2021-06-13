@@ -80,6 +80,14 @@ class TestDjango(object):
     def setup_method(self, test_method):
         Item.objects.all().delete()
 
+    def test_works(self):
+        item = Item(id=1, factors=[1, 2, 3])
+        item.save()
+        item = Item.objects.get(pk=1)
+        assert item.id == 1
+        assert np.array_equal(item.factors, np.array([1, 2, 3]))
+        assert item.factors.dtype == np.float32
+
     def test_l2_distance(self):
         create_items()
         items = Item.objects.order_by(L2Distance('factors', [1, 1, 1]))
