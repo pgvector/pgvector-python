@@ -1,5 +1,5 @@
 from sqlalchemy.types import UserDefinedType
-from ..utils import cast_vector, quote_vector
+from ..utils import from_db, to_db
 
 __all__ = ['Vector']
 
@@ -16,12 +16,12 @@ class Vector(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return quote_vector(value, self.dim)
+            return to_db(value, self.dim)
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return cast_vector(value)
+            return from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

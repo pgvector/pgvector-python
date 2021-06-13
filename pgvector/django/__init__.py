@@ -1,7 +1,7 @@
 from django.contrib.postgres.operations import CreateExtension
 from django.contrib.postgres.indexes import PostgresIndex
 from django.db.models import Field, FloatField, Func
-from ..utils import cast_vector, quote_vector
+from ..utils import from_db, to_db
 
 __all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
 
@@ -31,13 +31,13 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return cast_vector(value)
+        return from_db(value)
 
     def to_python(self, value):
-        return cast_vector(value)
+        return from_db(value)
 
     def get_prep_value(self, value):
-        return quote_vector(value)
+        return to_db(value)
 
 
 class IvfflatIndex(PostgresIndex):

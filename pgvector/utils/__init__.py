@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def cast_vector(value):
+def from_db(value):
     # could be ndarray if already cast by lower-level driver
     if value is None or isinstance(value, np.ndarray):
         return value
@@ -9,7 +9,7 @@ def cast_vector(value):
     return np.array(value[1:-1].split(','), dtype=np.float32)
 
 
-def quote_vector(value, dim=None):
+def to_db(value, dim=None):
     if value is None:
         return value
 
