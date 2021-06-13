@@ -1,3 +1,4 @@
+Django
 numpy
 psycopg2
 pytest

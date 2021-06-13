@@ -9,6 +9,7 @@ setup(
     author_email='andrew@ankane.org',
     license='MIT',
     packages=[
+        'pgvector.django',
         'pgvector.psycopg2',
         'pgvector.sqlalchemy',
         'pgvector.utils'

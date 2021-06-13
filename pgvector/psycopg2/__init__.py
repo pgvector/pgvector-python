@@ -3,7 +3,6 @@ import psycopg2
 from psycopg2.extensions import adapt, new_type, register_adapter, register_type
 from ..utils import cast_vector, quote_vector
 
-
 __all__ = ['register_vector']
 
 

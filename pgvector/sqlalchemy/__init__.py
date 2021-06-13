@@ -1,6 +1,8 @@
 from sqlalchemy.types import UserDefinedType
 from ..utils import cast_vector, quote_vector
 
+__all__ = ['Vector']
+
 
 class Vector(UserDefinedType):
     def __init__(self, dim=None):

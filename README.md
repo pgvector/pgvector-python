@@ -4,7 +4,7 @@
 
 Great for online recommendations :tada:
 
-Supports [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy) and [Psycopg 2](https://github.com/psycopg/psycopg2)
+Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), and [Psycopg 2](https://github.com/psycopg/psycopg2)
 
 [![Build Status](https://github.com/ankane/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-python/actions)
 
@@ -18,6 +18,7 @@ pip install pgvector
 
 And follow the instructions for your database library:
 
+- [Django](#django)
 - [SQLAlchemy](#sqlalchemy)
 - [Psycopg 2](#psycopg-2)
 
@@ -25,6 +26,64 @@ Or check out some examples:
 
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
+
+## Django
+
+Create the extension
+
+```python
+from pgvector.django import VectorExtension
+
+class Migration(migrations.Migration):
+    operations = [
+        VectorExtension()
+    ]
+```
+
+Add a vector field
+
+```python
+from pgvector.django import VectorField
+
+class Item(models.Model):
+    factors = VectorField(dimensions=3)
+```
+
+Insert a vector
+
+```python
+item = Item(factors=[1, 2, 3])
+item.save()
+```
+
+Get the nearest neighbors to a vector
+
+```python
+from pgvector.django import L2Distance
+
+Item.objects.order_by(L2Distance('factors', [3, 1, 2]))[:5]
+```
+
+Also supports `MaxInnerProduct` and `CosineDistance`
+
+Add an approximate index
+
+```python
+from pgvector.django import IvfflatIndex
+
+class Item(models.Model):
+    class Meta:
+        indexes = [
+            IvfflatIndex(
+                name='my_index',
+                fields=['factors'],
+                lists=100,
+                opclasses=['vector_l2_ops']
+            )
+        ]
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## SQLAlchemy
 
