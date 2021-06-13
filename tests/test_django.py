@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import connection, migrations, models
 from django.db.migrations.loader import MigrationLoader
 import numpy as np
+import pgvector.django
 from pgvector.django import VectorExtension, VectorField, IvfflatIndex, L2Distance, MaxInnerProduct, CosineDistance
 
 settings.configure(
@@ -43,8 +44,12 @@ class Migration(migrations.Migration):
             name='Item',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('factors', VectorField(dimensions=3)),
+                ('factors', pgvector.django.VectorField(dimensions=3)),
             ],
+        ),
+        migrations.AddIndex(
+            model_name='item',
+            index=pgvector.django.IvfflatIndex(fields=['factors'], lists=1, name='my_index', opclasses=['vector_l2_ops']),
         )
     ]
 
