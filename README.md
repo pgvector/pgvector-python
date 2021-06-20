@@ -26,6 +26,7 @@ Or check out some examples:
 
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
+- [Recommendations](examples/lightfm_recs.py) with LightFM
 
 ## Django
 
