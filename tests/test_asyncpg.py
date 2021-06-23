@@ -1,7 +1,7 @@
-import numpy as np
-from pgvector.asyncpg import register_vector
 import asyncio
 import asyncpg
+import numpy as np
+from pgvector.asyncpg import register_vector
 import pytest
 
 
