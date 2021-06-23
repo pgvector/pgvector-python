@@ -189,7 +189,7 @@ Insert a vector
 
 ```python
 factors = np.array([1, 2, 3])
-await conn.execute('INSERT INTO item (factors) VALUES (%1)', factors)
+await conn.execute('INSERT INTO item (factors) VALUES ($1)', factors)
 ```
 
 Get the nearest neighbors to a vector
