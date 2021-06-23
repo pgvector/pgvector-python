@@ -5,3 +5,4 @@ psycopg2
 pytest
 pytest-asyncio
 SQLAlchemy
+git+https://github.com/psycopg/psycopg3.git#subdirectory=psycopg3

@@ -4,7 +4,7 @@
 
 Great for online recommendations :tada:
 
-Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [Psycopg 2](https://github.com/psycopg/psycopg2), and [asyncpg](https://github.com/MagicStack/asyncpg)
+Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [Psycopg 2](https://github.com/psycopg/psycopg2), [Psycopg 3](https://github.com/psycopg/psycopg3), and [asyncpg](https://github.com/MagicStack/asyncpg)
 
 [![Build Status](https://github.com/ankane/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-python/actions)
 
@@ -21,6 +21,7 @@ And follow the instructions for your database library:
 - [Django](#django)
 - [SQLAlchemy](#sqlalchemy)
 - [Psycopg 2](#psycopg-2)
+- [Psycopg 3](#psycopg-3) [experimental]
 - [asyncpg](#asyncpg)
 
 Or check out some examples:
@@ -149,6 +150,29 @@ Get the nearest neighbors to a vector
 ```python
 cur.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,))
 cur.fetchall()
+```
+
+## psycopg3
+
+Register the vector type with your connection or cursor
+
+```python
+from pgvector.psycopg3 import register_vector
+
+register_vector(conn)
+```
+
+Insert a vector
+
+```python
+factors = np.array([1, 2, 3])
+cur.execute('INSERT INTO item (factors) VALUES (%s)', (factors,))
+```
+
+Get the nearest neighbors to a vector
+
+```python
+cur.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,)).fetchall()
 ```
 
 ## asyncpg

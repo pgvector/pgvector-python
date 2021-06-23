@@ -12,6 +12,7 @@ setup(
         'pgvector.asyncpg',
         'pgvector.django',
         'pgvector.psycopg2',
+        'pgvector.psycopg3',
         'pgvector.sqlalchemy',
         'pgvector.utils'
     ],
