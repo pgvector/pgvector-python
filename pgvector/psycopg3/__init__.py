@@ -1,4 +1,3 @@
-import numpy as np
 from psycopg3.adapt import Loader, Dumper
 from psycopg3.pq import Format
 from ..utils import from_db, from_db_binary, to_db, to_db_binary
