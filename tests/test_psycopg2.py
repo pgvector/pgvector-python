@@ -14,6 +14,9 @@ register_vector(cur)
 
 
 class TestPsycopg2(object):
+    def setup_method(self, test_method):
+        cur.execute('DELETE FROM item')
+
     def test_works(self):
         factors = np.array([1.5, 2, 3])
         cur.execute('INSERT INTO item (factors) VALUES (%s), (NULL)', (factors,))
