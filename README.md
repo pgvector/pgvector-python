@@ -158,7 +158,7 @@ Register the vector type with your connection
 ```python
 from pgvector.asyncpg import register_vector
 
-register_vector(conn)
+await register_vector(conn)
 ```
 
 Insert a vector
