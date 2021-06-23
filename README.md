@@ -152,7 +152,7 @@ cur.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,))
 cur.fetchall()
 ```
 
-## psycopg3
+## Psycopg 3
 
 Register the vector type with your connection or cursor
 
