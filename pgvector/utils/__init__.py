@@ -46,7 +46,4 @@ def to_db_binary(value):
     if value.ndim != 1:
         raise ValueError('expected ndim to be 1')
 
-    x = pack('>H', value.shape[0])
-    x += pack('>H', 0)
-    x += value.tobytes()
-    return x
+    return pack('>H', value.shape[0]) + pack('>H', 0) + value.tobytes()
