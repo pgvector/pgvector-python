@@ -18,10 +18,10 @@ async def test_works():
     await conn.execute("INSERT INTO item (factors) VALUES ($1), (NULL)", factors)
 
     res = await conn.fetch("SELECT * FROM item ORDER BY id")
-    assert res[0][0] == 1
-    assert res[1][0] == 2
-    assert np.array_equal(res[0][1], factors)
-    assert res[0][1].dtype == np.float32
-    assert res[1][1] is None
+    assert res[0]['id'] == 1
+    assert res[1]['id'] == 2
+    assert np.array_equal(res[0]['factors'], factors)
+    assert res[0]['factors'].dtype == np.float32
+    assert res[1]['factors'] is None
 
     await conn.close()
