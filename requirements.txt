@@ -1,5 +1,7 @@
+asyncpg
 Django
 numpy
 psycopg2
 pytest
+pytest-asyncio
 SQLAlchemy

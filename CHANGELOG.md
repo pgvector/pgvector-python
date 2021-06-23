@@ -1,3 +1,7 @@
+## 0.1.3 (unreleased)
+
+- Added support for asyncpg
+
 ## 0.1.2 (2021-06-13)
 
 - Added Django support
