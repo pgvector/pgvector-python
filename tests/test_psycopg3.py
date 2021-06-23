@@ -33,3 +33,7 @@ class TestPsycopg3(object):
         # text format
         text_res = cur.execute("SELECT %t::vector", (factors,)).fetchone()[0]
         assert np.array_equal(text_res, factors)
+
+        # ensures binary format is correct
+        binary_text_res = cur.execute("SELECT %b::vector::text", (factors,)).fetchone()[0]
+        assert binary_text_res == '[1.5,2,3]'
