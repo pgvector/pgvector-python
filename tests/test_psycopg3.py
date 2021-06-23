@@ -42,7 +42,13 @@ class TestPsycopg3(object):
         res = cur.execute('SELECT %b::vector::text', (factors,)).fetchone()[0]
         assert res == '[1.5,2,3]'
 
-    def test_non_contiguous(self):
+    def test_text_format_non_contiguous(self):
+        factors = np.flipud(np.array([1.5, 2, 3]))
+        assert not factors.data.contiguous
+        res = cur.execute('SELECT %t::vector', (factors,)).fetchone()[0]
+        assert np.array_equal(res, np.array([3, 2, 1.5]))
+
+    def test_binary_format_non_contiguous(self):
         factors = np.flipud(np.array([1.5, 2, 3]))
         assert not factors.data.contiguous
         res = cur.execute('SELECT %b::vector', (factors,)).fetchone()[0]
