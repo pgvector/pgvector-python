@@ -24,4 +24,8 @@ async def test_works():
     assert res[0]['factors'].dtype == np.float32
     assert res[1]['factors'] is None
 
+    # ensures binary format is correct
+    text_res = await conn.fetch("SELECT factors::text FROM item ORDER BY id LIMIT 1")
+    assert text_res[0]['factors'] == '[1.5,2,3]'
+
     await conn.close()

@@ -1,4 +1,4 @@
-from ..utils import from_db, to_db
+from ..utils import from_db, from_db_binary, to_db, to_db_binary
 
 
 async def register_vector(conn):
@@ -7,4 +7,11 @@ async def register_vector(conn):
         encoder=to_db,
         decoder=from_db,
         format='text'
+    )
+
+    await conn.set_type_codec(
+        'vector',
+        encoder=to_db_binary,
+        decoder=from_db_binary,
+        format='binary'
     )
