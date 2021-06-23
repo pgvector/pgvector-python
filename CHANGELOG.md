@@ -1,4 +1,4 @@
-## 0.1.3 (unreleased)
+## 0.1.3 (2021-06-22)
 
 - Added support for asyncpg
 - Added experimental support for psycopg3
