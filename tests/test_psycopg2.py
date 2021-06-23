@@ -20,8 +20,6 @@ class TestPsycopg2(object):
 
         cur.execute('SELECT * FROM item ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0] == 1
-        assert res[1][0] == 2
         assert np.array_equal(res[0][1], factors)
         assert res[0][1].dtype == np.float32
         assert res[1][1] is None
