@@ -217,5 +217,6 @@ To get started with development:
 git clone https://github.com/ankane/pgvector-python.git
 cd pgvector-python
 pip install -r requirements.txt
+createdb pgvector_python_test
 pytest
 ```
