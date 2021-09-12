@@ -1,6 +1,7 @@
-import psycopg3
-from psycopg3.adapt import Loader, Dumper
-from psycopg3.pq import Format
+import psycopg
+from psycopg.adapt import Loader, Dumper
+from psycopg.pq import Format
+from psycopg.types import TypeInfo
 from ..utils import from_db, from_db_binary, to_db, to_db_binary
 
 __all__ = ['register_vector']
@@ -42,16 +43,17 @@ class VectorBinaryLoader(VectorLoader):
         return from_db_binary(data)
 
 
-def register_vector(ctx):
-    cur = ctx.cursor() if hasattr(ctx, 'cursor') else ctx
+def register_vector(context):
+    if hasattr(context, 'connection'):
+        context = context.connection
 
-    try:
-        cur.execute('SELECT NULL::vector')
-        oid = cur.description[0][1]
-    except psycopg3.errors.UndefinedObject:
-        raise psycopg3.ProgrammingError('vector type not found in the database')
+    info = TypeInfo.fetch(context, 'vector')
+    if info is None:
+        raise psycopg.ProgrammingError('vector type not found in the database')
+    info.register(context)
 
-    VectorDumper.register('numpy.ndarray', ctx)
-    VectorBinaryDumper.register('numpy.ndarray', ctx)
-    VectorLoader.register(oid, ctx)
-    VectorBinaryLoader.register(oid, ctx)
+    adapters = context.adapters
+    adapters.register_dumper('numpy.ndarray', VectorDumper)
+    adapters.register_dumper('numpy.ndarray', VectorBinaryDumper)
+    adapters.register_loader(info.oid, VectorLoader)
+    adapters.register_loader(info.oid, VectorBinaryLoader)
