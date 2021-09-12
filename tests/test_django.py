@@ -76,7 +76,7 @@ def create_items():
         item.save()
 
 
-class TestDjango(object):
+class TestDjango:
     def setup_method(self, test_method):
         Item.objects.all().delete()
 

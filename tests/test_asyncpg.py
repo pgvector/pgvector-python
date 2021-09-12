@@ -5,7 +5,7 @@ from pgvector.asyncpg import register_vector
 import pytest
 
 
-class TestAsyncpg(object):
+class TestAsyncpg:
     @pytest.mark.asyncio
     async def test_works(self):
         conn = await asyncpg.connect(database='pgvector_python_test')

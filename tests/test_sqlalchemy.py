@@ -36,7 +36,7 @@ def create_items():
     session.commit()
 
 
-class TestSqlalchemy(object):
+class TestSqlalchemy:
     def setup_method(self, test_method):
         with Session(engine) as session:
             session.query(Item).delete()

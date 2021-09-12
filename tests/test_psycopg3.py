@@ -12,7 +12,7 @@ conn.execute('CREATE TABLE item (id bigserial primary key, factors vector(3))')
 register_vector(conn)
 
 
-class TestPsycopg3(object):
+class TestPsycopg3:
     def setup_method(self, test_method):
         conn.execute('DELETE FROM item')
 

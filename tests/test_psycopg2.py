@@ -13,7 +13,7 @@ cur.execute('CREATE TABLE item (id bigserial primary key, factors vector(3))')
 register_vector(cur)
 
 
-class TestPsycopg2(object):
+class TestPsycopg2:
     def setup_method(self, test_method):
         cur.execute('DELETE FROM item')
 
