@@ -43,8 +43,7 @@ if seed:
     conn.execute('CREATE TABLE image (id bigserial primary key, embedding vector(512))')
 
     for data in tqdm(dataloader):
-        inputs, labels = data
-        embeddings = generate_embeddings(inputs)
+        embeddings = generate_embeddings(data[0])
 
         sql = 'INSERT INTO image (embedding) VALUES ' + ','.join(['(%s)' for _ in embeddings])
         params = [embedding for embedding in embeddings]
@@ -61,11 +60,11 @@ def show_images(dataset_images):
 # load 5 random unseen images
 queryset = torchvision.datasets.CIFAR10(root=tempfile.gettempdir(), train=False, download=True, transform=transform)
 queryloader = torch.utils.data.DataLoader(queryset, batch_size=5, shuffle=True)
-images, labels = next(iter(queryloader))
+images = next(iter(queryloader))[0]
 
 
 # generate embeddings and query
 embeddings = generate_embeddings(images)
-for i, embedding in enumerate(embeddings):
+for image, embedding in zip(images, embeddings):
     result = conn.execute('SELECT id FROM image ORDER BY embedding <=> %s LIMIT 15', (embedding,)).fetchall()
-    show_images([images[i]] + [dataset[image[0] - 1][0] for image in result])
+    show_images([image] + [dataset[row[0] - 1][0] for row in result])
