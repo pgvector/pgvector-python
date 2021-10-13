@@ -1,6 +1,6 @@
 ## 0.1.4 (unreleased)
 
-- Updated psycopg3 integration for beta version (still experimental)
+- Updated psycopg3 integration for 3.0 release (no longer experimental)
 
 ## 0.1.3 (2021-06-22)
 

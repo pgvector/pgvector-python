@@ -5,4 +5,4 @@ psycopg2
 pytest
 pytest-asyncio
 SQLAlchemy
-psycopg[binary]==3.0.beta1
+psycopg[binary]

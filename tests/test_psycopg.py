@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg3 import register_vector
+from pgvector.psycopg import register_vector
 import psycopg
 
 conn = psycopg.connect(dbname='pgvector_python_test')
@@ -12,7 +12,7 @@ conn.execute('CREATE TABLE item (id bigserial primary key, factors vector(3))')
 register_vector(conn)
 
 
-class TestPsycopg3:
+class TestPsycopg:
     def setup_method(self, test_method):
         conn.execute('DELETE FROM item')
 
