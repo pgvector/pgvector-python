@@ -46,8 +46,8 @@ if seed:
         inputs, labels = data
         embeddings = generate_embeddings(inputs)
 
-        sql = 'INSERT INTO image (embedding) VALUES ' + ','.join(['(%s)' for i in range(embeddings.shape[0])])
-        params = [embeddings[i] for i in range(embeddings.shape[0])]
+        sql = 'INSERT INTO image (embedding) VALUES ' + ','.join(['(%s)' for _ in embeddings])
+        params = [embedding for embedding in embeddings]
         conn.execute(sql, params)
 
 
