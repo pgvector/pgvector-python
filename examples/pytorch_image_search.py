@@ -3,7 +3,6 @@ import numpy as np
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import create_engine, text, Column, Integer
 from sqlalchemy.orm import declarative_base, Session
-from sqlalchemy.sql import func
 import tempfile
 import torch
 import torchvision
