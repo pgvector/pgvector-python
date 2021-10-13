@@ -37,7 +37,7 @@ def generate_embeddings(inputs):
     return model(inputs).detach().numpy()
 
 
-# generate and save embeddings
+# generate, save, and index embeddings
 if seed:
     conn.execute('DROP TABLE IF EXISTS image')
     conn.execute('CREATE TABLE image (id bigserial primary key, embedding vector(512))')
