@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, text, Column, Integer
-from sqlalchemy.orm import declarative_base, Session
+from pgvector.psycopg import register_vector
+import psycopg
 import tempfile
 import torch
 import torchvision
@@ -13,21 +12,10 @@ seed = True
 
 
 # establish connection
-engine = create_engine('postgresql+psycopg2://localhost/pgvector_example', future=True)
-with engine.connect() as conn:
-    conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    conn.commit()
-
-session = Session(engine)
-Base = declarative_base()
-
-
-# define model
-class Image(Base):
-    __tablename__ = 'image'
-
-    id = Column(Integer, primary_key=True)
-    embedding = Column(Vector(512))
+conn = psycopg.connect(dbname='pgvector_example')
+conn.autocommit = True
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+register_vector(conn)
 
 
 # load images
@@ -51,16 +39,16 @@ def generate_embeddings(inputs):
 
 # generate and save embeddings
 if seed:
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
+    conn.execute('DROP TABLE IF EXISTS image')
+    conn.execute('CREATE TABLE image (id bigserial primary key, embedding vector(512))')
 
     for data in tqdm(dataloader):
         inputs, labels = data
         embeddings = generate_embeddings(inputs)
-        images = [dict(embedding=embeddings[i]) for i in range(embeddings.shape[0])]
 
-        session.bulk_insert_mappings(Image, images)
-        session.commit()
+        sql = 'INSERT INTO image (embedding) VALUES ' + ','.join(['(%s)' for i in range(embeddings.shape[0])])
+        params = [embeddings[i] for i in range(embeddings.shape[0])]
+        conn.execute(sql, params)
 
 
 def show_images(dataset_images):
@@ -79,5 +67,5 @@ images, labels = next(iter(queryloader))
 # generate embeddings and query
 embeddings = generate_embeddings(images)
 for i, embedding in enumerate(embeddings):
-    result = session.query(Image).order_by(Image.embedding.cosine_distance(embedding)).limit(15).all()
-    show_images([images[i]] + [dataset[image.id - 1][0] for image in result])
+    result = conn.execute('SELECT id FROM image ORDER BY embedding <=> %s LIMIT 15', (embedding,)).fetchall()
+    show_images([images[i]] + [dataset[image[0] - 1][0] for image in result])
