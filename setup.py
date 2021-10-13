@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pgvector',
-    version='0.1.3',
+    version='0.1.4',
     description='pgvector support for Python',
     url='https://github.com/ankane/pgvector-python',
     author='Andrew Kane',

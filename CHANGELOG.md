@@ -1,4 +1,4 @@
-## 0.1.4 (unreleased)
+## 0.1.4 (2021-10-12)
 
 - Updated psycopg3 integration for 3.0 release (no longer experimental)
 
