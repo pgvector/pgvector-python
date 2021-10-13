@@ -65,7 +65,7 @@ queryloader = torch.utils.data.DataLoader(queryset, batch_size=5, shuffle=True)
 images = next(iter(queryloader))[0]
 
 
-# generate embeddings and query
+# generate and query embeddings
 embeddings = generate_embeddings(images)
 for image, embedding in zip(images, embeddings):
     result = conn.execute('SELECT id FROM image ORDER BY embedding <=> %s LIMIT 15', (embedding,)).fetchall()
