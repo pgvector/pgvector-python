@@ -1,8 +1,8 @@
 asyncpg
 Django
 numpy
+psycopg[binary]
 psycopg2
 pytest
 pytest-asyncio
 SQLAlchemy
-psycopg[binary]
