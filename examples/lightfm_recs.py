@@ -1,10 +1,13 @@
 from lightfm import LightFM
 from lightfm.datasets import fetch_movielens
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, Column, Float, Integer, String
+from sqlalchemy import create_engine, text, Column, Float, Integer, String
 from sqlalchemy.orm import declarative_base, Session
 
-engine = create_engine("postgresql+psycopg2://localhost/pgvector_test", future=True)
+engine = create_engine('postgresql+psycopg2://localhost/pgvector_example', future=True)
+with engine.connect() as conn:
+    conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+    conn.commit()
 
 Base = declarative_base()
 

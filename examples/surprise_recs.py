@@ -1,9 +1,12 @@
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, Column, Integer
+from sqlalchemy import create_engine, text, Column, Integer
 from sqlalchemy.orm import declarative_base, Session
 from surprise import Dataset, SVD
 
-engine = create_engine("postgresql+psycopg2://localhost/pgvector_test", future=True)
+engine = create_engine('postgresql+psycopg2://localhost/pgvector_example', future=True)
+with engine.connect() as conn:
+    conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+    conn.commit()
 
 Base = declarative_base()
 
