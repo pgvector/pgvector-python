@@ -1,11 +1,9 @@
 import matplotlib.pyplot as plt
-import numpy as np
 from pgvector.psycopg import register_vector
 import psycopg
 import tempfile
 import torch
 import torchvision
-import torchvision.transforms as transforms
 from tqdm import tqdm
 
 seed = True
@@ -19,9 +17,9 @@ register_vector(conn)
 
 
 # load images
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+transform = torchvision.transforms.Compose([
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 dataset = torchvision.datasets.CIFAR10(root=tempfile.gettempdir(), train=True, download=True, transform=transform)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=1000)
