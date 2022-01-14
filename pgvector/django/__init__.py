@@ -1,6 +1,6 @@
 from django.contrib.postgres.operations import CreateExtension
 from django.contrib.postgres.indexes import PostgresIndex
-from django.db.models import Field, FloatField, Func
+from django.db.models import Field, FloatField, Func, Value
 from ..utils import from_db, to_db
 
 __all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
@@ -62,6 +62,11 @@ class IvfflatIndex(PostgresIndex):
 
 class DistanceBase(Func):
     output_field = FloatField()
+
+    def __init__(self, expression, vector, **extra):
+        if not hasattr(vector, 'resolve_expression'):
+            vector = Value(to_db(vector))
+        super().__init__(expression, vector, **extra)
 
 
 class L2Distance(DistanceBase):
