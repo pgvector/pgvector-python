@@ -5,6 +5,8 @@ __all__ = ['Vector']
 
 
 class Vector(UserDefinedType):
+    cache_ok = True
+
     def __init__(self, dim=None):
         super(UserDefinedType, self).__init__()
         self.dim = dim
