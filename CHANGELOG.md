@@ -1,4 +1,4 @@
-## 0.1.5 (unreleased)
+## 0.1.5 (2022-01-14)
 
 - Fixed `operator does not exist` error with Django
 - Fixed warning with SQLAlchemy 1.4.28+
