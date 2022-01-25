@@ -1,12 +1,12 @@
 # pgvector-python
 
-[pgvector](https://github.com/ankane/pgvector) support for Python
+[pgvector](https://github.com/pgvector/pgvector) support for Python
 
 Great for online recommendations :tada:
 
 Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), and [asyncpg](https://github.com/MagicStack/asyncpg)
 
-[![Build Status](https://github.com/ankane/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/ankane/pgvector-python/actions)
+[![Build Status](https://github.com/pgvector/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-python/actions)
 
 ## Installation
 
@@ -201,21 +201,21 @@ await conn.fetch('SELECT * FROM item ORDER BY factors <-> $1 LIMIT 5', factors)
 
 ## History
 
-View the [changelog](https://github.com/ankane/pgvector-python/blob/master/CHANGELOG.md)
+View the [changelog](https://github.com/pgvector/pgvector-python/blob/master/CHANGELOG.md)
 
 ## Contributing
 
 Everyone is encouraged to help improve this project. Here are a few ways you can help:
 
-- [Report bugs](https://github.com/ankane/pgvector-python/issues)
-- Fix bugs and [submit pull requests](https://github.com/ankane/pgvector-python/pulls)
+- [Report bugs](https://github.com/pgvector/pgvector-python/issues)
+- Fix bugs and [submit pull requests](https://github.com/pgvector/pgvector-python/pulls)
 - Write, clarify, or fix documentation
 - Suggest or add new features
 
 To get started with development:
 
 ```sh
-git clone https://github.com/ankane/pgvector-python.git
+git clone https://github.com/pgvector/pgvector-python.git
 cd pgvector-python
 pip install -r requirements.txt
 createdb pgvector_python_test

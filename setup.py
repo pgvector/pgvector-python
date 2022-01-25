@@ -9,7 +9,7 @@ setup(
     description='pgvector support for Python',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/ankane/pgvector-python',
+    url='https://github.com/pgvector/pgvector-python',
     author='Andrew Kane',
     author_email='andrew@ankane.org',
     license='MIT',
