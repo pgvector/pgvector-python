@@ -1,4 +1,4 @@
-## 0.1.6 (unreleased)
+## 0.1.6 (2022-05-22)
 
 - Fixed return type for distance operators with SQLAlchemy
 
