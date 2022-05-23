@@ -1,4 +1,4 @@
-from sqlalchemy.types import UserDefinedType
+from sqlalchemy.types import UserDefinedType, Float
 from ..utils import from_db, to_db
 
 __all__ = ['Vector']
@@ -28,10 +28,10 @@ class Vector(UserDefinedType):
 
     class comparator_factory(UserDefinedType.Comparator):
         def l2_distance(self, other):
-            return self.op('<->')(other)
+            return self.op('<->', return_type=Float)(other)
 
         def max_inner_product(self, other):
-            return self.op('<#>')(other)
+            return self.op('<#>', return_type=Float)(other)
 
         def cosine_distance(self, other):
-            return self.op('<=>')(other)
+            return self.op('<=>', return_type=Float)(other)
