@@ -1,3 +1,7 @@
+## 0.1.6 (unreleased)
+
+- Fixed return type for distance operators with SQLAlchemy
+
 ## 0.1.5 (2022-01-14)
 
 - Fixed `operator does not exist` error with Django
