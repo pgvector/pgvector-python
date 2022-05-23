@@ -105,6 +105,12 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(Item.factors.cosine_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 2, 3]
 
+    def test_select(self):
+        with Session(engine) as session:
+            session.add(Item(factors=[2, 3, 3]))
+            item = session.query(Item.factors.l2_distance([1, 1, 1])).first()
+            assert item[0] == 3
+
     def test_bad_dimensions(self):
         item = Item(factors=[1, 2])
         session = Session(engine)
