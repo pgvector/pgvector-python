@@ -15,7 +15,7 @@ jobs:
     - run: |
         sudo apt-get update && sudo apt-get install postgresql-server-dev-14
         cd /tmp
-        git clone --branch v0.3.0 https://github.com/pgvector/pgvector.git
+        git clone --branch v0.3.1 https://github.com/pgvector/pgvector.git
         cd pgvector
         make
         sudo make install
