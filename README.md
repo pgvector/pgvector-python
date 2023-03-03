@@ -50,13 +50,13 @@ Add a vector field
 from pgvector.django import VectorField
 
 class Item(models.Model):
-    factors = VectorField(dimensions=3)
+    embedding = VectorField(dimensions=3)
 ```
 
 Insert a vector
 
 ```python
-item = Item(factors=[1, 2, 3])
+item = Item(embedding=[1, 2, 3])
 item.save()
 ```
 
@@ -65,7 +65,7 @@ Get the nearest neighbors to a vector
 ```python
 from pgvector.django import L2Distance
 
-Item.objects.order_by(L2Distance('factors', [3, 1, 2]))[:5]
+Item.objects.order_by(L2Distance('embedding', [3, 1, 2]))[:5]
 ```
 
 Also supports `MaxInnerProduct` and `CosineDistance`
@@ -80,7 +80,7 @@ class Item(models.Model):
         indexes = [
             IvfflatIndex(
                 name='my_index',
-                fields=['factors'],
+                fields=['embedding'],
                 lists=100,
                 opclasses=['vector_l2_ops']
             )
@@ -97,13 +97,13 @@ Add a vector column
 from pgvector.sqlalchemy import Vector
 
 class Item(Base):
-    factors = Column(Vector(3))
+    embedding = Column(Vector(3))
 ```
 
 Insert a vector
 
 ```python
-item = Item(factors=[1, 2, 3])
+item = Item(embedding=[1, 2, 3])
 session.add(item)
 session.commit()
 ```
@@ -111,7 +111,7 @@ session.commit()
 Get the nearest neighbors to a vector
 
 ```python
-session.query(Item).order_by(Item.factors.l2_distance([3, 1, 2])).limit(5).all()
+session.query(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5).all()
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
@@ -119,10 +119,10 @@ Also supports `max_inner_product` and `cosine_distance`
 Add an approximate index
 
 ```python
-index = Index('my_index', Item.factors,
+index = Index('my_index', Item.embedding,
     postgresql_using='ivfflat',
     postgresql_with={'lists': 100},
-    postgresql_ops={'factors': 'vector_l2_ops'}
+    postgresql_ops={'embedding': 'vector_l2_ops'}
 )
 index.create(engine)
 ```
@@ -142,14 +142,14 @@ register_vector(conn)
 Insert a vector
 
 ```python
-factors = np.array([1, 2, 3])
-conn.execute('INSERT INTO item (factors) VALUES (%s)', (factors,))
+embedding = np.array([1, 2, 3])
+conn.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-conn.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,)).fetchall()
+conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
 ```
 
 ## Psycopg 2
@@ -165,14 +165,14 @@ register_vector(conn)
 Insert a vector
 
 ```python
-factors = np.array([1, 2, 3])
-cur.execute('INSERT INTO item (factors) VALUES (%s)', (factors,))
+embedding = np.array([1, 2, 3])
+cur.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-cur.execute('SELECT * FROM item ORDER BY factors <-> %s LIMIT 5', (factors,))
+cur.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,))
 cur.fetchall()
 ```
 
@@ -189,14 +189,14 @@ await register_vector(conn)
 Insert a vector
 
 ```python
-factors = np.array([1, 2, 3])
-await conn.execute('INSERT INTO item (factors) VALUES ($1)', factors)
+embedding = np.array([1, 2, 3])
+await conn.execute('INSERT INTO item (embedding) VALUES ($1)', embedding)
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-await conn.fetch('SELECT * FROM item ORDER BY factors <-> $1 LIMIT 5', factors)
+await conn.fetch('SELECT * FROM item ORDER BY embedding <-> $1 LIMIT 5', embedding)
 ```
 
 ## History

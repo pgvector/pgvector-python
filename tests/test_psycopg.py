@@ -7,7 +7,7 @@ conn.autocommit = True
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 conn.execute('DROP TABLE IF EXISTS item')
-conn.execute('CREATE TABLE item (id bigserial primary key, factors vector(3))')
+conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
 
 register_vector(conn)
 
@@ -17,37 +17,37 @@ class TestPsycopg:
         conn.execute('DELETE FROM item')
 
     def test_works(self):
-        factors = np.array([1.5, 2, 3])
-        conn.execute('INSERT INTO item (factors) VALUES (%s), (NULL)', (factors,))
+        embedding = np.array([1.5, 2, 3])
+        conn.execute('INSERT INTO item (embedding) VALUES (%s), (NULL)', (embedding,))
 
         res = conn.execute('SELECT * FROM item ORDER BY id').fetchall()
-        assert np.array_equal(res[0][1], factors)
+        assert np.array_equal(res[0][1], embedding)
         assert res[0][1].dtype == np.float32
         assert res[1][1] is None
 
     def test_binary_format(self):
-        factors = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector', (factors,)).fetchone()[0]
-        assert np.array_equal(res, factors)
+        embedding = np.array([1.5, 2, 3])
+        res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
+        assert np.array_equal(res, embedding)
 
     def test_text_format(self):
-        factors = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %t::vector', (factors,)).fetchone()[0]
-        assert np.array_equal(res, factors)
+        embedding = np.array([1.5, 2, 3])
+        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        assert np.array_equal(res, embedding)
 
     def test_binary_format_correct(self):
-        factors = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector::text', (factors,)).fetchone()[0]
+        embedding = np.array([1.5, 2, 3])
+        res = conn.execute('SELECT %b::vector::text', (embedding,)).fetchone()[0]
         assert res == '[1.5,2,3]'
 
     def test_text_format_non_contiguous(self):
-        factors = np.flipud(np.array([1.5, 2, 3]))
-        assert not factors.data.contiguous
-        res = conn.execute('SELECT %t::vector', (factors,)).fetchone()[0]
+        embedding = np.flipud(np.array([1.5, 2, 3]))
+        assert not embedding.data.contiguous
+        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))
 
     def test_binary_format_non_contiguous(self):
-        factors = np.flipud(np.array([1.5, 2, 3]))
-        assert not factors.data.contiguous
-        res = conn.execute('SELECT %b::vector', (factors,)).fetchone()[0]
+        embedding = np.flipud(np.array([1.5, 2, 3]))
+        assert not embedding.data.contiguous
+        res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))

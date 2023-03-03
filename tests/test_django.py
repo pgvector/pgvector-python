@@ -18,14 +18,14 @@ django.setup()
 
 
 class Item(models.Model):
-    factors = VectorField(dimensions=3)
+    embedding = VectorField(dimensions=3)
 
     class Meta:
         app_label = 'myapp'
         indexes = [
             IvfflatIndex(
                 name='my_index',
-                fields=['factors'],
+                fields=['embedding'],
                 lists=100,
                 opclasses=['vector_l2_ops']
             )
@@ -44,12 +44,12 @@ class Migration(migrations.Migration):
             name='Item',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('factors', pgvector.django.VectorField(dimensions=3)),
+                ('embedding', pgvector.django.VectorField(dimensions=3)),
             ],
         ),
         migrations.AddIndex(
             model_name='item',
-            index=pgvector.django.IvfflatIndex(fields=['factors'], lists=1, name='my_index', opclasses=['vector_l2_ops']),
+            index=pgvector.django.IvfflatIndex(fields=['embedding'], lists=1, name='my_index', opclasses=['vector_l2_ops']),
         )
     ]
 
@@ -72,7 +72,7 @@ def create_items():
         [1, 1, 2]
     ]
     for i, v in enumerate(vectors):
-        item = Item(id=i + 1, factors=v)
+        item = Item(id=i + 1, embedding=v)
         item.save()
 
 
@@ -81,24 +81,24 @@ class TestDjango:
         Item.objects.all().delete()
 
     def test_works(self):
-        item = Item(id=1, factors=[1, 2, 3])
+        item = Item(id=1, embedding=[1, 2, 3])
         item.save()
         item = Item.objects.get(pk=1)
         assert item.id == 1
-        assert np.array_equal(item.factors, np.array([1, 2, 3]))
-        assert item.factors.dtype == np.float32
+        assert np.array_equal(item.embedding, np.array([1, 2, 3]))
+        assert item.embedding.dtype == np.float32
 
     def test_l2_distance(self):
         create_items()
-        items = Item.objects.order_by(L2Distance('factors', [1, 1, 1]))
+        items = Item.objects.order_by(L2Distance('embedding', [1, 1, 1]))
         assert [v.id for v in items] == [1, 3, 2]
 
     def test_max_inner_product(self):
         create_items()
-        items = Item.objects.order_by(MaxInnerProduct('factors', [1, 1, 1]))
+        items = Item.objects.order_by(MaxInnerProduct('embedding', [1, 1, 1]))
         assert [v.id for v in items] == [2, 3, 1]
 
     def test_cosine_distance(self):
         create_items()
-        items = Item.objects.order_by(CosineDistance('factors', [1, 1, 1]))
+        items = Item.objects.order_by(CosineDistance('embedding', [1, 1, 1]))
         assert [v.id for v in items] == [1, 2, 3]

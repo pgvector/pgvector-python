@@ -8,7 +8,7 @@ conn.autocommit = True
 cur = conn.cursor()
 cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 cur.execute('DROP TABLE IF EXISTS item')
-cur.execute('CREATE TABLE item (id bigserial primary key, factors vector(3))')
+cur.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
 
 register_vector(cur)
 
@@ -18,11 +18,11 @@ class TestPsycopg2:
         cur.execute('DELETE FROM item')
 
     def test_works(self):
-        factors = np.array([1.5, 2, 3])
-        cur.execute('INSERT INTO item (factors) VALUES (%s), (NULL)', (factors,))
+        embedding = np.array([1.5, 2, 3])
+        cur.execute('INSERT INTO item (embedding) VALUES (%s), (NULL)', (embedding,))
 
         cur.execute('SELECT * FROM item ORDER BY id')
         res = cur.fetchall()
-        assert np.array_equal(res[0][1], factors)
+        assert np.array_equal(res[0][1], embedding)
         assert res[0][1].dtype == np.float32
         assert res[1][1] is None
