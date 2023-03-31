@@ -51,6 +51,7 @@ user = session.get(User, 1)
 items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors) - Item.bias).limit(5))
 print('user-based recs:', [item.title for item in items])
 
+# broken due to https://github.com/lyst/lightfm/issues/682
 item = session.scalars(select(Item).filter(Item.title == 'Star Wars (1977)')).first()
 items = session.scalars(select(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5))
 print('item-based recs:', [item.title for item in items])
