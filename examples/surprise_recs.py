@@ -1,9 +1,9 @@
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, text, Column, Integer
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy import create_engine, select, text, Integer
+from sqlalchemy.orm import declarative_base, mapped_column, Session
 from surprise import Dataset, SVD
 
-engine = create_engine('postgresql+psycopg2://localhost/pgvector_example', future=True)
+engine = create_engine('postgresql+psycopg2://localhost/pgvector_example')
 with engine.connect() as conn:
     conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     conn.commit()
@@ -14,15 +14,15 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True)
-    factors = Column(Vector(20))
+    id = mapped_column(Integer, primary_key=True)
+    factors = mapped_column(Vector(20))
 
 
 class Item(Base):
     __tablename__ = 'item'
 
-    id = Column(Integer, primary_key=True)
-    factors = Column(Vector(20))
+    id = mapped_column(Integer, primary_key=True)
+    factors = mapped_column(Vector(20))
 
 
 Base.metadata.drop_all(engine)
@@ -41,10 +41,10 @@ session.bulk_insert_mappings(User, users)
 session.bulk_insert_mappings(Item, items)
 session.commit()
 
-user = session.query(User).get(1)
-items = session.query(Item).order_by(Item.factors.max_inner_product(user.factors)).limit(5).all()
+user = session.get(User, 1)
+items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors)).limit(5))
 print('user-based recs:', [item.id for item in items])
 
-item = session.query(Item).get(50)
-items = session.query(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5).all()
+item = session.get(Item, 50)
+items = session.scalars(select(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5))
 print('item-based recs:', [item.id for item in items])
