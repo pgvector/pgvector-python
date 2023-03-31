@@ -1,10 +1,10 @@
 from lightfm import LightFM
 from lightfm.datasets import fetch_movielens
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, text, Column, Float, Integer, String
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy import create_engine, select, text, Float, Integer, String
+from sqlalchemy.orm import declarative_base, mapped_column, Session
 
-engine = create_engine('postgresql+psycopg2://localhost/pgvector_example', future=True)
+engine = create_engine('postgresql+psycopg2://localhost/pgvector_example')
 with engine.connect() as conn:
     conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     conn.commit()
@@ -15,17 +15,17 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True)
-    factors = Column(Vector(20))
+    id = mapped_column(Integer, primary_key=True)
+    factors = mapped_column(Vector(20))
 
 
 class Item(Base):
     __tablename__ = 'item'
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    factors = Column(Vector(20))
-    bias = Column(Float)
+    id = mapped_column(Integer, primary_key=True)
+    title = mapped_column(String)
+    factors = mapped_column(Vector(20))
+    bias = mapped_column(Float)
 
 
 Base.metadata.drop_all(engine)
@@ -46,11 +46,11 @@ session.bulk_insert_mappings(User, users)
 session.bulk_insert_mappings(Item, items)
 session.commit()
 
-user = session.query(User).get(1)
+user = session.get(User, 1)
 # subtract item bias for negative inner product
-items = session.query(Item).order_by(Item.factors.max_inner_product(user.factors) - Item.bias).limit(5).all()
+items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors) - Item.bias).limit(5))
 print('user-based recs:', [item.title for item in items])
 
-item = session.query(Item).filter(Item.title == 'Star Wars (1977)').first()
-items = session.query(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5).all()
+item = session.scalars(select(Item).filter(Item.title == 'Star Wars (1977)')).first()
+items = session.scalars(select(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5))
 print('item-based recs:', [item.title for item in items])
