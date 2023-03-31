@@ -26,7 +26,7 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=1000)
 
 
 # load pretrained model
-model = torchvision.models.resnet18(pretrained=True)
+model = torchvision.models.resnet18(weights='DEFAULT')
 model.fc = torch.nn.Identity()
 model.eval()
 
