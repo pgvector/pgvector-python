@@ -97,7 +97,7 @@ Add a vector column
 from pgvector.sqlalchemy import Vector
 
 class Item(Base):
-    embedding = Column(Vector(3))
+    embedding = mapped_column(Vector(3))
 ```
 
 Insert a vector
@@ -111,7 +111,7 @@ session.commit()
 Get the nearest neighbors to a vector
 
 ```python
-session.query(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5).all()
+session.scalars(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5))
 ```
 
 Also supports `max_inner_product` and `cosine_distance`

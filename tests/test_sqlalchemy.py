@@ -3,9 +3,9 @@ from pgvector.sqlalchemy import Vector
 import pytest
 from sqlalchemy import create_engine, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy.orm import declarative_base, mapped_column, Session
 
-engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test', future=True)
+engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with engine.connect() as con:
     con.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     con.commit()
@@ -16,8 +16,8 @@ Base = declarative_base()
 class Item(Base):
     __tablename__ = 'orm_item'
 
-    id = Column(Integer, primary_key=True)
-    embedding = Column(Vector(3))
+    id = mapped_column(Integer, primary_key=True)
+    embedding = mapped_column(Vector(3))
 
 
 Base.metadata.drop_all(engine)
