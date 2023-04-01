@@ -24,6 +24,7 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
+- [Embeddings](examples/openai_embeddings.py) with OpenAI
 - [Sentence embeddings](examples/sentence_embeddings.py) with SentenceTransformers
 - [Image search](examples/pytorch_image_search.py) with PyTorch
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
