@@ -34,8 +34,8 @@ titles, ratings = get_movielens('100k')
 model = implicit.als.AlternatingLeastSquares(factors=20)
 model.fit(ratings)
 
-users = [dict(id=i, factors=factors) for i, factors in enumerate(model.user_factors)]
-items = [dict(id=i, title=titles[i], factors=factors) for i, factors in enumerate(model.item_factors)]
+users = [dict(factors=factors) for i, factors in enumerate(model.user_factors)]
+items = [dict(title=titles[i], factors=factors) for i, factors in enumerate(model.item_factors)]
 
 session = Session(engine)
 session.bulk_insert_mappings(User, users)

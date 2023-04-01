@@ -38,8 +38,8 @@ model.fit(data['train'], epochs=30)
 user_biases, user_factors = model.get_user_representations()
 item_biases, item_factors = model.get_item_representations()
 
-users = [dict(id=i, factors=factors) for i, factors in enumerate(user_factors)]
-items = [dict(id=i, title=data['item_labels'][i], factors=factors, bias=item_biases[i].item()) for i, factors in enumerate(item_factors)]
+users = [dict(factors=factors) for i, factors in enumerate(user_factors)]
+items = [dict(title=data['item_labels'][i], factors=factors, bias=item_biases[i].item()) for i, factors in enumerate(item_factors)]
 
 session = Session(engine)
 session.bulk_insert_mappings(User, users)
