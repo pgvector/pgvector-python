@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.11
       - run: pip install -r requirements.txt
       - uses: ankane/setup-postgres@v1
         with:
@@ -15,7 +15,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.4.0 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.4.1 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
