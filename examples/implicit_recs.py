@@ -4,7 +4,7 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import create_engine, select, text, Integer, String
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 
-engine = create_engine('postgresql+psycopg2://localhost/pgvector_example')
+engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
 with engine.connect() as conn:
     conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     conn.commit()
