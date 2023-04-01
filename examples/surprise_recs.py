@@ -1,5 +1,5 @@
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, select, text, Integer
+from sqlalchemy import create_engine, insert, select, text, Integer
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 from surprise import Dataset, SVD
 
@@ -37,9 +37,8 @@ users = [dict(id=trainset.to_raw_uid(i), factors=algo.pu[i]) for i in trainset.a
 items = [dict(id=trainset.to_raw_iid(i), factors=algo.qi[i]) for i in trainset.all_items()]
 
 session = Session(engine)
-session.bulk_insert_mappings(User, users)
-session.bulk_insert_mappings(Item, items)
-session.commit()
+session.execute(insert(User), users)
+session.execute(insert(Item), items)
 
 user = session.get(User, 1)
 items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors)).limit(5))

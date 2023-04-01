@@ -1,7 +1,7 @@
 from lightfm import LightFM
 from lightfm.datasets import fetch_movielens
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, select, text, Float, Integer, String
+from sqlalchemy import create_engine, insert, select, text, Float, Integer, String
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 
 engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
@@ -42,9 +42,8 @@ users = [dict(factors=factors) for i, factors in enumerate(user_factors)]
 items = [dict(title=data['item_labels'][i], factors=factors, bias=item_biases[i].item()) for i, factors in enumerate(item_factors)]
 
 session = Session(engine)
-session.bulk_insert_mappings(User, users)
-session.bulk_insert_mappings(Item, items)
-session.commit()
+session.execute(insert(User), users)
+session.execute(insert(Item), items)
 
 user = session.get(User, 1)
 # subtract item bias for negative inner product

@@ -1,7 +1,7 @@
 import openai
 from pgvector.sqlalchemy import Vector
 from sentence_transformers import SentenceTransformer
-from sqlalchemy import create_engine, select, text, Integer, String, Text
+from sqlalchemy import create_engine, insert, select, text, Integer, String, Text
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 
 engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
@@ -33,8 +33,7 @@ embeddings = [v['embedding'] for v in openai.Embedding.create(input=input, model
 documents = [dict(content=input[i], embedding=embedding) for i, embedding in enumerate(embeddings)]
 
 session = Session(engine)
-session.bulk_insert_mappings(Document, documents)
-session.commit()
+session.execute(insert(Document), documents)
 
 doc = session.get(Document, 1)
 neighbors = session.scalars(select(Document).filter(Document.id != doc.id).order_by(Document.embedding.max_inner_product(doc.embedding)).limit(5))

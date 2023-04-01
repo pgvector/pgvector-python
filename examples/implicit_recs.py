@@ -1,7 +1,7 @@
 import implicit
 from implicit.datasets.movielens import get_movielens
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import create_engine, select, text, Integer, String
+from sqlalchemy import create_engine, insert, select, text, Integer, String
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 
 engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
@@ -38,9 +38,8 @@ users = [dict(factors=factors) for i, factors in enumerate(model.user_factors)]
 items = [dict(title=titles[i], factors=factors) for i, factors in enumerate(model.item_factors)]
 
 session = Session(engine)
-session.bulk_insert_mappings(User, users)
-session.bulk_insert_mappings(Item, items)
-session.commit()
+session.execute(insert(User), users)
+session.execute(insert(Item), items)
 
 user = session.get(User, 1)
 items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors)).limit(5))
