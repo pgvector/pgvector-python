@@ -3,3 +3,4 @@ lightfm
 torch
 torchvision
 scikit-surprise
+sentence-transformers

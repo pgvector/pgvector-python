@@ -26,6 +26,7 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
+- [Sentence embeddings](examples/sentence_embeddings.py) with SentenceTransformers
 - [Image search](examples/pytorch_image_search.py) with PyTorch
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
