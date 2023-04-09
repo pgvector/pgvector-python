@@ -109,3 +109,9 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+
+    def test_filter(self):
+        create_items()
+        distance = L2Distance('embedding', [1, 1, 1])
+        items = Item.objects.alias(distance=distance).filter(distance__lt=1)
+        assert [v.id for v in items] == [1]

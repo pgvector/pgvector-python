@@ -76,6 +76,12 @@ Get the distance
 Item.objects.annotate(distance=L2Distance('embedding', [3, 1, 2]))
 ```
 
+Get items within a certain distance
+
+```python
+Item.objects.alias(distance=L2Distance('embedding', [3, 1, 2])).filter(distance__lt=5)
+```
+
 Add an approximate index
 
 ```python
