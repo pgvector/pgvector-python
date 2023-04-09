@@ -70,6 +70,12 @@ Item.objects.order_by(L2Distance('embedding', [3, 1, 2]))[:5]
 
 Also supports `MaxInnerProduct` and `CosineDistance`
 
+Get the distance
+
+```python
+Item.objects.annotate(distance=L2Distance('embedding', [3, 1, 2]))
+```
+
 Add an approximate index
 
 ```python

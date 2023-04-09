@@ -2,6 +2,7 @@ import django
 from django.conf import settings
 from django.db import connection, migrations, models
 from django.db.migrations.loader import MigrationLoader
+from math import sqrt
 import numpy as np
 import pgvector.django
 from pgvector.django import VectorExtension, VectorField, IvfflatIndex, L2Distance, MaxInnerProduct, CosineDistance
@@ -90,15 +91,21 @@ class TestDjango:
 
     def test_l2_distance(self):
         create_items()
-        items = Item.objects.order_by(L2Distance('embedding', [1, 1, 1]))
+        distance = L2Distance('embedding', [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_max_inner_product(self):
         create_items()
-        items = Item.objects.order_by(MaxInnerProduct('embedding', [1, 1, 1]))
+        distance = MaxInnerProduct('embedding', [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_cosine_distance(self):
         create_items()
-        items = Item.objects.order_by(CosineDistance('embedding', [1, 1, 1]))
+        distance = CosineDistance('embedding', [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
+        assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
