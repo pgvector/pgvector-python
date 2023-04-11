@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Python
 
-Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), and [asyncpg](https://github.com/MagicStack/asyncpg)
+Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), and [asyncpg](https://github.com/MagicStack/asyncpg)
 
 [![Build Status](https://github.com/pgvector/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-python/actions)
 
@@ -18,6 +18,7 @@ And follow the instructions for your database library:
 
 - [Django](#django)
 - [SQLAlchemy](#sqlalchemy)
+- [SQLModel](#sqlmodel)
 - [Psycopg 3](#psycopg-3)
 - [Psycopg 2](#psycopg-2)
 - [asyncpg](#asyncpg)
@@ -140,6 +141,34 @@ index.create(engine)
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+## SQLModel
+
+Add a vector column
+
+```python
+from pgvector.sqlalchemy import Vector
+from sqlalchemy import Column
+
+class Item(SQLModel, table=True):
+    embedding: List[float] = Field(default=None, sa_column=Column(Vector(3)))
+```
+
+Insert a vector
+
+```python
+item = Item(embedding=[1, 2, 3])
+session.add(item)
+session.commit()
+```
+
+Get the nearest neighbors to a vector
+
+```python
+session.exec(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5))
+```
+
+Also supports `max_inner_product` and `cosine_distance`
 
 ## Psycopg 3
 
