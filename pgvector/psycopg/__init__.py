@@ -49,7 +49,7 @@ def register_vector(context):
         raise psycopg.ProgrammingError('vector type not found in the database')
     info.register(context)
 
-    # add oid to anonymous class
+    # add oid to anonymous class for set_types
     text_dumper = type('', (VectorDumper,), {'oid': info.oid})
     binary_dumper = type('', (VectorBinaryDumper,), {'oid': info.oid})
 
