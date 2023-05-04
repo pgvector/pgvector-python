@@ -1,3 +1,7 @@
+## 0.1.7 (unreleased)
+
+- Fixed binary copy for psycopg3
+
 ## 0.1.6 (2022-05-22)
 
 - Fixed return type for distance operators with SQLAlchemy
