@@ -1,6 +1,6 @@
 ## 0.1.7 (unreleased)
 
-- Fixed binary copy for psycopg3
+- Fixed `set_types` for psycopg3
 
 ## 0.1.6 (2022-05-22)
 

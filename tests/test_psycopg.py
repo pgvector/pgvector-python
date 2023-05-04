@@ -51,3 +51,22 @@ class TestPsycopg:
         assert not embedding.data.contiguous
         res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))
+
+    def test_text_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY item (embedding) FROM STDIN") as copy:
+            copy.write_row([embedding])
+
+    def test_binary_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY item (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.write_row([embedding])
+
+    def test_binary_copy_set_types(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY item (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['int8', 'vector'])
+            copy.write_row([1, embedding])
