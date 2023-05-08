@@ -193,6 +193,27 @@ Get the nearest neighbors to a vector
 conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
 ```
 
+Psycopg3 register async connection
+
+```python
+import psycopg
+from pgvector.psycopg import async_register_vector
+
+conn = await psycopg.AsyncConnection.connect("...")
+await async_register_vector(conn)
+```
+
+Insert a vector and get the nearest neighbors to a vector
+
+```python
+embedding = np.array([1, 2, 3])
+async with conn.cursor() as cur:
+    await cur.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
+    await cur.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,))
+    rows = await cur.fetchall()
+    await cur.commit()
+```
+ 
 ## Psycopg 2
 
 Register the vector type with your connection or cursor

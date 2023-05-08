@@ -58,3 +58,20 @@ def register_vector(context):
     adapters.register_dumper('numpy.ndarray', binary_dumper)
     adapters.register_loader(info.oid, VectorLoader)
     adapters.register_loader(info.oid, VectorBinaryLoader)
+
+
+async def async_register_vector(context):
+    info = await TypeInfo.fetch(context, 'vector')
+    if info is None:
+        raise psycopg.ProgrammingError('vector type not found in the database')
+    info.register(context)
+
+    # add oid to anonymous class for set_types
+    text_dumper = type('', (VectorDumper,), {'oid': info.oid})
+    binary_dumper = type('', (VectorBinaryDumper,), {'oid': info.oid})
+
+    adapters = context.adapters
+    adapters.register_dumper('numpy.ndarray', text_dumper)
+    adapters.register_dumper('numpy.ndarray', binary_dumper)
+    adapters.register_loader(info.oid, VectorLoader)
+    adapters.register_loader(info.oid, VectorBinaryLoader)
