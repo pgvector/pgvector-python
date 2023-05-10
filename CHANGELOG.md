@@ -1,5 +1,6 @@
 ## 0.1.7 (unreleased)
 
+- Added `register_vector_async` for psycopg3
 - Fixed `set_types` for psycopg3
 
 ## 0.1.6 (2022-05-22)

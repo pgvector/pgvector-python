@@ -45,6 +45,15 @@ class VectorBinaryLoader(VectorLoader):
 
 def register_vector(context):
     info = TypeInfo.fetch(context, 'vector')
+    register_vector_info(context, info)
+
+
+async def register_vector_async(context):
+    info = await TypeInfo.fetch(context, 'vector')
+    register_vector_info(context, info)
+
+
+def register_vector_info(context, info):
     if info is None:
         raise psycopg.ProgrammingError('vector type not found in the database')
     info.register(context)

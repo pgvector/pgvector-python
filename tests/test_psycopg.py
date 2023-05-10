@@ -1,6 +1,7 @@
 import numpy as np
-from pgvector.psycopg import register_vector
+from pgvector.psycopg import register_vector, register_vector_async
 import psycopg
+import pytest
 
 conn = psycopg.connect(dbname='pgvector_python_test')
 conn.autocommit = True
@@ -70,3 +71,23 @@ class TestPsycopg:
         with cur.copy("COPY item (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.set_types(['int8', 'vector'])
             copy.write_row([1, embedding])
+
+    @pytest.mark.asyncio
+    async def test_async(self):
+        conn = await psycopg.AsyncConnection.connect(dbname='pgvector_python_test', autocommit=True)
+
+        await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        await conn.execute('DROP TABLE IF EXISTS item')
+        await conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+
+        await register_vector_async(conn)
+
+        embedding = np.array([1.5, 2, 3])
+        await conn.execute('INSERT INTO item (embedding) VALUES (%s), (NULL)', (embedding,))
+
+        async with conn.cursor() as cur:
+            await cur.execute('SELECT * FROM item ORDER BY id')
+            res = await cur.fetchall()
+            assert np.array_equal(res[0][1], embedding)
+            assert res[0][1].dtype == np.float32
+            assert res[1][1] is None
