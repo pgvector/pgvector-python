@@ -3,11 +3,15 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.11, 3.6]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: ${{ matrix.python }}
       - run: pip install -r requirements.txt
       - uses: ankane/setup-postgres@v1
         with:
