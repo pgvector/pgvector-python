@@ -111,6 +111,12 @@ class TestSqlalchemy:
             items = session.query(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1).all()
             assert [v.id for v in items] == [1]
 
+    def test_filter_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1))
+            assert [v.id for v in items] == [1]
+
     def test_select(self):
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
