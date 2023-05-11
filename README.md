@@ -129,6 +129,12 @@ session.scalars(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).lim
 
 Also supports `max_inner_product` and `cosine_distance`
 
+Get items within a certain distance
+
+```python
+session.scalars(select(Item).filter(Item.embedding.l2_distance([3, 1, 2]) < 5))
+```
+
 Add an approximate index
 
 ```python
