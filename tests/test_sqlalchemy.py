@@ -141,6 +141,12 @@ class TestSqlalchemy:
             item = session.query(Item.embedding.l2_distance([1, 1, 1])).first()
             assert item[0] == 3
 
+    def test_select_orm(self):
+        with Session(engine) as session:
+            session.add(Item(embedding=[2, 3, 3]))
+            item = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
+            assert item[0] == 3
+
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])
         session = Session(engine)
