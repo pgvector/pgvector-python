@@ -192,7 +192,7 @@ from pgvector.psycopg import register_vector
 register_vector(conn)
 ```
 
-For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use [unreleased]
+For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use
 
 ```python
 from pgvector.psycopg import register_vector_async
