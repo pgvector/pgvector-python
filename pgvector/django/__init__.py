@@ -40,7 +40,7 @@ class VectorField(Field):
         return to_db(value)
 
     def value_to_string(self, obj):
-        return to_db(self.value_from_object(obj))
+        return self.get_prep_value(self.value_from_object(obj))
 
 
 class IvfflatIndex(PostgresIndex):
