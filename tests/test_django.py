@@ -1,4 +1,5 @@
 import django
+from django.core import serializers
 from django.conf import settings
 from django.db import connection, migrations, models
 from django.db.migrations.loader import MigrationLoader
@@ -6,6 +7,7 @@ from math import sqrt
 import numpy as np
 import pgvector.django
 from pgvector.django import VectorExtension, VectorField, IvfflatIndex, L2Distance, MaxInnerProduct, CosineDistance
+from unittest import mock
 
 settings.configure(
     DATABASES={
@@ -115,3 +117,12 @@ class TestDjango:
         distance = L2Distance('embedding', [1, 1, 1])
         items = Item.objects.alias(distance=distance).filter(distance__lt=1)
         assert [v.id for v in items] == [1]
+
+    def test_serialization(self):
+        create_items()
+        items = Item.objects.all()
+        data = serializers.serialize('json', items)
+        with mock.patch('django.core.serializers.python.apps.get_model') as get_model:
+            get_model.return_value = Item
+            for obj in serializers.deserialize('json', data, ):
+                obj.save()
