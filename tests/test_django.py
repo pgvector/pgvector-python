@@ -121,8 +121,9 @@ class TestDjango:
     def test_serialization(self):
         create_items()
         items = Item.objects.all()
-        data = serializers.serialize('json', items)
-        with mock.patch('django.core.serializers.python.apps.get_model') as get_model:
-            get_model.return_value = Item
-            for obj in serializers.deserialize('json', data):
-                obj.save()
+        for format in ['json', 'xml']:
+            data = serializers.serialize(format, items)
+            with mock.patch('django.core.serializers.python.apps.get_model') as get_model:
+                get_model.return_value = Item
+                for obj in serializers.deserialize(format, data):
+                    obj.save()
