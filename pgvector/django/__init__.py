@@ -11,7 +11,7 @@ class VectorExtension(CreateExtension):
         self.name = 'vector'
 
 
-# https://docs.djangoproject.com/en/3.2/howto/custom-model-fields/
+# https://docs.djangoproject.com/en/4.2/howto/custom-model-fields/
 class VectorField(Field):
     description = 'Vector'
 
