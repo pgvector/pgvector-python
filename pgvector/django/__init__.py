@@ -39,6 +39,9 @@ class VectorField(Field):
     def get_prep_value(self, value):
         return to_db(value)
 
+    def value_to_string(self, obj):
+        return to_db(self.value_from_object(obj))
+
 
 class IvfflatIndex(PostgresIndex):
     suffix = 'ivfflat'
