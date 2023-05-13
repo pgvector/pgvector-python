@@ -124,5 +124,5 @@ class TestDjango:
         data = serializers.serialize('json', items)
         with mock.patch('django.core.serializers.python.apps.get_model') as get_model:
             get_model.return_value = Item
-            for obj in serializers.deserialize('json', data, ):
+            for obj in serializers.deserialize('json', data):
                 obj.save()
