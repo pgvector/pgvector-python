@@ -1,6 +1,6 @@
 import django
-from django.core import serializers
 from django.conf import settings
+from django.core import serializers
 from django.db import connection, migrations, models
 from django.db.migrations.loader import MigrationLoader
 from math import sqrt
