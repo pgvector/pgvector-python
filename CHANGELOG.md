@@ -1,3 +1,7 @@
+## 0.1.8 (unreleased)
+
+- Fixed serialization with Django
+
 ## 0.1.7 (2023-05-11)
 
 - Added `register_vector_async` for psycopg3
