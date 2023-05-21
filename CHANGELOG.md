@@ -1,4 +1,4 @@
-## 0.1.8 (unreleased)
+## 0.1.8 (2023-05-20)
 
 - Fixed serialization with Django
 

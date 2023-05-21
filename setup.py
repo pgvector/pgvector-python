@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setup(
     name='pgvector',
-    version='0.1.7',
+    version='0.1.8',
     description='pgvector support for Python',
     long_description=long_description,
     long_description_content_type='text/markdown',
