@@ -10,8 +10,7 @@ seed = True
 
 
 # establish connection
-conn = psycopg.connect(dbname='pgvector_example')
-conn.autocommit = True
+conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 register_vector(conn)
 
@@ -38,7 +37,7 @@ def generate_embeddings(inputs):
 # generate, save, and index embeddings
 if seed:
     conn.execute('DROP TABLE IF EXISTS image')
-    conn.execute('CREATE TABLE image (id bigserial primary key, embedding vector(512))')
+    conn.execute('CREATE TABLE image (id bigserial PRIMARY KEY, embedding vector(512))')
 
     for data in tqdm(dataloader):
         embeddings = generate_embeddings(data[0])

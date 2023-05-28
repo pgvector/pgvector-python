@@ -3,8 +3,7 @@ from pgvector.psycopg import register_vector, register_vector_async
 import psycopg
 import pytest
 
-conn = psycopg.connect(dbname='pgvector_python_test')
-conn.autocommit = True
+conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 conn.execute('DROP TABLE IF EXISTS item')
