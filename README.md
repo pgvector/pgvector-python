@@ -27,6 +27,7 @@ Or check out some examples:
 
 - [Embeddings](examples/openai_embeddings.py) with OpenAI
 - [Sentence embeddings](examples/sentence_embeddings.py) with SentenceTransformers
+- [Hybrid search](examples/hybrid_search.py) with SentenceTransformers
 - [Image search](examples/pytorch_image_search.py) with PyTorch
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
