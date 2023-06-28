@@ -254,7 +254,7 @@ or your pool
 async def init(conn):
     await register_vector(conn)
 
-pool = await asyncpg.create_pool(..., init=register_vector)
+pool = await asyncpg.create_pool(..., init=init)
 ```
 
 Insert a vector
