@@ -248,6 +248,15 @@ from pgvector.asyncpg import register_vector
 await register_vector(conn)
 ```
 
+or your pool
+
+```python
+async def init(conn):
+    await register_vector(conn)
+
+pool = await asyncpg.create_pool(..., init=register_vector)
+```
+
 Insert a vector
 
 ```python
