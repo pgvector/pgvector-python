@@ -42,6 +42,12 @@ class VectorField(Field):
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
 
+    def validate(self, value, model_instance):
+        super().validate(value.tolist(), model_instance)
+
+    def run_validators(self, value):
+        super().run_validators(value.tolist())
+
 
 class IvfflatIndex(PostgresIndex):
     suffix = 'ivfflat'

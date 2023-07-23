@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core import serializers
 from django.db import connection, migrations, models
 from django.db.migrations.loader import MigrationLoader
+from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
@@ -79,6 +80,12 @@ def create_items():
         item.save()
 
 
+class ItemForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ['embedding']
+
+
 class TestDjango:
     def setup_method(self, test_method):
         Item.objects.all().delete()
@@ -127,3 +134,7 @@ class TestDjango:
                 get_model.return_value = Item
                 for obj in serializers.deserialize(format, data):
                     obj.save()
+
+    def test_form(self):
+        form = ItemForm(data={'embedding': [1, 2, 3]})
+        assert form.is_valid()

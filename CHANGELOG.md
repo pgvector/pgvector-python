@@ -1,5 +1,6 @@
 ## 0.2.0 (unreleased)
 
+- Fixed form validation with Django
 - Dropped support for Python < 3.8
 
 ## 0.1.8 (2023-05-20)
