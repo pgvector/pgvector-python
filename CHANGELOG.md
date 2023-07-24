@@ -1,4 +1,4 @@
-## 0.2.0 (unreleased)
+## 0.2.0 (2023-07-23)
 
 - Fixed form validation with Django
 - Dropped support for Python < 3.8
