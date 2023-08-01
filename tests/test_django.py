@@ -150,7 +150,7 @@ class TestDjango:
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
         form = ItemForm(instance=item, data={'embedding': '[4, 5, 6]'})
+        assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert form.has_changed()
         assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
