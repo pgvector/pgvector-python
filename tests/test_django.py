@@ -145,7 +145,7 @@ class TestDjango:
         item = Item.objects.get(pk=1)
         form = ItemForm(instance=item)
         # TODO fix
-        # assert 'value="[1. 2. 3.]"' in form.as_div()
+        # assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()
 
     def test_form_save(self):
         Item(id=1, embedding=[1, 2, 3]).save()
