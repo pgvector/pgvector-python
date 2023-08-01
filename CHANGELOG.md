@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1 (2023-07-31)
 
 - Fixed form issues with Django
 
