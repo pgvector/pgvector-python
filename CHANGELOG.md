@@ -1,3 +1,7 @@
+## 0.2.1 (unreleased)
+
+- Fixed form issues with Django
+
 ## 0.2.0 (2023-07-23)
 
 - Fixed form validation with Django
