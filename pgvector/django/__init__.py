@@ -1,6 +1,7 @@
 from django.contrib.postgres.operations import CreateExtension
 from django.contrib.postgres.indexes import PostgresIndex
 from django.db.models import Field, FloatField, Func, Value
+from .forms import VectorFormField
 from ..utils import from_db, to_db
 
 __all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
@@ -47,6 +48,9 @@ class VectorField(Field):
 
     def run_validators(self, value):
         super().run_validators(value.tolist())
+
+    def formfield(self, **kwargs):
+        return super().formfield(form_class=VectorFormField, **kwargs)
 
 
 class IvfflatIndex(PostgresIndex):
