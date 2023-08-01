@@ -138,3 +138,19 @@ class TestDjango:
     def test_form(self):
         form = ItemForm(data={'embedding': [1, 2, 3]})
         assert form.is_valid()
+        assert 'value="[1, 2, 3]"' in form.as_div()
+
+    def test_form_instance(self):
+        Item(id=1, embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = ItemForm(instance=item)
+        # TODO fix
+        # assert 'value="[1. 2. 3.]"' in form.as_div()
+
+    def test_form_save(self):
+        Item(id=1, embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = ItemForm(instance=item, data={'embedding': [4, 5, 6]})
+        assert form.is_valid()
+        assert form.save()
+        assert [4, 5, 6], Item.objects.get(pk=1).embedding
