@@ -21,6 +21,9 @@ def from_db_binary(value):
 def to_db(value, dim=None):
     if value is None:
         return value
+    
+    if value == 'null':
+        return None
 
     if isinstance(value, np.ndarray):
         if value.ndim != 1:
