@@ -7,7 +7,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, IvfflatIndex, L2Distance, MaxInnerProduct, CosineDistance
+from pgvector.django import VectorExtension, VectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance
 from unittest import mock
 
 settings.configure(
@@ -28,9 +28,16 @@ class Item(models.Model):
         app_label = 'myapp'
         indexes = [
             IvfflatIndex(
-                name='my_index',
+                name='ivfflat_idx',
                 fields=['embedding'],
                 lists=100,
+                opclasses=['vector_l2_ops']
+            ),
+            HnswIndex(
+                name='hnsw_idx',
+                fields=['embedding'],
+                m=16,
+                ef_construction=100,
                 opclasses=['vector_l2_ops']
             )
         ]

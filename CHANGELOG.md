@@ -1,3 +1,7 @@
+## 0.2.2 (unreleased)
+
+- Added `HnswIndex` for Django
+
 ## 0.2.1 (2023-07-31)
 
 - Fixed form issues with Django
