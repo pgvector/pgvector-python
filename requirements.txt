@@ -1,6 +1,7 @@
 asyncpg
 Django
 numpy
+peewee
 psycopg[binary]
 psycopg2-binary
 pytest

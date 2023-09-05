@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Python
 
-Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), and [asyncpg](https://github.com/MagicStack/asyncpg)
+Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [asyncpg](https://github.com/MagicStack/asyncpg), and [Peewee](https://github.com/coleifer/peewee)
 
 [![Build Status](https://github.com/pgvector/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-python/actions)
 
@@ -22,6 +22,7 @@ And follow the instructions for your database library:
 - [Psycopg 3](#psycopg-3)
 - [Psycopg 2](#psycopg-2)
 - [asyncpg](#asyncpg)
+- [Peewee](#peewee) [unreleased]
 
 Or check out some examples:
 
@@ -268,6 +269,43 @@ Get the nearest neighbors to a vector
 
 ```python
 await conn.fetch('SELECT * FROM item ORDER BY embedding <-> $1 LIMIT 5', embedding)
+```
+
+## Peewee
+
+Add a vector column
+
+```python
+from pgvector.peewee import VectorField
+
+class Item(BaseModel):
+    embedding = VectorField(dimensions=3)
+```
+
+Insert a vector
+
+```python
+item = Item.create(embedding=[1, 2, 3])
+```
+
+Get the nearest neighbors to a vector
+
+```python
+Item.select().order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5)
+```
+
+Also supports `max_inner_product` and `cosine_distance`
+
+Get the distance
+
+```python
+Item.select(Item.embedding.l2_distance([3, 1, 2]).alias('distance'))
+```
+
+Get items within a certain distance
+
+```python
+Item.select().where(Item.embedding.l2_distance([3, 1, 2]) < 5)
 ```
 
 ## History

@@ -16,6 +16,7 @@ setup(
     packages=[
         'pgvector.asyncpg',
         'pgvector.django',
+        'pgvector.peewee',
         'pgvector.psycopg',
         'pgvector.psycopg2',
         'pgvector.sqlalchemy',
