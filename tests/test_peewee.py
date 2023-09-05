@@ -15,6 +15,8 @@ class Item(BaseModel):
     embedding = VectorField(dimensions=3)
 
 
+Item.add_index('embedding vector_l2_ops', using='hnsw')
+
 db.connect()
 db.execute_sql('CREATE EXTENSION IF NOT EXISTS vector')
 db.drop_tables([Item])

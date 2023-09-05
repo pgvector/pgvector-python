@@ -308,6 +308,14 @@ Get items within a certain distance
 Item.select().where(Item.embedding.l2_distance([3, 1, 2]) < 5)
 ```
 
+Add an approximate index
+
+```python
+Item.add_index('embedding vector_l2_ops', using='hnsw')
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-python/blob/master/CHANGELOG.md)
