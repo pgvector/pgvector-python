@@ -10,16 +10,16 @@ register_vector(conn)
 conn.execute('DROP TABLE IF EXISTS documents')
 conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))')
 
-sentences = [
+input = [
     'The dog is barking',
     'The cat is purring',
     'The bear is growling'
 ]
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
-embeddings = model.encode(sentences)
+embeddings = model.encode(input)
 
-for content, embedding in zip(sentences, embeddings):
+for content, embedding in zip(input, embeddings):
     conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
 
 document_id = 1
