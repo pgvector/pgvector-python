@@ -1,26 +1,14 @@
-from pgvector.sqlalchemy import Vector
+from pgvector.psycopg import register_vector
+import psycopg
 from sentence_transformers import SentenceTransformer
-from sqlalchemy import create_engine, insert, select, text, Integer, String, Text
-from sqlalchemy.orm import declarative_base, mapped_column, Session
 
-engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
-with engine.connect() as conn:
-    conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    conn.commit()
+conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 
-Base = declarative_base()
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+register_vector(conn)
 
-
-class Document(Base):
-    __tablename__ = 'document'
-
-    id = mapped_column(Integer, primary_key=True)
-    content = mapped_column(Text)
-    embedding = mapped_column(Vector(384))
-
-
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+conn.execute('DROP TABLE IF EXISTS documents')
+conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))')
 
 sentences = [
     'The dog is barking',
@@ -31,12 +19,10 @@ sentences = [
 model = SentenceTransformer('all-MiniLM-L6-v2')
 embeddings = model.encode(sentences)
 
-documents = [dict(content=sentences[i], embedding=embedding) for i, embedding in enumerate(embeddings)]
+for content, embedding in zip(sentences, embeddings):
+    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
 
-session = Session(engine)
-session.execute(insert(Document), documents)
-
-doc = session.get(Document, 1)
-neighbors = session.scalars(select(Document).filter(Document.id != doc.id).order_by(Document.embedding.cosine_distance(doc.embedding)).limit(5))
+document_id = 1
+neighbors = conn.execute('SELECT content FROM documents WHERE id != %(id)s ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = %(id)s) LIMIT 5', {'id': document_id}).fetchall()
 for neighbor in neighbors:
-    print(neighbor.content)
+    print(neighbor[0])
