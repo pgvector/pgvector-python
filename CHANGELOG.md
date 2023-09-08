@@ -1,4 +1,4 @@
-## 0.2.2 (unreleased)
+## 0.2.2 (2023-08-08)
 
 - Added support for Peewee
 - Added `HnswIndex` for Django

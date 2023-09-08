@@ -22,7 +22,7 @@ And follow the instructions for your database library:
 - [Psycopg 3](#psycopg-3)
 - [Psycopg 2](#psycopg-2)
 - [asyncpg](#asyncpg)
-- [Peewee](#peewee) [unreleased]
+- [Peewee](#peewee)
 
 Or check out some examples:
 
