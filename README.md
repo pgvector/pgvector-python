@@ -88,7 +88,7 @@ Item.objects.alias(distance=L2Distance('embedding', [3, 1, 2])).filter(distance_
 Add an approximate index
 
 ```python
-from pgvector.django import IvfflatIndex
+from pgvector.django import IvfflatIndex, HnswIndex
 
 class Item(models.Model):
     class Meta:
