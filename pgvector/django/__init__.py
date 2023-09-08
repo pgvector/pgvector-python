@@ -4,7 +4,7 @@ from django.db.models import Field, FloatField, Func, Value
 from .forms import VectorFormField
 from ..utils import from_db, to_db
 
-__all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
+__all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'HnswIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
 
 
 class VectorExtension(CreateExtension):
