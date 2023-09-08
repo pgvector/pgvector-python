@@ -1,27 +1,15 @@
 import openai
-from pgvector.sqlalchemy import Vector
+from pgvector.psycopg import register_vector
+import psycopg
 from sentence_transformers import SentenceTransformer
-from sqlalchemy import create_engine, insert, select, text, Integer, String, Text
-from sqlalchemy.orm import declarative_base, mapped_column, Session
 
-engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
-with engine.connect() as conn:
-    conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    conn.commit()
+conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 
-Base = declarative_base()
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+register_vector(conn)
 
-
-class Document(Base):
-    __tablename__ = 'document'
-
-    id = mapped_column(Integer, primary_key=True)
-    content = mapped_column(Text)
-    embedding = mapped_column(Vector(1536))
-
-
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+conn.execute('DROP TABLE IF EXISTS document')
+conn.execute('CREATE TABLE document (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
 
 input = [
     'The dog is barking',
@@ -30,12 +18,11 @@ input = [
 ]
 
 embeddings = [v['embedding'] for v in openai.Embedding.create(input=input, model='text-embedding-ada-002')['data']]
-documents = [dict(content=input[i], embedding=embedding) for i, embedding in enumerate(embeddings)]
 
-session = Session(engine)
-session.execute(insert(Document), documents)
+for content, embedding in zip(input, embeddings):
+    conn.execute('INSERT INTO document (content, embedding) VALUES (%s, %s)', (content, embedding))
 
-doc = session.get(Document, 1)
-neighbors = session.scalars(select(Document).filter(Document.id != doc.id).order_by(Document.embedding.max_inner_product(doc.embedding)).limit(5))
+document_id = 2
+neighbors = conn.execute('SELECT content FROM documents WHERE id != %(id)s ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = %(id)s) LIMIT 5', {'id': document_id}).fetchall()
 for neighbor in neighbors:
-    print(neighbor.content)
+    print(neighbor[0])
