@@ -1,7 +1,6 @@
 import openai
 from pgvector.psycopg import register_vector
 import psycopg
-from sentence_transformers import SentenceTransformer
 
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 
