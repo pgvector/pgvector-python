@@ -55,14 +55,23 @@ class TestSqlalchemy:
         metadata.drop_all(engine)
         metadata.create_all(engine)
 
-        index = Index(
-            'my_core_index',
+        ivfflat_index = Index(
+            'ivfflat_core_index',
             item_table.c.embedding,
             postgresql_using='ivfflat',
             postgresql_with={'lists': 1},
             postgresql_ops={'embedding': 'vector_l2_ops'}
         )
-        index.create(engine)
+        ivfflat_index.create(engine)
+
+        hnsw_index = Index(
+            'hnsw_core_index',
+            item_table.c.embedding,
+            postgresql_using='hnsw',
+            postgresql_with={'m': 16, 'ef_construction': 64},
+            postgresql_ops={'embedding': 'vector_l2_ops'}
+        )
+        hnsw_index.create(engine)
 
     def test_orm(self):
         item = Item(embedding=np.array([1.5, 2, 3]))

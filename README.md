@@ -98,6 +98,14 @@ class Item(models.Model):
                 fields=['embedding'],
                 lists=100,
                 opclasses=['vector_l2_ops']
+            ),
+            # or
+            HnswIndex(
+                name='my_index',
+                fields=['embedding'],
+                m=16,
+                ef_construction=64,
+                opclasses=['vector_l2_ops']
             )
         ]
 ```
@@ -151,6 +159,13 @@ index = Index('my_index', Item.embedding,
     postgresql_with={'lists': 100},
     postgresql_ops={'embedding': 'vector_l2_ops'}
 )
+# or
+index = Index('my_index', Item.embedding,
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+
 index.create(engine)
 ```
 
