@@ -41,6 +41,7 @@ if seed:
     conn.execute('DROP TABLE IF EXISTS image')
     conn.execute('CREATE TABLE image (id bigserial PRIMARY KEY, embedding vector(512))')
 
+    print('Generating embeddings')
     for data in tqdm(dataloader):
         embeddings = generate_embeddings(data[0])
 
@@ -48,6 +49,7 @@ if seed:
         params = [embedding for embedding in embeddings]
         conn.execute(sql, params)
 
+    print('Creating index')
     conn.execute('CREATE INDEX ON image USING hnsw (embedding vector_cosine_ops)')
 
 
