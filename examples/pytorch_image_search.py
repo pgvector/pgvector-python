@@ -25,13 +25,15 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=1000)
 
 
 # load pretrained model
+device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
 model = torchvision.models.resnet18(weights='DEFAULT')
 model.fc = torch.nn.Identity()
+model.to(device)
 model.eval()
 
 
 def generate_embeddings(inputs):
-    return model(inputs).detach().numpy()
+    return model(inputs.to(device)).detach().cpu().numpy()
 
 
 # generate, save, and index embeddings
@@ -53,7 +55,8 @@ def show_images(dataset_images):
     grid = torchvision.utils.make_grid(dataset_images)
     img = (grid / 2 + 0.5).permute(1, 2, 0).numpy()
     plt.imshow(img)
-    plt.waitforbuttonpress()
+    plt.draw()
+    plt.waitforbuttonpress(timeout=3)
 
 
 # load 5 random unseen images
