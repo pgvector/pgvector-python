@@ -49,9 +49,6 @@ if seed:
         params = [embedding for embedding in embeddings]
         conn.execute(sql, params)
 
-    print('Creating index')
-    conn.execute('CREATE INDEX ON image USING hnsw (embedding vector_cosine_ops)')
-
 
 def show_images(dataset_images):
     grid = torchvision.utils.make_grid(dataset_images)
