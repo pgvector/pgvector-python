@@ -19,7 +19,7 @@ class VectorField(Field):
         return from_db(value)
 
     def _distance(self, op, vector):
-        return Expression(lhs=self, op=op, rhs=Value(vector, converter=to_db, unpack=False))
+        return Expression(lhs=self, op=op, rhs=self.to_value(vector))
 
     def l2_distance(self, vector):
         return self._distance('<->', vector)
