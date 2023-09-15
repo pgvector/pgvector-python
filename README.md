@@ -85,6 +85,16 @@ Get items within a certain distance
 Item.objects.alias(distance=L2Distance('embedding', [3, 1, 2])).filter(distance__lt=5)
 ```
 
+Average vectors
+
+```python
+from django.db.models import Avg
+
+Item.objects.aggregate(Avg('embedding'))
+```
+
+Also supports `Sum`
+
 Add an approximate index
 
 ```python
