@@ -68,3 +68,7 @@ class TestPeewee:
         create_items()
         items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)
         assert [v.id for v in items] == [1]
+
+    def test_get_or_create(self):
+        Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
+        Item.get_or_create(embedding=np.array([4, 5, 6]))
