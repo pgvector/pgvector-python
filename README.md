@@ -214,10 +214,13 @@ session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))
 Add a vector column
 
 ```python
+from typing import List, Optional
+
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column
+from sqlmodel import Column, Field, Session, SQLModel, create_engine, select
 
 class Item(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
     embedding: List[float] = Field(sa_column=Column(Vector(3)))
 ```
 
@@ -236,6 +239,8 @@ session.exec(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
+
+See [examples/simple_sqlmodel_vector.py](examples/simple_sqlmodel_vector.py) for full code.
 
 Get the distance
 
