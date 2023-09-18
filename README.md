@@ -36,7 +36,7 @@ Or check out some examples:
 
 ## Django
 
-Create the extension
+Enable the extension
 
 ```python
 from pgvector.django import VectorExtension
@@ -211,6 +211,12 @@ Also supports `max_inner_product` and `cosine_distance`
 
 ## Psycopg 3
 
+Enable the extension
+
+```python
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+```
+
 Register the vector type with your connection
 
 ```python
@@ -242,6 +248,12 @@ conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,
 
 ## Psycopg 2
 
+Enable the extension
+
+```python
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+```
+
 Register the vector type with your connection or cursor
 
 ```python
@@ -265,6 +277,12 @@ cur.fetchall()
 ```
 
 ## asyncpg
+
+Enable the extension
+
+```python
+await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+```
 
 Register the vector type with your connection
 
