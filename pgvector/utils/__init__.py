@@ -7,7 +7,13 @@ def from_db(value):
     if value is None or isinstance(value, np.ndarray):
         return value
 
-    return np.array(value[1:-1].split(','), dtype=np.float32)
+    # could be a string or a list if already cast by lower-level driver
+    if isinstance(value, str):
+        db_list = value[1:-1].split(',')
+    else:
+        db_list = value
+
+    return np.array(db_list, dtype=np.float32)
 
 
 def from_db_binary(value):

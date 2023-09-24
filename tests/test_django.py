@@ -178,3 +178,10 @@ class TestDjango:
         assert form.is_valid()
         assert form.save()
         assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
+
+    def test_clean(self):
+        item = Item(id=1, embedding=[1, 2, 3])
+        item.full_clean()
+
+    def test_get_or_create(self):
+        Item.objects.get_or_create(embedding=[1, 2, 3])
