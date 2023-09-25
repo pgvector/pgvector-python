@@ -1,7 +1,7 @@
-import numpy as np
 from django.contrib.postgres.operations import CreateExtension
 from django.contrib.postgres.indexes import PostgresIndex
 from django.db.models import Field, FloatField, Func, Value
+import numpy as np
 from .forms import VectorFormField
 from ..utils import from_db, to_db
 

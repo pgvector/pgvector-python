@@ -1,4 +1,5 @@
 from django import forms
+import numpy as np
 from .widgets import VectorWidget
 
 
@@ -6,9 +7,6 @@ class VectorFormField(forms.CharField):
     widget = VectorWidget
 
     def has_changed(self, initial, data):
-        try:
+        if isinstance(initial, np.ndarray):
             initial = initial.tolist()
-        except AttributeError:
-            # initial could be None
-            pass
         return super().has_changed(initial, data)
