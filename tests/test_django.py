@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
             name='Item',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('embedding', pgvector.django.VectorField(dimensions=3)),
+                ('embedding', pgvector.django.VectorField(dimensions=3, null=True)),
             ],
         ),
         migrations.AddIndex(
@@ -185,3 +185,7 @@ class TestDjango:
 
     def test_get_or_create(self):
         Item.objects.get_or_create(embedding=[1, 2, 3])
+
+    def test_missing(self):
+        Item().save()
+        assert Item.objects.first().embedding is None

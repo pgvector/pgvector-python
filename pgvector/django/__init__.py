@@ -16,6 +16,7 @@ class VectorExtension(CreateExtension):
 # https://docs.djangoproject.com/en/4.2/howto/custom-model-fields/
 class VectorField(Field):
     description = 'Vector'
+    empty_strings_allowed = False
 
     def __init__(self, *args, dimensions=None, **kwargs):
         self.dimensions = dimensions
@@ -47,10 +48,14 @@ class VectorField(Field):
         return self.get_prep_value(self.value_from_object(obj))
 
     def validate(self, value, model_instance):
-        super().validate(value.tolist(), model_instance)
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+        super().validate(value, model_instance)
 
     def run_validators(self, value):
-        super().run_validators(value.tolist())
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+        super().run_validators(value)
 
     def formfield(self, **kwargs):
         return super().formfield(form_class=VectorFormField, **kwargs)

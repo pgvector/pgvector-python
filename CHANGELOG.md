@@ -1,3 +1,7 @@
+## 0.2.3 (unreleased)
+
+- Fixed null values for Django
+
 ## 0.2.2 (2023-09-08)
 
 - Added support for Peewee
