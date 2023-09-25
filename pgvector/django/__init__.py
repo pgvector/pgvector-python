@@ -1,3 +1,4 @@
+import numpy as np
 from django.contrib.postgres.operations import CreateExtension
 from django.contrib.postgres.indexes import PostgresIndex
 from django.db.models import Field, FloatField, Func, Value
@@ -35,6 +36,8 @@ class VectorField(Field):
         return from_db(value)
 
     def to_python(self, value):
+        if isinstance(value, list):
+            return np.array(value, dtype=np.float32)
         return from_db(value)
 
     def get_prep_value(self, value):
