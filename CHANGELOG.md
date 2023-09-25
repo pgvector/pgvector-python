@@ -1,6 +1,7 @@
 ## 0.2.3 (unreleased)
 
-- Fixed null values for Django
+- Fixed null values with Django
+- Fixed `full_clean` with Django
 
 ## 0.2.2 (2023-09-08)
 
