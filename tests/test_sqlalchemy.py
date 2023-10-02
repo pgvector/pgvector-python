@@ -7,9 +7,9 @@ from sqlalchemy.orm import declarative_base, mapped_column, Session
 from sqlalchemy.sql import func
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
-with engine.connect() as con:
-    con.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    con.commit()
+with Session(engine) as session:
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+    session.commit()
 
 Base = declarative_base()
 
