@@ -124,6 +124,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 ## SQLAlchemy
 
+Enable the extension
+
+```python
+session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+```
+
 Add a vector column
 
 ```python
@@ -192,6 +198,12 @@ index.create(engine)
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## SQLModel
+
+Enable the extension
+
+```python
+session.exec('CREATE EXTENSION IF NOT EXISTS vector')
+```
 
 Add a vector column
 
