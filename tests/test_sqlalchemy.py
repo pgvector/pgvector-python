@@ -145,6 +145,18 @@ class TestSqlalchemy:
             items = session.scalars(select(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1))
             assert [v.id for v in items] == [1]
 
+    def test_select(self):
+        with Session(engine) as session:
+            session.add(Item(embedding=[2, 3, 3]))
+            item = session.query(Item.embedding.l2_distance([1, 1, 1])).first()
+            assert item[0] == 3
+
+    def test_select_orm(self):
+        with Session(engine) as session:
+            session.add(Item(embedding=[2, 3, 3]))
+            item = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
+            assert item[0] == 3
+
     def test_avg(self):
         with Session(engine) as session:
             avg = session.query(func.avg(Item.embedding)).first()[0]
@@ -162,18 +174,6 @@ class TestSqlalchemy:
             session.add(Item(embedding=[4, 5, 6]))
             sum = session.query(func.sum(Item.embedding)).first()[0]
             assert np.array_equal(sum, np.array([5, 7, 9]))
-
-    def test_select(self):
-        with Session(engine) as session:
-            session.add(Item(embedding=[2, 3, 3]))
-            item = session.query(Item.embedding.l2_distance([1, 1, 1])).first()
-            assert item[0] == 3
-
-    def test_select_orm(self):
-        with Session(engine) as session:
-            session.add(Item(embedding=[2, 3, 3]))
-            item = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
-            assert item[0] == 3
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])
