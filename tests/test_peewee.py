@@ -1,6 +1,6 @@
 from math import sqrt
 import numpy as np
-from peewee import Model, PostgresqlDatabase
+from peewee import Model, PostgresqlDatabase, fn
 from pgvector.peewee import VectorField
 
 db = PostgresqlDatabase('pgvector_python_test')
@@ -68,6 +68,22 @@ class TestPeewee:
         create_items()
         items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)
         assert [v.id for v in items] == [1]
+
+    def test_avg(self):
+        avg = Item.select(fn.avg(Item.embedding)).scalar()
+        assert avg is None
+        Item.create(embedding=[1, 2, 3])
+        Item.create(embedding=[4, 5, 6])
+        avg = Item.select(fn.avg(Item.embedding)).scalar()
+        assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+
+    def test_sum(self):
+        sum = Item.select(fn.sum(Item.embedding)).scalar()
+        assert sum is None
+        Item.create(embedding=[1, 2, 3])
+        Item.create(embedding=[4, 5, 6])
+        sum = Item.select(fn.sum(Item.embedding)).scalar()
+        assert np.array_equal(sum, np.array([5, 7, 9]))
 
     def test_get_or_create(self):
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
