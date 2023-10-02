@@ -142,12 +142,12 @@ class TestDjango:
         assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
 
     def test_sum(self):
-        avg = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
-        assert avg is None
+        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
+        assert sum is None
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
-        avg = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
-        assert np.array_equal(avg, np.array([5, 7, 9]))
+        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
+        assert np.array_equal(sum, np.array([5, 7, 9]))
 
     def test_serialization(self):
         create_items()
