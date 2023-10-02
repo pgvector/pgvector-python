@@ -4,6 +4,7 @@ import pytest
 from sqlalchemy import create_engine, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
 from sqlalchemy.orm import declarative_base, mapped_column, Session
+from sqlalchemy.sql import func
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with engine.connect() as con:
@@ -143,6 +144,24 @@ class TestSqlalchemy:
         with Session(engine) as session:
             items = session.scalars(select(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1))
             assert [v.id for v in items] == [1]
+
+    def test_avg(self):
+        with Session(engine) as session:
+            avg = session.query(func.avg(Item.embedding)).first()[0]
+            assert avg is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            avg = session.query(func.avg(Item.embedding)).first()[0]
+            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+
+    def test_sum(self):
+        with Session(engine) as session:
+            sum = session.query(func.sum(Item.embedding)).first()[0]
+            assert sum is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            sum = session.query(func.sum(Item.embedding)).first()[0]
+            assert np.array_equal(sum, np.array([5, 7, 9]))
 
     def test_select(self):
         with Session(engine) as session:
