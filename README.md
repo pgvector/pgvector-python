@@ -161,6 +161,16 @@ Get items within a certain distance
 session.scalars(select(Item).filter(Item.embedding.l2_distance([3, 1, 2]) < 5))
 ```
 
+Average vectors
+
+```python
+from sqlalchemy.sql import func
+
+session.query(func.avg(Item.embedding)).first()[0]
+```
+
+Also supports `sum`
+
 Add an approximate index
 
 ```python
@@ -351,6 +361,16 @@ Get items within a certain distance
 ```python
 Item.select().where(Item.embedding.l2_distance([3, 1, 2]) < 5)
 ```
+
+Average vectors
+
+```python
+from peewee import fn
+
+Item.select(fn.avg(Item.embedding)).scalar()
+```
+
+Also supports `sum`
 
 Add an approximate index
 
