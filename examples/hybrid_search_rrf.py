@@ -41,7 +41,7 @@ SELECT
 FROM semantic_search
 FULL OUTER JOIN keyword_search ON semantic_search.id = keyword_search.id
 ORDER BY score DESC
-LIMIT 10
+LIMIT 5
 """
 query = 'growling bear'
 embedding = model.encode(query)
