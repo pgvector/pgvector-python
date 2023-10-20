@@ -48,4 +48,5 @@ query = 'growling bear'
 embedding = model.encode(query)
 k = 60
 results = conn.execute(sql, {'query': query, 'embedding': embedding, 'k': k}).fetchall()
-print(results)
+for row in results:
+    print('document:', row[0], 'RRF score:', row[1])
