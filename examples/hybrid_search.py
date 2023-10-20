@@ -20,16 +20,16 @@ async def create_schema(conn):
     await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
     await register_vector_async(conn)
 
-    await conn.execute('DROP TABLE IF EXISTS document')
-    await conn.execute('CREATE TABLE document (id bigserial PRIMARY KEY, content text, embedding vector(384))')
-    await conn.execute("CREATE INDEX ON document USING GIN (to_tsvector('english', content))")
+    await conn.execute('DROP TABLE IF EXISTS documents')
+    await conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))')
+    await conn.execute("CREATE INDEX ON documents USING GIN (to_tsvector('english', content))")
 
 
 async def insert_data(conn):
     model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
     embeddings = model.encode(sentences)
 
-    sql = 'INSERT INTO document (content, embedding) VALUES ' + ', '.join(['(%s, %s)' for _ in embeddings])
+    sql = 'INSERT INTO documents (content, embedding) VALUES ' + ', '.join(['(%s, %s)' for _ in embeddings])
     params = list(itertools.chain(*zip(sentences, embeddings)))
     await conn.execute(sql, params)
 
@@ -39,13 +39,13 @@ async def semantic_search(conn, query):
     embedding = model.encode(query)
 
     async with conn.cursor() as cur:
-        await cur.execute('SELECT id, content FROM document ORDER BY embedding <=> %s LIMIT 5', (embedding,))
+        await cur.execute('SELECT id, content FROM documents ORDER BY embedding <=> %s LIMIT 5', (embedding,))
         return await cur.fetchall()
 
 
 async def keyword_search(conn, query):
     async with conn.cursor() as cur:
-        await cur.execute("SELECT id, content FROM document, plainto_tsquery('english', %s) query WHERE to_tsvector('english', content) @@ query ORDER BY ts_rank_cd(to_tsvector('english', content), query) DESC LIMIT 5", (query,))
+        await cur.execute("SELECT id, content FROM documents, plainto_tsquery('english', %s) query WHERE to_tsvector('english', content) @@ query ORDER BY ts_rank_cd(to_tsvector('english', content), query) DESC LIMIT 5", (query,))
         return await cur.fetchall()
 
 
