@@ -37,7 +37,8 @@ keyword_search AS (
 )
 SELECT
     COALESCE(semantic_search.id, keyword_search.id) AS id,
-    COALESCE(1.0 / (%(k)s + semantic_search.rank), 0.0) + COALESCE(1.0 / (%(k)s + keyword_search.rank), 0.0) AS score
+    COALESCE(1.0 / (%(k)s + semantic_search.rank), 0.0) +
+    COALESCE(1.0 / (%(k)s + keyword_search.rank), 0.0) AS score
 FROM semantic_search
 FULL OUTER JOIN keyword_search ON semantic_search.id = keyword_search.id
 ORDER BY score DESC
