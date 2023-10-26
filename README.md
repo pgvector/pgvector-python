@@ -104,7 +104,7 @@ cur.fetchall()
 
 ## Django
 
-Enable the extension
+Create a migration to enable the extension
 
 ```python
 from pgvector.django import VectorExtension
