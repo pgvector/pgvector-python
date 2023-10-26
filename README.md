@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
     ]
 ```
 
-Add a vector field
+Add a vector field to your model
 
 ```python
 from pgvector.django import VectorField
