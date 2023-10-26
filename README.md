@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Python
 
-Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [asyncpg](https://github.com/MagicStack/asyncpg), and [Peewee](https://github.com/coleifer/peewee)
+Supports [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [asyncpg](https://github.com/MagicStack/asyncpg), and [Peewee](https://github.com/coleifer/peewee)
 
 [![Build Status](https://github.com/pgvector/pgvector-python/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-python/actions)
 
@@ -16,11 +16,11 @@ pip install pgvector
 
 And follow the instructions for your database library:
 
+- [Psycopg 3](#psycopg-3)
+- [Psycopg 2](#psycopg-2)
 - [Django](#django)
 - [SQLAlchemy](#sqlalchemy)
 - [SQLModel](#sqlmodel)
-- [Psycopg 3](#psycopg-3)
-- [Psycopg 2](#psycopg-2)
 - [asyncpg](#asyncpg)
 - [Peewee](#peewee)
 
@@ -33,6 +33,74 @@ Or check out some examples:
 - [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
 - [Recommendations](examples/lightfm_recs.py) with LightFM
+
+## Psycopg 3
+
+Enable the extension
+
+```python
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+```
+
+Register the vector type with your connection
+
+```python
+from pgvector.psycopg import register_vector
+
+register_vector(conn)
+```
+
+For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use
+
+```python
+from pgvector.psycopg import register_vector_async
+
+await register_vector_async(conn)
+```
+
+Insert a vector
+
+```python
+embedding = np.array([1, 2, 3])
+conn.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
+```
+
+Get the nearest neighbors to a vector
+
+```python
+conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
+```
+
+## Psycopg 2
+
+Enable the extension
+
+```python
+cur = conn.cursor()
+cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
+```
+
+Register the vector type with your connection or cursor
+
+```python
+from pgvector.psycopg2 import register_vector
+
+register_vector(conn)
+```
+
+Insert a vector
+
+```python
+embedding = np.array([1, 2, 3])
+cur.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
+```
+
+Get the nearest neighbors to a vector
+
+```python
+cur.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,))
+cur.fetchall()
+```
 
 ## Django
 
@@ -230,74 +298,6 @@ session.exec(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
-
-## Psycopg 3
-
-Enable the extension
-
-```python
-conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-```
-
-Register the vector type with your connection
-
-```python
-from pgvector.psycopg import register_vector
-
-register_vector(conn)
-```
-
-For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use
-
-```python
-from pgvector.psycopg import register_vector_async
-
-await register_vector_async(conn)
-```
-
-Insert a vector
-
-```python
-embedding = np.array([1, 2, 3])
-conn.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
-```
-
-Get the nearest neighbors to a vector
-
-```python
-conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
-```
-
-## Psycopg 2
-
-Enable the extension
-
-```python
-cur = conn.cursor()
-cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
-```
-
-Register the vector type with your connection or cursor
-
-```python
-from pgvector.psycopg2 import register_vector
-
-register_vector(conn)
-```
-
-Insert a vector
-
-```python
-embedding = np.array([1, 2, 3])
-cur.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
-```
-
-Get the nearest neighbors to a vector
-
-```python
-cur.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,))
-cur.fetchall()
-```
 
 ## asyncpg
 
