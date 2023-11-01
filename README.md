@@ -26,14 +26,14 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
-- [Embeddings](examples/openai_embeddings.py) with OpenAI
-- [Sentence embeddings](examples/sentence_embeddings.py) with SentenceTransformers
-- [Hybrid search](examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
-- [Hybrid search](examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
-- [Image search](examples/pytorch_image_search.py) with PyTorch
-- [Implicit feedback recommendations](examples/implicit_recs.py) with Implicit
-- [Explicit feedback recommendations](examples/surprise_recs.py) with Surprise
-- [Recommendations](examples/lightfm_recs.py) with LightFM
+- [Embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/openai_embeddings.py) with OpenAI
+- [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_embeddings.py) with SentenceTransformers
+- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
+- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
+- [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
+- [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
+- [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise_recs.py) with Surprise
+- [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm_recs.py) with LightFM
 
 ## Django
 
