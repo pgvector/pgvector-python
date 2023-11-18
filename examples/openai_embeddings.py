@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -16,8 +16,9 @@ input = [
     'The bear is growling'
 ]
 
-response = openai.Embedding.create(input=input, model='text-embedding-ada-002')
-embeddings = [v['embedding'] for v in response['data']]
+client = OpenAI()
+response = client.embeddings.create(input=input, model='text-embedding-ada-002')
+embeddings = [v.embedding for v in response.data]
 
 for content, embedding in zip(input, embeddings):
     conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
