@@ -6,4 +6,4 @@ psycopg[binary]
 psycopg2-binary
 pytest
 pytest-asyncio
-SQLAlchemy
+SQLAlchemy[asyncio]

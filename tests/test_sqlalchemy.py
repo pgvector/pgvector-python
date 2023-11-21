@@ -3,6 +3,7 @@ from pgvector.sqlalchemy import Vector
 import pytest
 from sqlalchemy import create_engine, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 from sqlalchemy.sql import func
 
@@ -213,3 +214,17 @@ class TestSqlalchemy:
         session.add(item)
         with pytest.raises(StatementError, match='dtype must be numeric'):
             session.commit()
+
+    @pytest.mark.asyncio
+    async def test_async(self):
+        engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                session.add(Item(embedding=[1, 2, 3]))
+                session.add(Item(embedding=[4, 5, 6]))
+                avg = await session.scalars(select(func.avg(Item.embedding)))
+                assert avg.first() == '[2.5,3.5,4.5]'
+
+        await engine.dispose()
