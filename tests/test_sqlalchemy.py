@@ -166,6 +166,15 @@ class TestSqlalchemy:
             avg = session.query(func.avg(Item.embedding)).first()[0]
             assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
 
+    def test_avg_orm(self):
+        with Session(engine) as session:
+            avg = session.scalars(select(func.avg(Item.embedding))).first()
+            assert avg is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            avg = session.scalars(select(func.avg(Item.embedding))).first()
+            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+
     def test_sum(self):
         with Session(engine) as session:
             sum = session.query(func.sum(Item.embedding)).first()[0]
@@ -173,6 +182,15 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             sum = session.query(func.sum(Item.embedding)).first()[0]
+            assert np.array_equal(sum, np.array([5, 7, 9]))
+
+    def test_sum_orm(self):
+        with Session(engine) as session:
+            sum = session.scalars(select(func.sum(Item.embedding))).first()
+            assert sum is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            sum = session.scalars(select(func.sum(Item.embedding))).first()
             assert np.array_equal(sum, np.array([5, 7, 9]))
 
     def test_bad_dimensions(self):
