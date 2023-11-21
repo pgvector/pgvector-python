@@ -173,7 +173,7 @@ Average vectors
 ```python
 from sqlalchemy.sql import func
 
-session.query(func.avg(Item.embedding)).first()[0]
+session.scalars(select(func.avg(Item.embedding))).first()
 ```
 
 Also supports `sum`
