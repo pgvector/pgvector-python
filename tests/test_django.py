@@ -61,7 +61,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='item',
-            index=pgvector.django.IvfflatIndex(fields=['embedding'], lists=1, name='my_index', opclasses=['vector_l2_ops']),
+            index=pgvector.django.IvfflatIndex(fields=['embedding'], lists=1, name='ivfflat_idx', opclasses=['vector_l2_ops']),
+        ),
+        migrations.AddIndex(
+            model_name='item',
+            index=pgvector.django.HnswIndex(fields=['embedding'], m=16, ef_construction=64, name='hnsw_idx', opclasses=['vector_l2_ops']),
         )
     ]
 
