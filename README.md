@@ -259,20 +259,20 @@ await register_vector_async(conn)
 Create a table
 
 ```python
-conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 ```
 
 Insert a vector
 
 ```python
 embedding = np.array([1, 2, 3])
-conn.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
+conn.execute('INSERT INTO items (embedding) VALUES (%s)', (embedding,))
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-conn.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
+conn.execute('SELECT * FROM items ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
 ```
 
 ## Psycopg 2
@@ -295,20 +295,20 @@ register_vector(conn)
 Create a table
 
 ```python
-cur.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+cur.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 ```
 
 Insert a vector
 
 ```python
 embedding = np.array([1, 2, 3])
-cur.execute('INSERT INTO item (embedding) VALUES (%s)', (embedding,))
+cur.execute('INSERT INTO items (embedding) VALUES (%s)', (embedding,))
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-cur.execute('SELECT * FROM item ORDER BY embedding <-> %s LIMIT 5', (embedding,))
+cur.execute('SELECT * FROM items ORDER BY embedding <-> %s LIMIT 5', (embedding,))
 cur.fetchall()
 ```
 
@@ -340,20 +340,20 @@ pool = await asyncpg.create_pool(..., init=init)
 Create a table
 
 ```python
-await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 ```
 
 Insert a vector
 
 ```python
 embedding = np.array([1, 2, 3])
-await conn.execute('INSERT INTO item (embedding) VALUES ($1)', embedding)
+await conn.execute('INSERT INTO items (embedding) VALUES ($1)', embedding)
 ```
 
 Get the nearest neighbors to a vector
 
 ```python
-await conn.fetch('SELECT * FROM item ORDER BY embedding <-> $1 LIMIT 5', embedding)
+await conn.fetch('SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5', embedding)
 ```
 
 ## Peewee

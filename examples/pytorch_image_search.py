@@ -38,14 +38,14 @@ def generate_embeddings(inputs):
 
 # generate, save, and index embeddings
 if seed:
-    conn.execute('DROP TABLE IF EXISTS image')
-    conn.execute('CREATE TABLE image (id bigserial PRIMARY KEY, embedding vector(512))')
+    conn.execute('DROP TABLE IF EXISTS images')
+    conn.execute('CREATE TABLE images (id bigserial PRIMARY KEY, embedding vector(512))')
 
     print('Generating embeddings')
     for data in tqdm(dataloader):
         embeddings = generate_embeddings(data[0])
 
-        sql = 'INSERT INTO image (embedding) VALUES ' + ','.join(['(%s)' for _ in embeddings])
+        sql = 'INSERT INTO images (embedding) VALUES ' + ','.join(['(%s)' for _ in embeddings])
         params = [embedding for embedding in embeddings]
         conn.execute(sql, params)
 
@@ -67,5 +67,5 @@ images = next(iter(queryloader))[0]
 # generate and query embeddings
 embeddings = generate_embeddings(images)
 for image, embedding in zip(images, embeddings):
-    result = conn.execute('SELECT id FROM image ORDER BY embedding <=> %s LIMIT 15', (embedding,)).fetchall()
+    result = conn.execute('SELECT id FROM images ORDER BY embedding <=> %s LIMIT 15', (embedding,)).fetchall()
     show_images([image] + [dataset[row[0] - 1][0] for row in result])

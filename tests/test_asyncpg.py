@@ -10,15 +10,15 @@ class TestAsyncpg:
     async def test_works(self):
         conn = await asyncpg.connect(database='pgvector_python_test')
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-        await conn.execute('DROP TABLE IF EXISTS item')
-        await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+        await conn.execute('DROP TABLE IF EXISTS items')
+        await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 
         await register_vector(conn)
 
         embedding = np.array([1.5, 2, 3])
-        await conn.execute("INSERT INTO item (embedding) VALUES ($1), (NULL)", embedding)
+        await conn.execute("INSERT INTO items (embedding) VALUES ($1), (NULL)", embedding)
 
-        res = await conn.fetch("SELECT * FROM item ORDER BY id")
+        res = await conn.fetch("SELECT * FROM items ORDER BY id")
         assert res[0]['id'] == 1
         assert res[1]['id'] == 2
         assert np.array_equal(res[0]['embedding'], embedding)
@@ -26,7 +26,7 @@ class TestAsyncpg:
         assert res[1]['embedding'] is None
 
         # ensures binary format is correct
-        text_res = await conn.fetch("SELECT embedding::text FROM item ORDER BY id LIMIT 1")
+        text_res = await conn.fetch("SELECT embedding::text FROM items ORDER BY id LIMIT 1")
         assert text_res[0]['embedding'] == '[1.5,2,3]'
 
         await conn.close()
@@ -40,13 +40,13 @@ class TestAsyncpg:
 
         async with pool.acquire() as conn:
             await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-            await conn.execute('DROP TABLE IF EXISTS item')
-            await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+            await conn.execute('DROP TABLE IF EXISTS items')
+            await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 
             embedding = np.array([1.5, 2, 3])
-            await conn.execute("INSERT INTO item (embedding) VALUES ($1), (NULL)", embedding)
+            await conn.execute("INSERT INTO items (embedding) VALUES ($1), (NULL)", embedding)
 
-            res = await conn.fetch("SELECT * FROM item ORDER BY id")
+            res = await conn.fetch("SELECT * FROM items ORDER BY id")
             assert res[0]['id'] == 1
             assert res[1]['id'] == 2
             assert np.array_equal(res[0]['embedding'], embedding)

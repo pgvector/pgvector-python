@@ -6,21 +6,21 @@ import pytest
 conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-conn.execute('DROP TABLE IF EXISTS item')
-conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+conn.execute('DROP TABLE IF EXISTS items')
+conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 
 register_vector(conn)
 
 
 class TestPsycopg:
     def setup_method(self, test_method):
-        conn.execute('DELETE FROM item')
+        conn.execute('DELETE FROM items')
 
     def test_works(self):
         embedding = np.array([1.5, 2, 3])
-        conn.execute('INSERT INTO item (embedding) VALUES (%s), (NULL)', (embedding,))
+        conn.execute('INSERT INTO items (embedding) VALUES (%s), (NULL)', (embedding,))
 
-        res = conn.execute('SELECT * FROM item ORDER BY id').fetchall()
+        res = conn.execute('SELECT * FROM items ORDER BY id').fetchall()
         assert np.array_equal(res[0][1], embedding)
         assert res[0][1].dtype == np.float32
         assert res[1][1] is None
@@ -55,19 +55,19 @@ class TestPsycopg:
     def test_text_copy(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY item (embedding) FROM STDIN") as copy:
+        with cur.copy("COPY items (embedding) FROM STDIN") as copy:
             copy.write_row([embedding])
 
     def test_binary_copy(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY item (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+        with cur.copy("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.write_row([embedding])
 
     def test_binary_copy_set_types(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY item (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+        with cur.copy("COPY items (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.set_types(['int8', 'vector'])
             copy.write_row([1, embedding])
 
@@ -76,16 +76,16 @@ class TestPsycopg:
         conn = await psycopg.AsyncConnection.connect(dbname='pgvector_python_test', autocommit=True)
 
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-        await conn.execute('DROP TABLE IF EXISTS item')
-        await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+        await conn.execute('DROP TABLE IF EXISTS items')
+        await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 
         await register_vector_async(conn)
 
         embedding = np.array([1.5, 2, 3])
-        await conn.execute('INSERT INTO item (embedding) VALUES (%s), (NULL)', (embedding,))
+        await conn.execute('INSERT INTO items (embedding) VALUES (%s), (NULL)', (embedding,))
 
         async with conn.cursor() as cur:
-            await cur.execute('SELECT * FROM item ORDER BY id')
+            await cur.execute('SELECT * FROM items ORDER BY id')
             res = await cur.fetchall()
             assert np.array_equal(res[0][1], embedding)
             assert res[0][1].dtype == np.float32
