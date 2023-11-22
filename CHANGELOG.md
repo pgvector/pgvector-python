@@ -1,3 +1,7 @@
+## 0.2.4 (unreleased)
+
+- Improved reflection with SQLAlchemy
+
 ## 0.2.3 (2023-09-25)
 
 - Fixed null values with Django
