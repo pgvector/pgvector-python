@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector.sqlalchemy import Vector
 import pytest
-from sqlalchemy import create_engine, select, text, MetaData, Table, Column, Index, Integer
+from sqlalchemy import create_engine, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, mapped_column, Session
@@ -214,6 +214,10 @@ class TestSqlalchemy:
         session.add(item)
         with pytest.raises(StatementError, match='dtype must be numeric'):
             session.commit()
+
+    def test_inspect(self):
+        columns = inspect(engine).get_columns('orm_item')
+        assert isinstance(columns[1]['type'], Vector)
 
     @pytest.mark.asyncio
     async def test_async(self):
