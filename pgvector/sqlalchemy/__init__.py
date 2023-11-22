@@ -1,6 +1,7 @@
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.types import UserDefinedType, Float
 from ..utils import from_db, to_db
-from sqlalchemy.dialects import postgresql
+
 __all__ = ['Vector']
 
 
@@ -35,6 +36,7 @@ class Vector(UserDefinedType):
 
         def cosine_distance(self, other):
             return self.op('<=>', return_type=Float)(other)
+
 
 # Register Vector type to PostgreSQL's reflection subsystem
 postgresql.base.ischema_names['vector'] = Vector
