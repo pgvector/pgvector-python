@@ -7,7 +7,7 @@ conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 conn.execute('DROP TABLE IF EXISTS item')
-conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 
 register_vector(conn)
 
@@ -77,7 +77,7 @@ class TestPsycopg:
 
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
         await conn.execute('DROP TABLE IF EXISTS item')
-        await conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+        await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 
         await register_vector_async(conn)
 

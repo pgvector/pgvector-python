@@ -8,7 +8,7 @@ conn.autocommit = True
 cur = conn.cursor()
 cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 cur.execute('DROP TABLE IF EXISTS item')
-cur.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+cur.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 
 register_vector(cur)
 

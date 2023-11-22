@@ -11,7 +11,7 @@ class TestAsyncpg:
         conn = await asyncpg.connect(database='pgvector_python_test')
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
         await conn.execute('DROP TABLE IF EXISTS item')
-        await conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+        await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 
         await register_vector(conn)
 
@@ -41,7 +41,7 @@ class TestAsyncpg:
         async with pool.acquire() as conn:
             await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
             await conn.execute('DROP TABLE IF EXISTS item')
-            await conn.execute('CREATE TABLE item (id bigserial primary key, embedding vector(3))')
+            await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 
             embedding = np.array([1.5, 2, 3])
             await conn.execute("INSERT INTO item (embedding) VALUES ($1), (NULL)", embedding)

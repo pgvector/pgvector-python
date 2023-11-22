@@ -256,6 +256,12 @@ from pgvector.psycopg import register_vector_async
 await register_vector_async(conn)
 ```
 
+Create a table
+
+```python
+conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
+```
+
 Insert a vector
 
 ```python
@@ -284,6 +290,12 @@ Register the vector type with your connection or cursor
 from pgvector.psycopg2 import register_vector
 
 register_vector(conn)
+```
+
+Create a table
+
+```python
+cur.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 ```
 
 Insert a vector
@@ -323,6 +335,12 @@ async def init(conn):
     await register_vector(conn)
 
 pool = await asyncpg.create_pool(..., init=init)
+```
+
+Create a table
+
+```python
+await conn.execute('CREATE TABLE item (id bigserial PRIMARY KEY, embedding vector(3))')
 ```
 
 Insert a vector
