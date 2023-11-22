@@ -203,7 +203,7 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 Enable the extension
 
 ```python
-session.exec('CREATE EXTENSION IF NOT EXISTS vector')
+session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))
 ```
 
 Add a vector column
