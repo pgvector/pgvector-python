@@ -37,4 +37,4 @@ class Vector(UserDefinedType):
             return self.op('<=>', return_type=Float)(other)
 
 # Register Vector type to PostgreSQL's reflection subsystem
-postgresql.base.ischema_names['VECTOR'] = Vector
+postgresql.base.ischema_names['vector'] = Vector
