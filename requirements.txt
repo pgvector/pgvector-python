@@ -6,4 +6,5 @@ psycopg[binary]
 psycopg2-binary
 pytest
 pytest-asyncio
-SQLAlchemy[asyncio]
+SQLAlchemy[asyncio]>=2
+sqlmodel>=0.0.12
