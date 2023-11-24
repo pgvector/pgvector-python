@@ -1,4 +1,4 @@
-from sqlalchemy.dialects import postgresql
+from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float
 from ..utils import from_db, to_db
 
@@ -38,5 +38,5 @@ class Vector(UserDefinedType):
             return self.op('<=>', return_type=Float)(other)
 
 
-# Register Vector type to PostgreSQL's reflection subsystem
-postgresql.base.ischema_names['vector'] = Vector
+# for reflection
+ischema_names['vector'] = Vector
