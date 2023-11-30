@@ -34,6 +34,7 @@ Or check out some examples:
 - [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise_recs.py) with Surprise
 - [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm_recs.py) with LightFM
+- [Horizontal scaling](https://github.com/pgvector/pgvector-python/blob/master/examples/citus.py) with Citus
 
 ## Django
 
