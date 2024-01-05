@@ -1,3 +1,6 @@
+# RRF stands for "Reciprocal Rank Fusion"
+# Source: Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods
+# Link: https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf
 from pgvector.psycopg import register_vector
 import psycopg
 from sentence_transformers import SentenceTransformer
