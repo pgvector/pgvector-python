@@ -22,6 +22,10 @@ class Vector(UserDefinedType):
             return to_db(value, self.dim)
         return process
 
+    def literal_processor(self, dialect):
+        # Allows compiling with the literal_binds flag
+        return self.bind_processor()
+
     def result_processor(self, dialect, coltype):
         def process(value):
             return from_db(value)
