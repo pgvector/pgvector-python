@@ -220,7 +220,7 @@ class TestSqlalchemy:
         assert isinstance(columns[1]['type'], Vector)
 
     def test_literal_binds(self):
-        sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(compile_kwargs={'literal_binds': True})
+        sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(engine, compile_kwargs={'literal_binds': True})
         assert "embedding <-> '[1.0,2.0,3.0]'" in str(sql)
 
     @pytest.mark.asyncio
