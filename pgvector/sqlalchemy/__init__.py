@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
-from sqlalchemy.types import UserDefinedType, Float
+from sqlalchemy.types import UserDefinedType, Float, String
 from ..utils import from_db, to_db
 
 __all__ = ['Vector']
@@ -7,6 +7,7 @@ __all__ = ['Vector']
 
 class Vector(UserDefinedType):
     cache_ok = True
+    _string = String()
 
     def __init__(self, dim=None):
         super(UserDefinedType, self).__init__()
@@ -20,6 +21,12 @@ class Vector(UserDefinedType):
     def bind_processor(self, dialect):
         def process(value):
             return to_db(value, self.dim)
+        return process
+
+    def literal_processor(self, dialect):
+        string_literal_processor = self._string._cached_literal_processor(dialect)
+        def process(value):
+            return string_literal_processor(to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):

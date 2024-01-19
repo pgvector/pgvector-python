@@ -219,6 +219,10 @@ class TestSqlalchemy:
         columns = inspect(engine).get_columns('orm_item')
         assert isinstance(columns[1]['type'], Vector)
 
+    def test_literal_binds(self):
+        sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(compile_kwargs={'literal_binds': True})
+        assert "embedding <-> '[1.0,2.0,3.0]'" in str(sql)
+
     @pytest.mark.asyncio
     async def test_async(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')

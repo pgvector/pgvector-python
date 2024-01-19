@@ -1,3 +1,7 @@
+## 0.2.5 (unreleased)
+
+- Added literal binds support for SQLAlchemy
+
 ## 0.2.4 (2023-11-24)
 
 - Improved reflection with SQLAlchemy
