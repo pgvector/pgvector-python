@@ -17,7 +17,7 @@ input = [
 ]
 
 client = OpenAI()
-response = client.embeddings.create(input=input, model='text-embedding-ada-002')
+response = client.embeddings.create(input=input, model='text-embedding-3-small')
 embeddings = [v.embedding for v in response.data]
 
 for content, embedding in zip(input, embeddings):
