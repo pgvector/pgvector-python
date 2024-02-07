@@ -25,6 +25,7 @@ class Vector(UserDefinedType):
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
+
         def process(value):
             return string_literal_processor(to_db(value, self.dim))
         return process
