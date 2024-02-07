@@ -1,4 +1,4 @@
-## 0.2.5 (unreleased)
+## 0.2.5 (2024-02-07)
 
 - Added literal binds support for SQLAlchemy
 
