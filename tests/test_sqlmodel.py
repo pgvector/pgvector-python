@@ -100,8 +100,8 @@ class TestSqlmodel:
     def test_select(self):
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
-            item = session.exec(select(Item.embedding.l2_distance([1, 1, 1]))).all()
-            assert item[0] == 3
+            items = session.exec(select(Item.embedding.l2_distance([1, 1, 1]))).all()
+            assert items[0] == 3
 
     def test_avg(self):
         with Session(engine) as session:
