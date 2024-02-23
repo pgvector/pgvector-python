@@ -25,6 +25,15 @@ class Item(Base):
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
+index = Index(
+    'orm_index',
+    Item.embedding,
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+index.create(engine)
+
 
 def create_items():
     vectors = [

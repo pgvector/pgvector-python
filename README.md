@@ -182,13 +182,17 @@ Also supports `sum`
 Add an approximate index
 
 ```python
-index = Index('my_index', Item.embedding,
+index = Index(
+    'my_index',
+    Item.embedding,
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'vector_l2_ops'}
 )
 # or
-index = Index('my_index', Item.embedding,
+index = Index(
+    'my_index',
+    Item.embedding,
     postgresql_using='ivfflat',
     postgresql_with={'lists': 100},
     postgresql_ops={'embedding': 'vector_l2_ops'}
@@ -254,6 +258,32 @@ session.exec(select(func.avg(Item.embedding))).first()
 ```
 
 Also supports `sum`
+
+Add an approximate index
+
+```python
+from sqlalchemy import Index
+
+index = Index(
+    'my_index',
+    Item.embedding,
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+# or
+index = Index(
+    'my_index',
+    Item.embedding,
+    postgresql_using='ivfflat',
+    postgresql_with={'lists': 100},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+
+index.create(engine)
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Psycopg 3
 

@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector.sqlalchemy import Vector
 import pytest
-from sqlalchemy import Column
+from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
 from sqlalchemy.sql import func
 from sqlmodel import Field, Session, SQLModel, create_engine, delete, select, text
@@ -21,6 +21,15 @@ class Item(SQLModel, table=True):
 
 SQLModel.metadata.drop_all(engine)
 SQLModel.metadata.create_all(engine)
+
+index = Index(
+    'sqlmodel_index',
+    Item.embedding,
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+index.create(engine)
 
 
 def create_items():
