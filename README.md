@@ -298,6 +298,16 @@ Get the nearest neighbors to a vector
 conn.execute('SELECT * FROM items ORDER BY embedding <-> %s LIMIT 5', (embedding,)).fetchall()
 ```
 
+Add an approximate index
+
+```python
+conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
+# or
+conn.execute('CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)')
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
 ## Psycopg 2
 
 Enable the extension
@@ -334,6 +344,16 @@ Get the nearest neighbors to a vector
 cur.execute('SELECT * FROM items ORDER BY embedding <-> %s LIMIT 5', (embedding,))
 cur.fetchall()
 ```
+
+Add an approximate index
+
+```python
+cur.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
+# or
+cur.execute('CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)')
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## asyncpg
 
@@ -378,6 +398,16 @@ Get the nearest neighbors to a vector
 ```python
 await conn.fetch('SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5', embedding)
 ```
+
+Add an approximate index
+
+```python
+await conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
+# or
+await conn.execute('CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)')
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Peewee
 
