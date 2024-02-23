@@ -233,6 +233,28 @@ session.exec(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(
 
 Also supports `max_inner_product` and `cosine_distance`
 
+Get the distance
+
+```python
+session.exec(select(Item.embedding.l2_distance([3, 1, 2])))
+```
+
+Get items within a certain distance
+
+```python
+session.exec(select(Item).filter(Item.embedding.l2_distance([3, 1, 2]) < 5))
+```
+
+Average vectors
+
+```python
+from sqlalchemy.sql import func
+
+session.exec(select(func.avg(Item.embedding))).first()
+```
+
+Also supports `sum`
+
 ## Psycopg 3
 
 Enable the extension

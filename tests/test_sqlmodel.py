@@ -3,6 +3,7 @@ from pgvector.sqlalchemy import Vector
 import pytest
 from sqlalchemy import Column
 from sqlalchemy.exc import StatementError
+from sqlalchemy.sql import func
 from sqlmodel import Field, Session, SQLModel, create_engine, delete, select, text
 from typing import List, Optional
 
@@ -80,6 +81,36 @@ class TestSqlmodel:
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
+
+    def test_filter(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1))
+            assert [v.id for v in items] == [1]
+
+    def test_select(self):
+        with Session(engine) as session:
+            session.add(Item(embedding=[2, 3, 3]))
+            item = session.exec(select(Item.embedding.l2_distance([1, 1, 1]))).all()
+            assert item[0] == 3
+
+    def test_avg(self):
+        with Session(engine) as session:
+            avg = session.exec(select(func.avg(Item.embedding))).first()
+            assert avg is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            avg = session.exec(select(func.avg(Item.embedding))).first()
+            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+
+    def test_sum(self):
+        with Session(engine) as session:
+            sum = session.exec(select(func.sum(Item.embedding))).first()
+            assert sum is None
+            session.add(Item(embedding=[1, 2, 3]))
+            session.add(Item(embedding=[4, 5, 6]))
+            sum = session.exec(select(func.sum(Item.embedding))).first()
+            assert np.array_equal(sum, np.array([5, 7, 9]))
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])
