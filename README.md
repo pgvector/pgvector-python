@@ -138,6 +138,8 @@ Add a vector column
 from pgvector.sqlalchemy import Vector
 
 class Item(Base):
+    __tablename__ = "items"
+    id: Mapped[int] = mapped_column(primary_key=True)
     embedding = mapped_column(Vector(3))
 ```
 
