@@ -35,6 +35,7 @@ Or check out some examples:
 - [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise_recs.py) with Surprise
 - [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm_recs.py) with LightFM
 - [Horizontal scaling](https://github.com/pgvector/pgvector-python/blob/master/examples/citus.py) with Citus
+- [Bulk loading](https://github.com/pgvector/pgvector-python/blob/master/examples/bulk_loading.py) with `COPY`
 
 ## Django
 
