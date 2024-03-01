@@ -25,6 +25,8 @@ for batch in np.array_split(embeddings, batches):
     print('.', end='', flush=True)
 
     with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
+        # use set_types for binary copy
+        # https://www.psycopg.org/psycopg3/docs/basic/copy.html#binary-copy
         copy.set_types(['vector'])
 
         for embedding in batch:
