@@ -16,11 +16,10 @@ register_vector(conn)
 conn.execute('DROP TABLE IF EXISTS items')
 conn.execute(f'CREATE TABLE items (id bigserial, embedding vector({dimensions}))')
 
-# load data in batches
+# load data
+print(f'Loading {len(embeddings)} rows')
 cur = conn.cursor()
-batches = len(embeddings) // 10000
-print(f'Loading {len(embeddings)} rows over {batches} batches')
-for batch in np.array_split(embeddings, batches):
+for batch in np.array_split(embeddings, len(embeddings) // 10000):
     # show progress
     print('.', end='', flush=True)
 
