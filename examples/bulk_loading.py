@@ -19,17 +19,21 @@ conn.execute(f'CREATE TABLE items (id bigserial, embedding vector({dimensions}))
 # load data
 print(f'Loading {len(embeddings)} rows')
 cur = conn.cursor()
-for batch in np.array_split(embeddings, len(embeddings) // 10000):
-    # show progress
-    print('.', end='', flush=True)
+with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
+    # use set_types for binary copy
+    # https://www.psycopg.org/psycopg3/docs/basic/copy.html#binary-copy
+    copy.set_types(['vector'])
 
-    with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
-        # use set_types for binary copy
-        # https://www.psycopg.org/psycopg3/docs/basic/copy.html#binary-copy
-        copy.set_types(['vector'])
+    for i, embedding in enumerate(embeddings):
+        # show progress
+        if i % 10000 == 0:
+            print('.', end='', flush=True)
 
-        for embedding in batch:
-            copy.write_row([embedding])
+        copy.write_row([embedding])
+
+        # flush data
+        while conn.pgconn.flush() == 1:
+            pass
 
 print('\nSuccess!')
 
