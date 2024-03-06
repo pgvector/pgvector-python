@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector.sqlalchemy import Vector
 import pytest
-from sqlalchemy import create_engine, inspect, select, text, MetaData, Table, Column, Index, Integer
+from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, mapped_column, Session
@@ -231,6 +231,12 @@ class TestSqlalchemy:
     def test_literal_binds(self):
         sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(engine, compile_kwargs={'literal_binds': True})
         assert "embedding <-> '[1.0,2.0,3.0]'" in str(sql)
+
+    def test_insert(self):
+        session.execute(insert(Item).values(embedding=np.array([1, 2, 3])))
+
+    def test_insert_bulk(self):
+        session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
 
     @pytest.mark.asyncio
     async def test_async(self):
