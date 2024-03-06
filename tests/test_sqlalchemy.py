@@ -238,6 +238,9 @@ class TestSqlalchemy:
     def test_insert_bulk(self):
         session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
 
+    def test_insert_text(self):
+        session.execute(text('INSERT INTO orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
+
     @pytest.mark.asyncio
     async def test_async(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
