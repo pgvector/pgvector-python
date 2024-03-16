@@ -38,10 +38,11 @@ with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
 print('\nSuccess!')
 
 # create any indexes *after* loading initial data (skipping for this example)
-# print('Creating index')
-# conn.execute("SET maintenance_work_mem = '8GB'")
-# conn.execute("SET max_parallel_maintenance_workers = 7")
-# conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)')
+if False:
+    print('Creating index')
+    conn.execute("SET maintenance_work_mem = '8GB'")
+    conn.execute('SET max_parallel_maintenance_workers = 7')
+    conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)')
 
 # update planner statistics for good measure
 conn.execute('ANALYZE items')
