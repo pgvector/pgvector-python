@@ -40,6 +40,9 @@ with conn.cursor().copy('COPY items (embedding, category_id) FROM STDIN WITH (FO
     for i in range(rows):
         copy.write_row([embeddings[i], categories[i]])
 
+        while conn.pgconn.flush() == 1:
+            pass
+
 print('Creating index in parallel')
 conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
 
