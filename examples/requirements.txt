@@ -1,6 +1,8 @@
+datasets
 imagehash
 implicit
 lightfm
+matplotlib
 openai
 torch
 torchvision
