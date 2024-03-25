@@ -109,6 +109,7 @@ class TestDjango:
         assert item.id == 1
         assert np.array_equal(item.embedding, np.array([1, 2, 3]))
         assert item.embedding.dtype == np.float32
+        item.save()
 
     def test_l2_distance(self):
         create_items()
