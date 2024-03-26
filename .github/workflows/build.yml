@@ -9,7 +9,7 @@ jobs:
         python: [3.12, 3.8]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - run: pip install -r requirements.txt
@@ -19,7 +19,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.6.0 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.6.2 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
