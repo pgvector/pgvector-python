@@ -15,8 +15,8 @@ class Vector(UserDefinedType):
 
     def get_col_spec(self, **kw):
         if self.dim is None:
-            return "VECTOR"
-        return "VECTOR(%d)" % self.dim
+            return 'VECTOR'
+        return 'VECTOR(%d)' % self.dim
 
     def bind_processor(self, dialect):
         def process(value):
