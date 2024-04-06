@@ -1,5 +1,5 @@
 import numpy as np
-from struct import pack, unpack
+from struct import pack, unpack_from
 
 
 def from_db(value):
@@ -14,7 +14,7 @@ def from_db_binary(value):
     if value is None:
         return value
 
-    (dim, unused) = unpack('>HH', value[:4])
+    dim, unused = unpack_from('>HH', value)
     return np.frombuffer(value, dtype='>f', count=dim, offset=4).astype(dtype=np.float32)
 
 
