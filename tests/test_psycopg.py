@@ -71,6 +71,10 @@ class TestPsycopg:
             copy.set_types(['int8', 'vector'])
             copy.write_row([1, embedding])
 
+    def test_bit(self):
+        res = conn.execute('SELECT %s::bit(3)', ('101',)).fetchone()[0]
+        assert res == '101'
+
     @pytest.mark.asyncio
     async def test_async(self):
         conn = await psycopg.AsyncConnection.connect(dbname='pgvector_python_test', autocommit=True)
