@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg import register_vector, register_vector_async
+from pgvector.psycopg import register_vector, register_vector_async, HalfVec, SparseVec
 import psycopg
 import pytest
 
@@ -27,7 +27,7 @@ class TestPsycopg:
 
     def test_binary_format(self):
         embedding = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
+        res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
         assert np.array_equal(res, embedding)
 
     def test_text_format(self):
@@ -70,6 +70,45 @@ class TestPsycopg:
         with cur.copy("COPY items (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.set_types(['int8', 'vector'])
             copy.write_row([1, embedding])
+
+    def test_halfvec(self):
+        conn.execute('DROP TABLE IF EXISTS half_items')
+        conn.execute('CREATE TABLE half_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
+
+        embedding = HalfVec([1.5, 2, 3])
+        conn.execute('INSERT INTO half_items (embedding) VALUES (%s)', (embedding,))
+
+        res = conn.execute('SELECT * FROM half_items ORDER BY id').fetchall()
+
+    def test_halfvec_binary_format(self):
+        embedding = HalfVec([1.5, 2, 3])
+        res = conn.execute('SELECT %b::halfvec', (embedding,), binary=True).fetchone()[0]
+        assert res.to_list() == [1.5, 2, 3]
+
+    def test_halfvec_text_format(self):
+        embedding = HalfVec([1.5, 2, 3])
+        res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
+        assert res.to_list() == [1.5, 2, 3]
+
+    def test_sparsevec(self):
+        conn.execute('DROP TABLE IF EXISTS sparse_items')
+        conn.execute('CREATE TABLE sparse_items (id bigserial PRIMARY KEY, embedding sparsevec(6))')
+
+        embedding = SparseVec.from_dense([0, 1.5, 0, 2, 0, 3])
+        conn.execute('INSERT INTO sparse_items (embedding) VALUES (%s)', (embedding,))
+
+        res = conn.execute('SELECT * FROM sparse_items ORDER BY id').fetchall()
+        assert res[0][1].to_dense() == [0, 1.5, 0, 2, 0, 3]
+
+    def test_sparsevec_binary_format(self):
+        embedding = SparseVec.from_dense([1.5, 2, 3])
+        res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
+        assert res.to_dense() == [1.5, 2, 3]
+
+    def test_sparsevec_text_format(self):
+        embedding = SparseVec.from_dense([1.5, 2, 3])
+        res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
+        assert res.to_dense() == [1.5, 2, 3]
 
     def test_bit(self):
         res = conn.execute('SELECT %s::bit(3)', ('101',)).fetchone()[0]

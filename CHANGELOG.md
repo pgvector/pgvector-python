@@ -1,3 +1,7 @@
+## 0.2.6 (unreleased)
+
+- Added support for `halfvec` and `sparsevec` types to Psycopg 3
+
 ## 0.2.5 (2024-02-07)
 
 - Added literal binds support for SQLAlchemy
