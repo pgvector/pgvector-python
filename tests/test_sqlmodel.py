@@ -5,7 +5,7 @@ from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
 from sqlalchemy.sql import func
 from sqlmodel import Field, Session, SQLModel, create_engine, delete, select, text
-from typing import List, Optional
+from typing import Any, Optional
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
@@ -16,9 +16,9 @@ class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Vector(3)))
-    half_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Halfvec(3)))
-    sparse_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(Sparsevec(3)))
+    embedding: Optional[Any] = Field(default=None, sa_column=Column(Vector(3)))
+    half_embedding: Optional[Any] = Field(default=None, sa_column=Column(Halfvec(3)))
+    sparse_embedding: Optional[Any] = Field(default=None, sa_column=Column(Sparsevec(3)))
 
 
 SQLModel.metadata.drop_all(engine)

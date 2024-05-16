@@ -1,5 +1,5 @@
 from django.db.models import FloatField, Func, Value
-from ..utils import Vector
+from ..utils import Vector, HalfVec, SparseVec
 
 
 class DistanceBase(Func):
@@ -7,7 +7,12 @@ class DistanceBase(Func):
 
     def __init__(self, expression, vector, **extra):
         if not hasattr(vector, 'resolve_expression'):
-            vector = Value(Vector.to_db(vector))
+            if isinstance(vector, HalfVec):
+                vector = Value(HalfVec.to_db(vector))
+            elif isinstance(vector, SparseVec):
+                vector = Value(SparseVec.to_db(vector))
+            else:
+                vector = Value(Vector.to_db(vector))
         super().__init__(expression, vector, **extra)
 
 
