@@ -29,3 +29,6 @@ class VectorField(Field):
 
     def cosine_distance(self, vector):
         return self._distance('<=>', vector)
+
+    def l1_distance(self, vector):
+        return self._distance('<+>', vector)

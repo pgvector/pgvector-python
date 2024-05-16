@@ -64,6 +64,13 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
+    def test_l1_distance(self):
+        create_items()
+        distance = Item.embedding.l1_distance([1, 1, 1])
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, 3]
+
     def test_where(self):
         create_items()
         items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)
