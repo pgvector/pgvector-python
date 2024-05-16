@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Sparsevec, SparseVec
+from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVec
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -21,6 +21,7 @@ class Item(Base):
     id = mapped_column(Integer, primary_key=True)
     embedding = mapped_column(Vector(3))
     half_embedding = mapped_column(Halfvec(3))
+    binary_embedding = mapped_column(Bit(3))
     sparse_embedding = mapped_column(Sparsevec(3))
 
 
@@ -62,7 +63,10 @@ class TestSqlalchemy:
             'core_item',
             metadata,
             Column('id', Integer, primary_key=True),
-            Column('embedding', Vector(3))
+            Column('embedding', Vector(3)),
+            Column('half_embedding', Halfvec(3)),
+            Column('binary_embedding', Bit(3)),
+            Column('sparse_embedding', Sparsevec(3))
         )
 
         metadata.drop_all(engine)
@@ -156,6 +160,26 @@ class TestSqlalchemy:
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
+
+    def test_bit_hamming_distance(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='000'))
+        session.add(Item(id=2, binary_embedding='101'))
+        session.add(Item(id=3, binary_embedding='111'))
+        session.commit()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.binary_embedding.hamming_distance('101')).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='000'))
+        session.add(Item(id=2, binary_embedding='101'))
+        session.add(Item(id=3, binary_embedding='111'))
+        session.commit()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.binary_embedding.jaccard_distance('101')).all()
+            assert [v.id for v in items] == [2, 3, 1]
 
     def test_filter(self):
         create_items()
