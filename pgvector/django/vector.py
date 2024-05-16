@@ -1,6 +1,6 @@
+from django import forms
 from django.db.models import Field
 import numpy as np
-from .forms import VectorFormField
 from ..utils import Vector
 
 
@@ -50,3 +50,19 @@ class VectorField(Field):
 
     def formfield(self, **kwargs):
         return super().formfield(form_class=VectorFormField, **kwargs)
+
+
+class VectorWidget(forms.TextInput):
+    def format_value(self, value):
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+        return super().format_value(value)
+
+
+class VectorFormField(forms.CharField):
+    widget = VectorWidget
+
+    def has_changed(self, initial, data):
+        if isinstance(initial, np.ndarray):
+            initial = initial.tolist()
+        return super().has_changed(initial, data)
