@@ -19,9 +19,13 @@ class SparseVec:
             vec[i] = v
         return vec
 
-    def to_db(value):
+    def to_db(value, dim=None):
         if value is None:
             return value
+
+        if dim is not None and value.dim != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
+
         return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value.indices, value.values)]) + '}/' + str(value.dim)
 
     def to_db_binary(value):

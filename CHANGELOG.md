@@ -1,7 +1,7 @@
-## 0.2.6 (unreleased)
+## 0.3.0 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types to Django
-- Added support for `halfvec` type to SQLAlchemy and SQLModel
+- Added support for `halfvec` and `sparsevec` types to SQLAlchemy and SQLModel
 - Added support for `halfvec` and `sparsevec` types to Psycopg 3
 - Added support for `halfvec` and `sparsevec` types to Psycopg 2
 - Added support for `halfvec` and `sparsevec` types to asyncpg
