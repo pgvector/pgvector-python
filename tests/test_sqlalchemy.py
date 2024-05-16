@@ -119,6 +119,18 @@ class TestSqlalchemy:
             items = session.scalars(select(Item).order_by(Item.embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.embedding.l1_distance([1, 1, 2])).all()
+            assert [v.id for v in items] == [3, 1, 2]
+
+    def test_l1_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 2])))
+            assert [v.id for v in items] == [3, 1, 2]
+
     def test_max_inner_product(self):
         create_items()
         with Session(engine) as session:

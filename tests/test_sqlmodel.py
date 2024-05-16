@@ -79,6 +79,12 @@ class TestSqlmodel:
             items = session.exec(select(Item).order_by(Item.embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
     def test_max_inner_product(self):
         create_items()
         with Session(engine) as session:
