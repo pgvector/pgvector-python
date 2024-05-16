@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import Vector, Halfvec
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -20,6 +20,7 @@ class Item(Base):
 
     id = mapped_column(Integer, primary_key=True)
     embedding = mapped_column(Vector(3))
+    half_embedding = mapped_column(Halfvec(3))
 
 
 Base.metadata.drop_all(engine)
@@ -43,7 +44,7 @@ def create_items():
     ]
     session = Session(engine)
     for i, v in enumerate(vectors):
-        session.add(Item(id=i + 1, embedding=v))
+        session.add(Item(id=i + 1, embedding=v, half_embedding=v))
     session.commit()
 
 
