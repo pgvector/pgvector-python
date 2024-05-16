@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance
+from pgvector.django import VectorExtension, VectorField, HalfvecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance
 from unittest import mock
 
 settings.configure(
@@ -23,7 +23,8 @@ django.setup()
 
 
 class Item(models.Model):
-    embedding = VectorField(dimensions=3)
+    embedding = VectorField(dimensions=3, null=True, blank=True)
+    half_embedding = HalfvecField(dimensions=3, null=True, blank=True)
 
     class Meta:
         app_label = 'myapp'
@@ -56,7 +57,8 @@ class Migration(migrations.Migration):
             name='Item',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('embedding', pgvector.django.VectorField(dimensions=3, null=True)),
+                ('embedding', pgvector.django.VectorField(dimensions=3, null=True, blank=True)),
+                ('half_embedding', pgvector.django.HalfvecField(dimensions=3, null=True, blank=True)),
             ],
         ),
         migrations.AddIndex(
@@ -102,13 +104,20 @@ class TestDjango:
     def setup_method(self, test_method):
         Item.objects.all().delete()
 
-    def test_works(self):
+    def test_vector(self):
         item = Item(id=1, embedding=[1, 2, 3])
         item.save()
         item = Item.objects.get(pk=1)
         assert item.id == 1
         assert np.array_equal(item.embedding, np.array([1, 2, 3]))
         assert item.embedding.dtype == np.float32
+
+    def test_halfvec(self):
+        item = Item(id=1, half_embedding=[1, 2, 3])
+        item.save()
+        item = Item.objects.get(pk=1)
+        assert item.id == 1
+        assert item.half_embedding.to_list() == [1, 2, 3]
 
     def test_l2_distance(self):
         create_items()
