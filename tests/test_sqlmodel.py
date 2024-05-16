@@ -5,7 +5,7 @@ from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
 from sqlalchemy.sql import func
 from sqlmodel import Field, Session, SQLModel, create_engine, delete, select, text
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
