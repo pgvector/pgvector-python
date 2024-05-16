@@ -71,4 +71,3 @@ class VectorFormField(forms.CharField):
         if isinstance(value, str) and value == '':
             return None
         return super().to_python(value)
-
