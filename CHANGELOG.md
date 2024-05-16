@@ -37,8 +37,8 @@
 
 ## 0.1.7 (2023-05-11)
 
-- Added `register_vector_async` for psycopg3
-- Fixed `set_types` for psycopg3
+- Added `register_vector_async` for Psycopg 3
+- Fixed `set_types` for Psycopg 3
 
 ## 0.1.6 (2022-05-22)
 
@@ -51,12 +51,12 @@
 
 ## 0.1.4 (2021-10-12)
 
-- Updated psycopg3 integration for 3.0 release (no longer experimental)
+- Updated Psycopg 3 integration for 3.0 release (no longer experimental)
 
 ## 0.1.3 (2021-06-22)
 
 - Added support for asyncpg
-- Added experimental support for psycopg3
+- Added experimental support for Psycopg 3
 
 ## 0.1.2 (2021-06-13)
 
