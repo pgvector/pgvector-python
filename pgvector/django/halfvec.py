@@ -4,7 +4,7 @@ from ..utils import HalfVec
 
 # https://docs.djangoproject.com/en/4.2/howto/custom-model-fields/
 class HalfvecField(Field):
-    description = 'Halfvec'
+    description = 'Half vector'
     empty_strings_allowed = False
 
     def __init__(self, *args, dimensions=None, **kwargs):
