@@ -16,6 +16,15 @@ class DistanceBase(Func):
         super().__init__(expression, vector, **extra)
 
 
+class BitDistanceBase(Func):
+    output_field = FloatField()
+
+    def __init__(self, expression, vector, **extra):
+        if not hasattr(vector, 'resolve_expression'):
+            vector = Value(vector)
+        super().__init__(expression, vector, **extra)
+
+
 class L2Distance(DistanceBase):
     function = ''
     arg_joiner = ' <-> '
@@ -34,3 +43,13 @@ class CosineDistance(DistanceBase):
 class L1Distance(DistanceBase):
     function = ''
     arg_joiner = ' <+> '
+
+
+class HammingDistance(BitDistanceBase):
+    function = ''
+    arg_joiner = ' <~> '
+
+
+class JaccardDistance(BitDistanceBase):
+    function = ''
+    arg_joiner = ' <%%> '

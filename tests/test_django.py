@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, HalfvecField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HalfVec, SparseVec
+from pgvector.django import VectorExtension, VectorField, HalfvecField, BitField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance, HalfVec, SparseVec
 from unittest import mock
 
 settings.configure(
@@ -25,6 +25,7 @@ django.setup()
 class Item(models.Model):
     embedding = VectorField(dimensions=3, null=True, blank=True)
     half_embedding = HalfvecField(dimensions=3, null=True, blank=True)
+    binary_embedding = BitField(length=3, null=True, blank=True)
     sparse_embedding = SparsevecField(dimensions=3, null=True, blank=True)
 
     class Meta:
@@ -60,6 +61,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('embedding', pgvector.django.VectorField(dimensions=3, null=True, blank=True)),
                 ('half_embedding', pgvector.django.HalfvecField(dimensions=3, null=True, blank=True)),
+                ('binary_embedding', pgvector.django.BitField(length=3, null=True, blank=True)),
                 ('sparse_embedding', pgvector.django.SparsevecField(dimensions=3, null=True, blank=True)),
             ],
         ),
@@ -169,6 +171,24 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
+
+    def test_bit_hamming_distance(self):
+        Item(id=1, binary_embedding='000').save()
+        Item(id=2, binary_embedding='101').save()
+        Item(id=3, binary_embedding='111').save()
+        distance = HammingDistance('binary_embedding', '101')
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [0, 1, 2]
+
+    def test_bit_jaccard_distance(self):
+        Item(id=1, binary_embedding='000').save()
+        Item(id=2, binary_embedding='101').save()
+        Item(id=3, binary_embedding='111').save()
+        distance = JaccardDistance('binary_embedding', '101')
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_filter(self):
         create_items()

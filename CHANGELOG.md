@@ -1,12 +1,12 @@
 ## 0.3.0 (unreleased)
 
-- Added support for `halfvec` and `sparsevec` types to Django
+- Added support for `halfvec`, `bit`, and `sparsevec` types to Django
 - Added support for `halfvec` and `sparsevec` types to SQLAlchemy and SQLModel
 - Added support for `halfvec` and `sparsevec` types to Psycopg 3
 - Added support for `halfvec` and `sparsevec` types to Psycopg 2
 - Added support for `halfvec` and `sparsevec` types to asyncpg
 - Added support for `halfvec` and `sparsevec` types to Peewee
-- Added `L1Distance` for Django
+- Added `L1Distance`, `HammingDistance`, and `JaccardDistance` for Django
 - Added `l1_distance` for SQLAlchemy, SQLModel, and Peewee
 
 ## 0.2.5 (2024-02-07)
