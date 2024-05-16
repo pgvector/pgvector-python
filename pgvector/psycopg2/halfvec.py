@@ -3,11 +3,11 @@ from ..utils import HalfVec
 
 
 class HalfvecAdapter(object):
-    def __init__(self, halfvec):
-        self._halfvec = halfvec
+    def __init__(self, value):
+        self._value = value
 
     def getquoted(self):
-        return adapt(HalfVec.to_db(self._halfvec)).getquoted()
+        return adapt(HalfVec.to_db(self._value)).getquoted()
 
 
 def cast_halfvec(value, cur):

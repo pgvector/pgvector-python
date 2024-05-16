@@ -4,11 +4,11 @@ from ..utils import from_db, to_db
 
 
 class VectorAdapter(object):
-    def __init__(self, vector):
-        self._vector = vector
+    def __init__(self, value):
+        self._value = value
 
     def getquoted(self):
-        return adapt(to_db(self._vector)).getquoted()
+        return adapt(to_db(self._value)).getquoted()
 
 
 def cast_vector(value, cur):
