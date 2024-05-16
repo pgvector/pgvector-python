@@ -8,7 +8,7 @@ class HalfVecDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return obj.to_db().encode('utf8')
+        return HalfVec.to_db(obj).encode('utf8')
 
 
 class HalfVecBinaryDumper(HalfVecDumper):
@@ -16,7 +16,7 @@ class HalfVecBinaryDumper(HalfVecDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return obj.to_db_binary()
+        return HalfVec.to_db_binary(obj)
 
 
 class HalfVecLoader(Loader):
@@ -24,8 +24,6 @@ class HalfVecLoader(Loader):
     format = Format.TEXT
 
     def load(self, data):
-        if data is None:
-            return None
         if isinstance(data, memoryview):
             data = bytes(data)
         return HalfVec.from_db(data.decode('utf8'))
@@ -36,8 +34,6 @@ class HalfVecBinaryLoader(HalfVecLoader):
     format = Format.BINARY
 
     def load(self, data):
-        if data is None:
-            return None
         if isinstance(data, memoryview):
             data = bytes(data)
         return HalfVec.from_db_binary(data)

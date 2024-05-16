@@ -1,6 +1,13 @@
-## 0.2.6 (unreleased)
+## 0.3.0 (unreleased)
 
+- Added support for `halfvec` and `sparsevec` types to Django
+- Added support for `halfvec` and `sparsevec` types to SQLAlchemy and SQLModel
 - Added support for `halfvec` and `sparsevec` types to Psycopg 3
+- Added support for `halfvec` and `sparsevec` types to Psycopg 2
+- Added support for `halfvec` and `sparsevec` types to asyncpg
+- Added support for `halfvec` and `sparsevec` types to Peewee
+- Added `L1Distance` for Django
+- Added `l1_distance` for SQLAlchemy, SQLModel, and Peewee
 
 ## 0.2.5 (2024-02-07)
 
@@ -35,8 +42,8 @@
 
 ## 0.1.7 (2023-05-11)
 
-- Added `register_vector_async` for psycopg3
-- Fixed `set_types` for psycopg3
+- Added `register_vector_async` for Psycopg 3
+- Fixed `set_types` for Psycopg 3
 
 ## 0.1.6 (2022-05-22)
 
@@ -49,12 +56,12 @@
 
 ## 0.1.4 (2021-10-12)
 
-- Updated psycopg3 integration for 3.0 release (no longer experimental)
+- Updated Psycopg 3 integration for 3.0 release (no longer experimental)
 
 ## 0.1.3 (2021-06-22)
 
 - Added support for asyncpg
-- Added experimental support for psycopg3
+- Added experimental support for Psycopg 3
 
 ## 0.1.2 (2021-06-13)
 

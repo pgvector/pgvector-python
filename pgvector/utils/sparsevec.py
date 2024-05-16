@@ -19,14 +19,24 @@ class SparseVec:
             vec[i] = v
         return vec
 
-    def to_db(self):
-        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(self.indices, self.values)]) + '}/' + str(self.dim)
+    def to_db(value, dim=None):
+        if value is None:
+            return value
 
-    def to_db_binary(self):
-        nnz = len(self.indices)
-        return pack(f'>iii{nnz}i{nnz}f', self.dim, nnz, 0, *self.indices, *self.values)
+        if dim is not None and value.dim != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
+
+        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value.indices, value.values)]) + '}/' + str(value.dim)
+
+    def to_db_binary(value):
+        if value is None:
+            return value
+        nnz = len(value.indices)
+        return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
 
     def from_db(value):
+        if value is None or isinstance(value, SparseVec):
+            return value
         elements, dim = value.split('/')
         indices = []
         values = []
@@ -37,6 +47,8 @@ class SparseVec:
         return SparseVec(int(dim), indices, values)
 
     def from_db_binary(value):
+        if value is None or isinstance(value, SparseVec):
+            return value
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)

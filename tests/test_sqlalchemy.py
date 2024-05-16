@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import Vector, Halfvec, Sparsevec, SparseVec
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -20,6 +20,8 @@ class Item(Base):
 
     id = mapped_column(Integer, primary_key=True)
     embedding = mapped_column(Vector(3))
+    half_embedding = mapped_column(Halfvec(3))
+    sparse_embedding = mapped_column(Sparsevec(3))
 
 
 Base.metadata.drop_all(engine)
@@ -43,7 +45,7 @@ def create_items():
     ]
     session = Session(engine)
     for i, v in enumerate(vectors):
-        session.add(Item(id=i + 1, embedding=v))
+        session.add(Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v)))
     session.commit()
 
 
@@ -142,6 +144,18 @@ class TestSqlalchemy:
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
+
+    def test_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.embedding.l1_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_l1_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
 
     def test_filter(self):
         create_items()
