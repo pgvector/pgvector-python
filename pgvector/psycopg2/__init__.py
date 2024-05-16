@@ -1,7 +1,8 @@
 import psycopg2
 from .halfvec import register_halfvec_info
+from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
-from ..utils import from_db, to_db
+from ..utils import from_db, to_db, SparseVec
 
 __all__ = ['register_vector']
 
@@ -18,5 +19,11 @@ def register_vector(conn_or_curs=None):
     try:
         cur.execute('SELECT NULL::halfvec')
         register_halfvec_info(cur.description[0][1])
+    except psycopg2.errors.UndefinedObject:
+        pass
+
+    try:
+        cur.execute('SELECT NULL::sparsevec')
+        register_sparsevec_info(cur.description[0][1])
     except psycopg2.errors.UndefinedObject:
         pass
