@@ -1,6 +1,7 @@
 ## 0.2.6 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types to Psycopg 3
+- Added support for `halfvec` and `sparsevec` types to asyncpg
 - Added `L1Distance` for Django
 - Added `l1_distance` for SQLAlchemy, SQLModel, and Peewee
 
