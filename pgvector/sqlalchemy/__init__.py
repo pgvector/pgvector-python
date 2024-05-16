@@ -39,14 +39,14 @@ class Vector(UserDefinedType):
         def l2_distance(self, other):
             return self.op('<->', return_type=Float)(other)
 
-        def l1_distance(self, other):
-            return self.op('<+>', return_type=Float)(other)
-
         def max_inner_product(self, other):
             return self.op('<#>', return_type=Float)(other)
 
         def cosine_distance(self, other):
             return self.op('<=>', return_type=Float)(other)
+
+        def l1_distance(self, other):
+            return self.op('<+>', return_type=Float)(other)
 
 
 # for reflection
