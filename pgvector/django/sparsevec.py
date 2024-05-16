@@ -2,7 +2,7 @@ from django.db.models import Field
 from ..utils import SparseVec
 
 
-# https://docs.djangoproject.com/en/4.2/howto/custom-model-fields/
+# https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
 class SparsevecField(Field):
     description = 'Sparse vector'
     empty_strings_allowed = False

@@ -4,7 +4,7 @@ import numpy as np
 from ..utils import Vector
 
 
-# https://docs.djangoproject.com/en/4.2/howto/custom-model-fields/
+# https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
 class VectorField(Field):
     description = 'Vector'
     empty_strings_allowed = False
