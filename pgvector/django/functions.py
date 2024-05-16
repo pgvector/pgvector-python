@@ -1,6 +1,7 @@
 from django.db.models import FloatField, Func, Value
 from ..utils import Vector
 
+
 class DistanceBase(Func):
     output_field = FloatField()
 
