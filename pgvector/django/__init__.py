@@ -5,7 +5,7 @@ import numpy as np
 from .forms import VectorFormField
 from ..utils import from_db, to_db
 
-__all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'HnswIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance']
+__all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'HnswIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance', 'L1Distance']
 
 
 class VectorExtension(CreateExtension):
@@ -128,3 +128,8 @@ class MaxInnerProduct(DistanceBase):
 class CosineDistance(DistanceBase):
     function = ''
     arg_joiner = ' <=> '
+
+
+class L1Distance(DistanceBase):
+    function = ''
+    arg_joiner = ' <+> '

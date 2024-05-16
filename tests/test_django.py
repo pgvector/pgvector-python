@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance
+from pgvector.django import VectorExtension, VectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance
 from unittest import mock
 
 settings.configure(
@@ -130,6 +130,13 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+
+    def test_l1_distance(self):
+        create_items()
+        distance = L1Distance('embedding', [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, 3]
 
     def test_filter(self):
         create_items()
