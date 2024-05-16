@@ -220,7 +220,7 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column
 
 class Item(SQLModel, table=True):
-    embedding: List[float] = Field(sa_column=Column(Vector(3)))
+    embedding: Any = Field(sa_column=Column(Vector(3)))
 ```
 
 Insert a vector
