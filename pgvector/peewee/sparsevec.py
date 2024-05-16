@@ -1,24 +1,25 @@
 from peewee import Expression, Field, Value
-from ..utils import HalfVec
+from ..utils import SparseVec
 
 
-class HalfvecField(Field):
-    field_type = 'halfvec'
+class SparsevecField(Field):
+    field_type = 'sparsevec'
 
     def __init__(self, dimensions=None, *args, **kwargs):
         self.dimensions = dimensions
-        super(HalfvecField, self).__init__(*args, **kwargs)
+        super(SparsevecField, self).__init__(*args, **kwargs)
 
     def get_modifiers(self):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        return HalfVec(value).to_db()
+        # TODO improve
+        return value.to_db()
 
     def python_value(self, value):
         if value is None:
             return value
-        return HalfVec.from_db(value)
+        return SparseVec.from_db(value)
 
     def _distance(self, op, vector):
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))

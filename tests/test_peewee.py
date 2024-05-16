@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector.peewee import VectorField, HalfvecField
+from pgvector.peewee import VectorField, HalfvecField, SparsevecField, SparseVec
 
 db = PostgresqlDatabase('pgvector_python_test')
 
@@ -14,6 +14,7 @@ class BaseModel(Model):
 class Item(BaseModel):
     embedding = VectorField(dimensions=3, null=True)
     half_embedding = HalfvecField(dimensions=3, null=True)
+    sparse_embedding = SparsevecField(dimensions=3, null=True)
 
 
 Item.add_index('embedding vector_l2_ops', using='hnsw')
@@ -31,7 +32,7 @@ def create_items():
         [1, 1, 2]
     ]
     for i, v in enumerate(vectors):
-        Item.create(id=i + 1, embedding=v, half_embedding=v)
+        Item.create(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v))
 
 
 class TestPeewee:
@@ -75,6 +76,13 @@ class TestPeewee:
     def test_halfvec_l2_distance(self):
         create_items()
         distance = Item.half_embedding.l2_distance([1, 1, 1])
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, sqrt(3)]
+
+    def test_sparsevec_l2_distance(self):
+        create_items()
+        distance = Item.sparse_embedding.l2_distance(SparseVec.from_dense([1, 1, 1]))
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
