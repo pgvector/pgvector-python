@@ -1,21 +1,8 @@
-import numpy as np
 import psycopg2
-from psycopg2.extensions import adapt, new_type, register_adapter, register_type
+from .vector import register_vector_info
 from ..utils import from_db, to_db
 
 __all__ = ['register_vector']
-
-
-class VectorAdapter(object):
-    def __init__(self, vector):
-        self._vector = vector
-
-    def getquoted(self):
-        return adapt(to_db(self._vector)).getquoted()
-
-
-def cast_vector(value, cur):
-    return from_db(value)
 
 
 def register_vector(conn_or_curs=None):
@@ -27,6 +14,4 @@ def register_vector(conn_or_curs=None):
     except psycopg2.errors.UndefinedObject:
         raise psycopg2.ProgrammingError('vector type not found in the database')
 
-    vector = new_type((oid,), 'VECTOR', cast_vector)
-    register_type(vector)
-    register_adapter(np.ndarray, VectorAdapter)
+    register_vector_info(oid)
