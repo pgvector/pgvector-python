@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, HalfvecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance
+from pgvector.django import VectorExtension, VectorField, HalfvecField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, SparseVec
 from unittest import mock
 
 settings.configure(
@@ -25,6 +25,7 @@ django.setup()
 class Item(models.Model):
     embedding = VectorField(dimensions=3, null=True, blank=True)
     half_embedding = HalfvecField(dimensions=3, null=True, blank=True)
+    sparse_embedding = SparsevecField(dimensions=3, null=True, blank=True)
 
     class Meta:
         app_label = 'myapp'
@@ -59,6 +60,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('embedding', pgvector.django.VectorField(dimensions=3, null=True, blank=True)),
                 ('half_embedding', pgvector.django.HalfvecField(dimensions=3, null=True, blank=True)),
+                ('sparse_embedding', pgvector.django.SparsevecField(dimensions=3, null=True, blank=True)),
             ],
         ),
         migrations.AddIndex(
@@ -118,6 +120,13 @@ class TestDjango:
         item = Item.objects.get(pk=1)
         assert item.id == 1
         assert item.half_embedding.to_list() == [1, 2, 3]
+
+    def test_sparsevec(self):
+        item = Item(id=1, sparse_embedding=SparseVec.from_dense([1, 2, 3]))
+        item.save()
+        item = Item.objects.get(pk=1)
+        assert item.id == 1
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
 
     def test_l2_distance(self):
         create_items()
