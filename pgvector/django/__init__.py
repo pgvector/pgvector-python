@@ -4,6 +4,19 @@ from .halfvec import HalfvecField
 from .indexes import IvfflatIndex, HnswIndex
 from .sparsevec import SparsevecField
 from .vector import VectorField
-from ..utils import SparseVec
+from ..utils import HalfVec, SparseVec
 
-__all__ = ['VectorExtension', 'VectorField', 'HalfvecField', 'SparsevecField', 'IvfflatIndex', 'HnswIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance', 'L1Distance']
+__all__ = [
+    'VectorExtension',
+    'VectorField',
+    'HalfvecField',
+    'SparsevecField',
+    'IvfflatIndex',
+    'HnswIndex',
+    'L2Distance',
+    'MaxInnerProduct',
+    'CosineDistance',
+    'L1Distance',
+    'HalfVec',
+    'SparseVec'
+]

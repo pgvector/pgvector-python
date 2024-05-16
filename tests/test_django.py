@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, HalfvecField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, SparseVec
+from pgvector.django import VectorExtension, VectorField, HalfvecField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HalfVec, SparseVec
 from unittest import mock
 
 settings.configure(
@@ -158,7 +158,7 @@ class TestDjango:
 
     def test_halfvec_l2_distance(self):
         create_items()
-        distance = L2Distance('half_embedding', [1, 1, 1])
+        distance = L2Distance('half_embedding', HalfVec([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
