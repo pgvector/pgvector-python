@@ -66,3 +66,8 @@ class VectorFormField(forms.CharField):
         if isinstance(initial, np.ndarray):
             initial = initial.tolist()
         return super().has_changed(initial, data)
+
+    def to_python(self, value):
+        if isinstance(value, str) and value == '':
+            return None
+        return super().to_python(value)

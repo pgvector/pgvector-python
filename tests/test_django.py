@@ -222,6 +222,14 @@ class TestDjango:
         assert form.save()
         assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
 
+    def test_form_save_missing(self):
+        Item(id=1).save()
+        item = Item.objects.get(pk=1)
+        form = ItemForm(instance=item, data={'embedding': ''})
+        assert form.is_valid()
+        assert form.save()
+        assert Item.objects.get(pk=1).embedding is None
+
     def test_clean(self):
         item = Item(id=1, embedding=[1, 2, 3])
         item.full_clean()
