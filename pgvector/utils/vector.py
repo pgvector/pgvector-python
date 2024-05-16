@@ -47,3 +47,10 @@ def to_db_binary(value):
         raise ValueError('expected ndim to be 1')
 
     return pack('>HH', value.shape[0], 0) + value.tobytes()
+
+
+class Vector:
+    from_db = from_db
+    from_db_binary = from_db_binary
+    to_db = to_db
+    to_db_binary = to_db_binary
