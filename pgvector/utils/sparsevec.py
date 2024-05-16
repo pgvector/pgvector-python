@@ -31,7 +31,7 @@ class SparseVec:
         return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
 
     def from_db(value):
-        if value is None:
+        if value is None or isinstance(value, SparseVec):
             return value
         elements, dim = value.split('/')
         indices = []
@@ -43,7 +43,7 @@ class SparseVec:
         return SparseVec(int(dim), indices, values)
 
     def from_db_binary(value):
-        if value is None:
+        if value is None or isinstance(value, SparseVec):
             return value
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)

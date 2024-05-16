@@ -1,4 +1,5 @@
 import psycopg2
+from .halfvec import register_halfvec_info
 from .vector import register_vector_info
 from ..utils import from_db, to_db
 
@@ -10,8 +11,12 @@ def register_vector(conn_or_curs=None):
 
     try:
         cur.execute('SELECT NULL::vector')
-        oid = cur.description[0][1]
+        register_vector_info(cur.description[0][1])
     except psycopg2.errors.UndefinedObject:
         raise psycopg2.ProgrammingError('vector type not found in the database')
 
-    register_vector_info(oid)
+    try:
+        cur.execute('SELECT NULL::halfvec')
+        register_halfvec_info(cur.description[0][1])
+    except psycopg2.errors.UndefinedObject:
+        pass

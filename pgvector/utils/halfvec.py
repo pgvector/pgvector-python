@@ -27,12 +27,12 @@ class HalfVec:
         return pack(f'>HH{len(value)}e', len(value), 0, *value)
 
     def from_db(value):
-        if value is None:
+        if value is None or isinstance(value, HalfVec):
             return value
         return HalfVec([float(v) for v in value[1:-1].split(',')])
 
     def from_db_binary(value):
-        if value is None:
+        if value is None or isinstance(value, HalfVec):
             return value
         dim, unused = unpack_from('>HH', value)
         return HalfVec(unpack_from(f'>{dim}e', value, 4))
