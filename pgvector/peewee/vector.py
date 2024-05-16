@@ -1,5 +1,5 @@
 from peewee import Expression, Field, Value
-from ..utils import from_db, to_db
+from ..utils import Vector
 
 
 class VectorField(Field):
@@ -13,10 +13,10 @@ class VectorField(Field):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        return to_db(value)
+        return Vector.to_db(value)
 
     def python_value(self, value):
-        return from_db(value)
+        return Vector.from_db(value)
 
     def _distance(self, op, vector):
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))

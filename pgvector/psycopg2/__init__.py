@@ -2,7 +2,7 @@ import psycopg2
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
-from ..utils import from_db, to_db, SparseVec
+from ..utils import SparseVec
 
 __all__ = ['register_vector']
 

@@ -5,9 +5,6 @@ from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
 from ..utils import HalfVec, SparseVec
 
-# TODO remove in 0.3.0
-from .vector import *
-from ..utils import from_db, from_db_binary, to_db, to_db_binary
 
 __all__ = ['register_vector']
 

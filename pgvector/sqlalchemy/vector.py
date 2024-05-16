@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
-from ..utils import from_db, to_db
+from ..utils import Vector as Vec
 
 
 class Vector(UserDefinedType):
@@ -18,19 +18,19 @@ class Vector(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return to_db(value, self.dim)
+            return Vec.to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(to_db(value, self.dim))
+            return string_literal_processor(Vec.to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return from_db(value)
+            return Vec.from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

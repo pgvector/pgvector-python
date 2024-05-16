@@ -1,6 +1,6 @@
 import numpy as np
 from psycopg2.extensions import adapt, new_type, register_adapter, register_type
-from ..utils import from_db, to_db
+from ..utils import Vector
 
 
 class VectorAdapter(object):
@@ -8,11 +8,11 @@ class VectorAdapter(object):
         self._value = value
 
     def getquoted(self):
-        return adapt(to_db(self._value)).getquoted()
+        return adapt(Vector.to_db(self._value)).getquoted()
 
 
 def cast_vector(value, cur):
-    return from_db(value)
+    return Vector.from_db(value)
 
 
 def register_vector_info(oid):

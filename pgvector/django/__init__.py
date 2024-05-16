@@ -3,7 +3,7 @@ from django.contrib.postgres.indexes import PostgresIndex
 from django.db.models import Field, FloatField, Func, Value
 import numpy as np
 from .forms import VectorFormField
-from ..utils import from_db, to_db
+from ..utils import Vector
 
 __all__ = ['VectorExtension', 'VectorField', 'IvfflatIndex', 'HnswIndex', 'L2Distance', 'MaxInnerProduct', 'CosineDistance', 'L1Distance']
 
@@ -34,15 +34,15 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return from_db(value)
+        return Vector.from_db(value)
 
     def to_python(self, value):
         if isinstance(value, list):
             return np.array(value, dtype=np.float32)
-        return from_db(value)
+        return Vector.from_db(value)
 
     def get_prep_value(self, value):
-        return to_db(value)
+        return Vector.to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
@@ -111,7 +111,7 @@ class DistanceBase(Func):
 
     def __init__(self, expression, vector, **extra):
         if not hasattr(vector, 'resolve_expression'):
-            vector = Value(to_db(vector))
+            vector = Value(Vector.to_db(vector))
         super().__init__(expression, vector, **extra)
 
 
