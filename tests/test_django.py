@@ -43,12 +43,6 @@ class Item(models.Model):
             )
         ]
 
-class ItemBlankAndNull(models.Model):
-    embedding = VectorField(dimensions=3, null=True, blank=True)
-
-    class Meta:
-        app_label = 'myapp'
-
 
 class Migration(migrations.Migration):
     initial = True
@@ -60,13 +54,6 @@ class Migration(migrations.Migration):
         VectorExtension(),
         migrations.CreateModel(
             name='Item',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('embedding', pgvector.django.VectorField(dimensions=3, null=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='ItemBlankAndNull',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('embedding', pgvector.django.VectorField(dimensions=3, null=True, blank=True)),
@@ -91,7 +78,6 @@ sql_statements = loader.collect_sql([(migration, False)])
 
 with connection.cursor() as cursor:
     cursor.execute("DROP TABLE IF EXISTS myapp_item")
-    cursor.execute("DROP TABLE IF EXISTS myapp_itemblankandnull")
     cursor.execute('\n'.join(sql_statements))
 
 
@@ -109,11 +95,6 @@ def create_items():
 class ItemForm(ModelForm):
     class Meta:
         model = Item
-        fields = ['embedding']
-
-class ItemBlankAndNullForm(ModelForm):
-    class Meta:
-        model = ItemBlankAndNull
         fields = ['embedding']
 
 
@@ -203,12 +184,12 @@ class TestDjango:
         assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
 
     def test_form_save_missing(self):
-        ItemBlankAndNull(id=1).save()
-        item = ItemBlankAndNull.objects.get(pk=1)
-        form = ItemBlankAndNullForm(instance=item, data={'embedding': ''})
+        Item(id=1).save()
+        item = Item.objects.get(pk=1)
+        form = ItemForm(instance=item, data={'embedding': ''})
         assert form.is_valid()
         assert form.save()
-        assert ItemBlankAndNull.objects.get(pk=1).embedding is None
+        assert Item.objects.get(pk=1).embedding is None
 
     def test_clean(self):
         item = Item(id=1, embedding=[1, 2, 3])

@@ -12,6 +12,7 @@ class VectorFormField(forms.CharField):
         return super().has_changed(initial, data)
 
     def to_python(self, value):
-        if value in self.empty_values:
+        if isinstance(value, str) and value == '':
             return None
         return super().to_python(value)
+        
