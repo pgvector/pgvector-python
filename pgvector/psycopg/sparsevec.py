@@ -8,7 +8,7 @@ class SparseVecDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return obj.to_db().encode('utf8')
+        return SparseVec.to_db(obj).encode('utf8')
 
 
 class SparseVecBinaryDumper(SparseVecDumper):
@@ -16,7 +16,7 @@ class SparseVecBinaryDumper(SparseVecDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return obj.to_db_binary()
+        return SparseVec.to_db_binary(obj)
 
 
 class SparseVecLoader(Loader):
@@ -24,8 +24,6 @@ class SparseVecLoader(Loader):
     format = Format.TEXT
 
     def load(self, data):
-        if data is None:
-            return None
         if isinstance(data, memoryview):
             data = bytes(data)
         return SparseVec.from_db(data.decode('utf8'))
@@ -36,8 +34,6 @@ class SparseVecBinaryLoader(SparseVecLoader):
     format = Format.BINARY
 
     def load(self, data):
-        if data is None:
-            return None
         if isinstance(data, memoryview):
             data = bytes(data)
         return SparseVec.from_db_binary(data)

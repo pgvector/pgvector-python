@@ -13,15 +13,14 @@ async def register_vector(conn):
 
     await conn.set_type_codec(
         'halfvec',
-        encoder=lambda v: HalfVec(v).to_db_binary(),
+        encoder=HalfVec.to_db_binary,
         decoder=HalfVec.from_db_binary,
         format='binary'
     )
 
     await conn.set_type_codec(
         'sparsevec',
-        # TODO fix
-        encoder=lambda v: isinstance(v, SparseVec) and v.to_db_binary(),
+        encoder=SparseVec.to_db_binary,
         decoder=SparseVec.from_db_binary,
         format='binary'
     )

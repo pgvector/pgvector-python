@@ -13,12 +13,9 @@ class SparsevecField(Field):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        # TODO improve
-        return value.to_db()
+        return SparseVec.to_db(value)
 
     def python_value(self, value):
-        if value is None:
-            return value
         return SparseVec.from_db(value)
 
     def _distance(self, op, vector):

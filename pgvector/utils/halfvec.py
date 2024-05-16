@@ -12,16 +12,28 @@ class HalfVec:
     def to_list(self):
         return list(self.value)
 
-    def to_db(self):
-        return '[' + ','.join([str(float(v)) for v in self.value]) + ']'
+    def to_db(value):
+        if value is None:
+            return value
+        if isinstance(value, HalfVec):
+            value = value.value
+        return '[' + ','.join([str(float(v)) for v in value]) + ']'
 
-    def to_db_binary(self):
-        return pack(f'>HH{len(self.value)}e', len(self.value), 0, *self.value)
+    def to_db_binary(value):
+        if value is None:
+            return value
+        if isinstance(value, HalfVec):
+            value = value.value
+        return pack(f'>HH{len(value)}e', len(value), 0, *value)
 
     def from_db(value):
+        if value is None:
+            return value
         return HalfVec([float(v) for v in value[1:-1].split(',')])
 
     def from_db_binary(value):
+        if value is None:
+            return value
         dim, unused = unpack_from('>HH', value)
         return HalfVec(unpack_from(f'>{dim}e', value, 4))
 
