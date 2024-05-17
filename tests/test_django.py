@@ -238,7 +238,7 @@ class TestDjango:
         items = Item.objects.alias(distance=distance).filter(distance__lt=1)
         assert [v.id for v in items] == [1]
 
-    def test_avg(self):
+    def test_vector_avg(self):
         avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
         assert avg is None
         Item(embedding=[1, 2, 3]).save()
@@ -246,13 +246,29 @@ class TestDjango:
         avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
         assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
 
-    def test_sum(self):
+    def test_vector_sum(self):
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
         assert sum is None
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
         assert np.array_equal(sum, np.array([5, 7, 9]))
+
+    def test_halfvec_avg(self):
+        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
+        assert avg is None
+        Item(half_embedding=[1, 2, 3]).save()
+        Item(half_embedding=[4, 5, 6]).save()
+        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
+        assert avg.to_list() == [2.5, 3.5, 4.5]
+
+    def test_halfvec_sum(self):
+        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
+        assert sum is None
+        Item(half_embedding=[1, 2, 3]).save()
+        Item(half_embedding=[4, 5, 6]).save()
+        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
+        assert sum.to_list() == [5, 7, 9]
 
     def test_serialization(self):
         create_items()
