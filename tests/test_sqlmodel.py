@@ -180,7 +180,7 @@ class TestSqlmodel:
             items = session.exec(select(Item.embedding.l2_distance([1, 1, 1]))).all()
             assert items[0] == 3
 
-    def test_avg(self):
+    def test_vector_avg(self):
         with Session(engine) as session:
             avg = session.exec(select(func.avg(Item.embedding))).first()
             assert avg is None
@@ -189,7 +189,7 @@ class TestSqlmodel:
             avg = session.exec(select(func.avg(Item.embedding))).first()
             assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
 
-    def test_sum(self):
+    def test_vector_sum(self):
         with Session(engine) as session:
             sum = session.exec(select(func.sum(Item.embedding))).first()
             assert sum is None
@@ -197,6 +197,24 @@ class TestSqlmodel:
             session.add(Item(embedding=[4, 5, 6]))
             sum = session.exec(select(func.sum(Item.embedding))).first()
             assert np.array_equal(sum, np.array([5, 7, 9]))
+
+    def test_halfvec_avg(self):
+        with Session(engine) as session:
+            avg = session.exec(select(func.avg(Item.half_embedding))).first()
+            assert avg is None
+            session.add(Item(half_embedding=[1, 2, 3]))
+            session.add(Item(half_embedding=[4, 5, 6]))
+            avg = session.exec(select(func.avg(Item.half_embedding))).first()
+            assert avg.to_list() == [2.5, 3.5, 4.5]
+
+    def test_halfvec_sum(self):
+        with Session(engine) as session:
+            sum = session.exec(select(func.sum(Item.half_embedding))).first()
+            assert sum is None
+            session.add(Item(half_embedding=[1, 2, 3]))
+            session.add(Item(half_embedding=[4, 5, 6]))
+            sum = session.exec(select(func.sum(Item.half_embedding))).first()
+            assert sum.to_list() == [5, 7, 9]
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])
