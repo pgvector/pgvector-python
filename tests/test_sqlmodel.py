@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Sparsevec, SparseVec
+from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVec
 import pytest
 from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
@@ -18,6 +18,7 @@ class Item(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     embedding: Optional[Any] = Field(default=None, sa_column=Column(Vector(3)))
     half_embedding: Optional[Any] = Field(default=None, sa_column=Column(Halfvec(3)))
+    binary_embedding: Optional[Any] = Field(default=None, sa_column=Column(Bit(3)))
     sparse_embedding: Optional[Any] = Field(default=None, sa_column=Column(Sparsevec(3)))
 
 
@@ -98,6 +99,26 @@ class TestSqlmodel:
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
+
+    def test_bit_hamming_distance(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='000'))
+        session.add(Item(id=2, binary_embedding='101'))
+        session.add(Item(id=3, binary_embedding='111'))
+        session.commit()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='000'))
+        session.add(Item(id=2, binary_embedding='101'))
+        session.add(Item(id=3, binary_embedding='111'))
+        session.commit()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
 
     def test_filter(self):
         create_items()
