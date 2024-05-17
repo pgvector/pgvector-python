@@ -106,10 +106,46 @@ class TestSqlmodel:
             items = session.exec(select(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_halfvec_max_inner_product(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.half_embedding.max_inner_product([1, 1, 1])))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_halfvec_cosine_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.half_embedding.cosine_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_halfvec_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
     def test_sparsevec_l2_distance(self):
         create_items()
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_sparsevec_max_inner_product(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.sparse_embedding.max_inner_product([1, 1, 1])))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_sparsevec_cosine_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.sparse_embedding.cosine_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_sparsevec_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
     def test_bit_hamming_distance(self):
