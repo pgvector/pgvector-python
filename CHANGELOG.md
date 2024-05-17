@@ -5,7 +5,7 @@
 - Added support for `halfvec` and `sparsevec` types to Psycopg 3
 - Added support for `halfvec` and `sparsevec` types to Psycopg 2
 - Added support for `halfvec` and `sparsevec` types to asyncpg
-- Added support for `halfvec` and `sparsevec` types to Peewee
+- Added support for `halfvec`, `bit`, and `sparsevec` types to Peewee
 - Added `L1Distance`, `HammingDistance`, and `JaccardDistance` for Django
 - Added `l1_distance`, `hamming_distance`, and `jaccard_distance` for SQLAlchemy and SQLModel
 - Added `l1_distance` for Peewee

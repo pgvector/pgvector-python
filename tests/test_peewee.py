@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector.peewee import VectorField, HalfvecField, SparsevecField, SparseVec
+from pgvector.peewee import VectorField, HalfvecField, FixedBitField, SparsevecField, SparseVec
 
 db = PostgresqlDatabase('pgvector_python_test')
 
@@ -14,6 +14,7 @@ class BaseModel(Model):
 class Item(BaseModel):
     embedding = VectorField(dimensions=3, null=True)
     half_embedding = HalfvecField(dimensions=3, null=True)
+    binary_embedding = FixedBitField(max_length=3, null=True)
     sparse_embedding = SparsevecField(dimensions=3, null=True)
 
 
@@ -86,6 +87,24 @@ class TestPeewee:
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
+
+    def test_bit_hamming_distance(self):
+        Item.create(id=1, binary_embedding='000')
+        Item.create(id=2, binary_embedding='101')
+        Item.create(id=3, binary_embedding='111')
+        distance = Item.binary_embedding.hamming_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [0, 1, 2]
+
+    def test_bit_jaccard_distance(self):
+        Item.create(id=1, binary_embedding='000')
+        Item.create(id=2, binary_embedding='101')
+        Item.create(id=3, binary_embedding='111')
+        distance = Item.binary_embedding.jaccard_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_where(self):
         create_items()
