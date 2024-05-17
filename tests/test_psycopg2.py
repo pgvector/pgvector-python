@@ -8,7 +8,7 @@ conn.autocommit = True
 cur = conn.cursor()
 cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 cur.execute('DROP TABLE IF EXISTS psycopg2_items')
-cur.execute('CREATE TABLE psycopg2_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), sparse_embedding sparsevec(3))')
+cur.execute('CREATE TABLE psycopg2_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))')
 
 register_vector(cur)
 
@@ -34,6 +34,15 @@ class TestPsycopg2:
         cur.execute('SELECT half_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
         assert res[0][0].to_list() == [1.5, 2, 3]
+        assert res[1][0] is None
+
+    def test_bit(self):
+        embedding = '101'
+        cur.execute('INSERT INTO psycopg2_items (binary_embedding) VALUES (%s), (NULL)', (embedding,))
+
+        cur.execute('SELECT binary_embedding FROM psycopg2_items ORDER BY id')
+        res = cur.fetchall()
+        assert res[0][0] == '101'
         assert res[1][0] is None
 
     def test_sparsevec(self):
