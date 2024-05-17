@@ -1,3 +1,4 @@
+import numpy as np
 from struct import pack, unpack_from
 
 
@@ -8,6 +9,8 @@ class SparseVec:
         self.values = values
 
     def from_dense(value):
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
         values = [value[i] for i in indices]
@@ -23,6 +26,9 @@ class SparseVec:
         if value is None:
             return value
 
+        if isinstance(value, (list, np.ndarray)):
+            value = SparseVec.from_dense(value)
+
         if dim is not None and value.dim != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
 
@@ -31,6 +37,10 @@ class SparseVec:
     def to_db_binary(value):
         if value is None:
             return value
+
+        if isinstance(value, (list, np.ndarray)):
+            value = SparseVec.from_dense(value)
+
         nnz = len(value.indices)
         return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
 
