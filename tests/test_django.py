@@ -123,6 +123,13 @@ class TestDjango:
         assert item.id == 1
         assert item.half_embedding.to_list() == [1, 2, 3]
 
+    def test_bit(self):
+        item = Item(id=1, binary_embedding='101')
+        item.save()
+        item = Item.objects.get(pk=1)
+        assert item.id == 1
+        assert item.binary_embedding == '101'
+
     def test_sparsevec(self):
         item = Item(id=1, sparse_embedding=SparseVec.from_dense([1, 2, 3]))
         item.save()
