@@ -165,12 +165,54 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
+    def test_halfvec_max_inner_product(self):
+        create_items()
+        distance = MaxInnerProduct('half_embedding', HalfVec([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [-6, -4, -3]
+
+    def test_halfvec_cosine_distance(self):
+        create_items()
+        distance = CosineDistance('half_embedding', HalfVec([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 2, 3]
+        assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+
+    def test_halfvec_l1_distance(self):
+        create_items()
+        distance = L1Distance('half_embedding', HalfVec([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, 3]
+
     def test_sparsevec_l2_distance(self):
         create_items()
         distance = L2Distance('sparse_embedding', SparseVec.from_dense([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
+
+    def test_sparsevec_max_inner_product(self):
+        create_items()
+        distance = MaxInnerProduct('sparse_embedding', SparseVec.from_dense([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [-6, -4, -3]
+
+    def test_sparsevec_cosine_distance(self):
+        create_items()
+        distance = CosineDistance('sparse_embedding', SparseVec.from_dense([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 2, 3]
+        assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+
+    def test_sparsevec_l1_distance(self):
+        create_items()
+        distance = L1Distance('sparse_embedding', SparseVec.from_dense([1, 1, 1]))
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, 3]
 
     def test_bit_hamming_distance(self):
         Item(id=1, binary_embedding='000').save()
