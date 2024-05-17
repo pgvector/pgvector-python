@@ -66,8 +66,8 @@ class SparseVec:
         if value is None or isinstance(value, SparseVec):
             return value
         dim, nnz, unused = unpack_from('>iii', value)
-        indices = unpack_from(f'>{nnz}i', value, 12)
-        values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
+        indices = list(unpack_from(f'>{nnz}i', value, 12))
+        values = list(unpack_from(f'>{nnz}f', value, 12 + nnz * 4))
         return SparseVec(int(dim), indices, values)
 
     def __repr__(self):

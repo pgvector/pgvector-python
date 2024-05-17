@@ -10,7 +10,7 @@ class HalfVec:
         if not isinstance(value, (list, tuple)):
             raise ValueError('expected list or tuple')
 
-        self.value = value
+        self.value = list(value)
 
     def to_list(self):
         return list(self.value)
