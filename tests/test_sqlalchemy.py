@@ -113,52 +113,64 @@ class TestSqlalchemy:
             assert items[1].embedding.dtype == np.float32
             assert items[2].embedding is None
 
-    def test_l2_distance(self):
+    def test_vector_l2_distance(self):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_l2_distance_orm(self):
+    def test_vector_l2_distance_orm(self):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_max_inner_product(self):
+    def test_vector_max_inner_product(self):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.max_inner_product([1, 1, 1])).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_max_inner_product_orm(self):
+    def test_vector_max_inner_product_orm(self):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.max_inner_product([1, 1, 1])))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_cosine_distance(self):
+    def test_vector_cosine_distance(self):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_cosine_distance_orm(self):
+    def test_vector_cosine_distance_orm(self):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_l1_distance(self):
+    def test_vector_l1_distance(self):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.l1_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_l1_distance_orm(self):
+    def test_vector_l1_distance_orm(self):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_halfvec_l2_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_sparsevec_l2_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
     def test_bit_hamming_distance(self):
