@@ -1,9 +1,12 @@
+import numpy as np
 from struct import pack, unpack_from
 
 
 class HalfVec:
     def __init__(self, value):
-        # TODO support np.array
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+
         if not isinstance(value, (list, tuple)):
             raise ValueError('expected list or tuple')
 
