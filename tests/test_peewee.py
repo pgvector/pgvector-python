@@ -17,6 +17,9 @@ class Item(BaseModel):
     binary_embedding = FixedBitField(max_length=3, null=True)
     sparse_embedding = SparsevecField(dimensions=3, null=True)
 
+    class Meta:
+        table_name = 'peewee_item'
+
 
 Item.add_index('embedding vector_l2_ops', using='hnsw')
 
