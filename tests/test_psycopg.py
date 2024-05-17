@@ -67,9 +67,9 @@ class TestPsycopg:
     def test_binary_copy_set_types(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (id, embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.set_types(['int8', 'vector'])
-            copy.write_row([1, embedding])
+        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['int8', 'vector', 'halfvec', 'sparsevec'])
+            copy.write_row([1, embedding, HalfVec(embedding), SparseVec.from_dense(embedding)])
 
     def test_halfvec(self):
         conn.execute('DROP TABLE IF EXISTS half_items')
