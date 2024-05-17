@@ -40,34 +40,34 @@ class TestPeewee:
     def setup_method(self, test_method):
         Item.truncate_table()
 
-    def test_works(self):
+    def test_vector(self):
         Item.create(id=1, embedding=[1, 2, 3])
         item = Item.get_by_id(1)
         assert np.array_equal(item.embedding, np.array([1, 2, 3]))
         assert item.embedding.dtype == np.float32
 
-    def test_l2_distance(self):
+    def test_vector_l2_distance(self):
         create_items()
         distance = Item.embedding.l2_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
-    def test_max_inner_product(self):
+    def test_vector_max_inner_product(self):
         create_items()
         distance = Item.embedding.max_inner_product([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
-    def test_cosine_distance(self):
+    def test_vector_cosine_distance(self):
         create_items()
         distance = Item.embedding.cosine_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
-    def test_l1_distance(self):
+    def test_vector_l1_distance(self):
         create_items()
         distance = Item.embedding.l1_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)

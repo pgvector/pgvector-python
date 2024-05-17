@@ -130,28 +130,28 @@ class TestDjango:
         assert item.id == 1
         assert item.sparse_embedding.to_dense() == [1, 2, 3]
 
-    def test_l2_distance(self):
+    def test_vector_l2_distance(self):
         create_items()
         distance = L2Distance('embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
-    def test_max_inner_product(self):
+    def test_vector_max_inner_product(self):
         create_items()
         distance = MaxInnerProduct('embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
-    def test_cosine_distance(self):
+    def test_vector_cosine_distance(self):
         create_items()
         distance = CosineDistance('embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
-    def test_l1_distance(self):
+    def test_vector_l1_distance(self):
         create_items()
         distance = L1Distance('embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)
