@@ -114,6 +114,14 @@ class TestPsycopg:
         res = conn.execute('SELECT %s::bit(3)', ('101',)).fetchone()[0]
         assert res == '101'
 
+    def test_bit_binary_format(self):
+        res = conn.execute('SELECT %b::bit(3)', ('101',), binary=True).fetchone()[0]
+        assert res == b'\x00\x00\x00\x03\xa0'
+
+    def test_bit_text_format(self):
+        res = conn.execute('SELECT %t::bit(3)', ('101',)).fetchone()[0]
+        assert res == '101'
+
     @pytest.mark.asyncio
     async def test_async(self):
         conn = await psycopg.AsyncConnection.connect(dbname='pgvector_python_test', autocommit=True)
