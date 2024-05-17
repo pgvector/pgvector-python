@@ -8,7 +8,7 @@
 - Added support for `halfvec`, `bit`, and `sparsevec` types to Peewee
 - Added `L1Distance`, `HammingDistance`, and `JaccardDistance` for Django
 - Added `l1_distance`, `hamming_distance`, and `jaccard_distance` for SQLAlchemy and SQLModel
-- Added `l1_distance` for Peewee
+- Added `l1_distance`, `hamming_distance`, and `jaccard_distance` for Peewee
 
 ## 0.2.5 (2024-02-07)
 
