@@ -56,6 +56,30 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
+    async def test_bit(self):
+        conn = await asyncpg.connect(database='pgvector_python_test')
+        await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+        await conn.execute('DROP TABLE IF EXISTS items')
+        await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding bit(3))')
+
+        await register_vector(conn)
+
+        embedding = asyncpg.BitString.from_int(5, 3)
+        await conn.execute("INSERT INTO items (embedding) VALUES ($1), (NULL)", embedding)
+
+        res = await conn.fetch("SELECT * FROM items ORDER BY id")
+        assert res[0]['id'] == 1
+        assert res[1]['id'] == 2
+        assert res[0]['embedding'].to_int() == 5
+        assert res[1]['embedding'] is None
+
+        # ensures binary format is correct
+        text_res = await conn.fetch("SELECT embedding::text FROM items ORDER BY id LIMIT 1")
+        assert text_res[0]['embedding'] == '101'
+
+        await conn.close()
+
+    @pytest.mark.asyncio
     async def test_sparsevec(self):
         conn = await asyncpg.connect(database='pgvector_python_test')
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
