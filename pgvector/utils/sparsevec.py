@@ -2,6 +2,15 @@ import numpy as np
 from struct import pack, unpack_from
 
 
+def to_db_value(value):
+    if isinstance(value, SparseVec):
+        return value
+    elif isinstance(value, (list, np.ndarray)):
+        return SparseVec.from_dense(value)
+    else:
+        raise ValueError('expected sparsevec')
+
+
 class SparseVec:
     def __init__(self, dim, indices, values):
         self.dim = dim
@@ -26,11 +35,10 @@ class SparseVec:
         if value is None:
             return value
 
-        if isinstance(value, (list, np.ndarray)):
-            value = SparseVec.from_dense(value)
+        value = to_db_value(value)
 
         if dim is not None and value.dim != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim))
 
         return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value.indices, value.values)]) + '}/' + str(value.dim)
 
@@ -38,9 +46,7 @@ class SparseVec:
         if value is None:
             return value
 
-        if isinstance(value, (list, np.ndarray)):
-            value = SparseVec.from_dense(value)
-
+        value = to_db_value(value)
         nnz = len(value.indices)
         return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
 
