@@ -1,7 +1,7 @@
 import asyncio
 import asyncpg
 import numpy as np
-from pgvector.asyncpg import register_vector, SparseVec
+from pgvector.asyncpg import register_vector, SparseVector
 import pytest
 
 
@@ -88,7 +88,7 @@ class TestAsyncpg:
 
         await register_vector(conn)
 
-        embedding = SparseVec.from_dense([1.5, 2, 3])
+        embedding = SparseVector.from_dense([1.5, 2, 3])
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")

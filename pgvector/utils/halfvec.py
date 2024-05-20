@@ -2,7 +2,7 @@ import numpy as np
 from struct import pack, unpack_from
 
 
-class HalfVec:
+class HalfVector:
     def __init__(self, value):
         if isinstance(value, np.ndarray):
             value = value.tolist()
@@ -18,7 +18,7 @@ class HalfVec:
     def to_db(value, dim=None):
         if value is None:
             return value
-        if isinstance(value, HalfVec):
+        if isinstance(value, HalfVector):
             value = value.value
 
         if dim is not None and len(value) != dim:
@@ -29,20 +29,20 @@ class HalfVec:
     def to_db_binary(value):
         if value is None:
             return value
-        if isinstance(value, HalfVec):
+        if isinstance(value, HalfVector):
             value = value.value
         return pack(f'>HH{len(value)}e', len(value), 0, *value)
 
     def from_db(value):
-        if value is None or isinstance(value, HalfVec):
+        if value is None or isinstance(value, HalfVector):
             return value
-        return HalfVec([float(v) for v in value[1:-1].split(',')])
+        return HalfVector([float(v) for v in value[1:-1].split(',')])
 
     def from_db_binary(value):
-        if value is None or isinstance(value, HalfVec):
+        if value is None or isinstance(value, HalfVector):
             return value
         dim, unused = unpack_from('>HH', value)
-        return HalfVec(unpack_from(f'>{dim}e', value, 4))
+        return HalfVector(unpack_from(f'>{dim}e', value, 4))
 
     def __repr__(self):
-        return f'HalfVec({self.value})'
+        return f'HalfVector({self.value})'

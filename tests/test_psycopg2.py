@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg2 import register_vector, SparseVec
+from pgvector.psycopg2 import register_vector, SparseVector
 import psycopg2
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
@@ -46,7 +46,7 @@ class TestPsycopg2:
         assert res[1][0] is None
 
     def test_sparsevec(self):
-        embedding = SparseVec.from_dense([1.5, 2, 3])
+        embedding = SparseVector.from_dense([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (sparse_embedding) VALUES (%s), (NULL)', (embedding,))
 
         cur.execute('SELECT sparse_embedding FROM psycopg2_items ORDER BY id')

@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
-from ..utils import HalfVec
+from ..utils import HalfVector
 
 
 class Halfvec(UserDefinedType):
@@ -18,19 +18,19 @@ class Halfvec(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return HalfVec.to_db(value, self.dim)
+            return HalfVector.to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(HalfVec.to_db(value, self.dim))
+            return string_literal_processor(HalfVector.to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return HalfVec.from_db(value)
+            return HalfVector.from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

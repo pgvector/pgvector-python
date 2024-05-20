@@ -1,5 +1,5 @@
 from django.db.models import Field
-from ..utils import HalfVec
+from ..utils import HalfVector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
@@ -23,13 +23,13 @@ class HalfvecField(Field):
         return 'halfvec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return HalfVec.from_db(value)
+        return HalfVector.from_db(value)
 
     def to_python(self, value):
-        return HalfVec.from_db(value)
+        return HalfVector.from_db(value)
 
     def get_prep_value(self, value):
-        return HalfVec.to_db(value)
+        return HalfVector.to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))

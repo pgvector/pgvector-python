@@ -5,7 +5,7 @@ from .halfvec import HalfvecField
 from .indexes import IvfflatIndex, HnswIndex
 from .sparsevec import SparsevecField
 from .vector import VectorField
-from ..utils import HalfVec, SparseVec
+from ..utils import HalfVector, SparseVector
 
 __all__ = [
     'VectorExtension',
@@ -21,6 +21,6 @@ __all__ = [
     'L1Distance',
     'HammingDistance',
     'JaccardDistance',
-    'HalfVec',
-    'SparseVec'
+    'HalfVector',
+    'SparseVector'
 ]

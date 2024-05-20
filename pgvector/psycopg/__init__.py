@@ -3,7 +3,7 @@ from psycopg.types import TypeInfo
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
-from ..utils import HalfVec, SparseVec
+from ..utils import HalfVector, SparseVector
 
 
 __all__ = ['register_vector']

@@ -1,5 +1,5 @@
 from psycopg2.extensions import adapt, new_type, register_adapter, register_type
-from ..utils import HalfVec
+from ..utils import HalfVector
 
 
 class HalfvecAdapter(object):
@@ -7,14 +7,14 @@ class HalfvecAdapter(object):
         self._value = value
 
     def getquoted(self):
-        return adapt(HalfVec.to_db(self._value)).getquoted()
+        return adapt(HalfVector.to_db(self._value)).getquoted()
 
 
 def cast_halfvec(value, cur):
-    return HalfVec.from_db(value)
+    return HalfVector.from_db(value)
 
 
 def register_halfvec_info(oid):
     halfvec = new_type((oid,), 'HALFVEC', cast_halfvec)
     register_type(halfvec)
-    register_adapter(HalfVec, HalfvecAdapter)
+    register_adapter(HalfVector, HalfvecAdapter)

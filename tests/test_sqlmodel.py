@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVec
+from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVector
 import pytest
 from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
@@ -43,7 +43,7 @@ def create_items():
     ]
     session = Session(engine)
     for i, v in enumerate(vectors):
-        session.add(Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v)))
+        session.add(Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVector.from_dense(v)))
     session.commit()
 
 
