@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg import register_vector, register_vector_async, HalfVector, SparseVector
+from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector
 import psycopg
 import pytest
 
@@ -90,6 +90,23 @@ class TestPsycopg:
         res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
         assert res.to_list() == [1.5, 2, 3]
 
+    def test_bit(self):
+        embedding = Bit([False, True, False, True, False, False, False, False, True])
+        res = conn.execute('SELECT %s::bit(9)', (embedding,)).fetchone()[0]
+        assert res == '010100001'
+        assert str(Bit(res)) == '010100001'
+
+    def test_bit_binary_format(self):
+        embedding = Bit([False, True, False, True, False, False, False, False, True])
+        res = conn.execute('SELECT %b::bit(9)', (embedding,), binary=True).fetchone()[0]
+        assert str(Bit(res)) == '010100001'
+        assert repr(Bit(res)) == 'Bit(010100001)'
+
+    def test_bit_text_format(self):
+        embedding = Bit([False, True, False, True, False, False, False, False, True])
+        res = conn.execute('SELECT %t::bit(9)', (embedding,)).fetchone()[0]
+        assert res == '010100001'
+
     def test_sparsevec(self):
         conn.execute('DROP TABLE IF EXISTS sparse_items')
         conn.execute('CREATE TABLE sparse_items (id bigserial PRIMARY KEY, embedding sparsevec(6))')
@@ -109,18 +126,6 @@ class TestPsycopg:
         embedding = SparseVector.from_dense([1.5, 2, 3])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
         assert res.to_dense() == [1.5, 2, 3]
-
-    def test_bit(self):
-        res = conn.execute('SELECT %s::bit(3)', ('101',)).fetchone()[0]
-        assert res == '101'
-
-    def test_bit_binary_format(self):
-        res = conn.execute('SELECT %b::bit(3)', ('101',), binary=True).fetchone()[0]
-        assert res == b'\x00\x00\x00\x03\xa0'
-
-    def test_bit_text_format(self):
-        res = conn.execute('SELECT %t::bit(3)', ('101',)).fetchone()[0]
-        assert res == '101'
 
     @pytest.mark.asyncio
     async def test_async(self):
