@@ -2,12 +2,12 @@ from peewee import Expression, Field, Value
 from ..utils import SparseVector
 
 
-class SparsevecField(Field):
+class SparseVectorField(Field):
     field_type = 'sparsevec'
 
     def __init__(self, dimensions=None, *args, **kwargs):
         self.dimensions = dimensions
-        super(SparsevecField, self).__init__(*args, **kwargs)
+        super(SparseVectorField, self).__init__(*args, **kwargs)
 
     def get_modifiers(self):
         return self.dimensions and [self.dimensions] or None

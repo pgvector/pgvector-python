@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector.peewee import VectorField, HalfvecField, FixedBitField, SparsevecField, SparseVector
+from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField, SparseVector
 
 db = PostgresqlDatabase('pgvector_python_test')
 
@@ -13,9 +13,9 @@ class BaseModel(Model):
 
 class Item(BaseModel):
     embedding = VectorField(dimensions=3, null=True)
-    half_embedding = HalfvecField(dimensions=3, null=True)
+    half_embedding = HalfVectorField(dimensions=3, null=True)
     binary_embedding = FixedBitField(max_length=3, null=True)
-    sparse_embedding = SparsevecField(dimensions=3, null=True)
+    sparse_embedding = SparseVectorField(dimensions=3, null=True)
 
     class Meta:
         table_name = 'peewee_item'

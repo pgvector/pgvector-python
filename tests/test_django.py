@@ -8,7 +8,7 @@ from django.forms import ModelForm
 from math import sqrt
 import numpy as np
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, HalfvecField, BitField, SparsevecField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance, HalfVector, SparseVector
+from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance, HalfVector, SparseVector
 from unittest import mock
 
 settings.configure(
@@ -24,9 +24,9 @@ django.setup()
 
 class Item(models.Model):
     embedding = VectorField(dimensions=3, null=True, blank=True)
-    half_embedding = HalfvecField(dimensions=3, null=True, blank=True)
+    half_embedding = HalfVectorField(dimensions=3, null=True, blank=True)
     binary_embedding = BitField(length=3, null=True, blank=True)
-    sparse_embedding = SparsevecField(dimensions=3, null=True, blank=True)
+    sparse_embedding = SparseVectorField(dimensions=3, null=True, blank=True)
 
     class Meta:
         app_label = 'myapp'
@@ -60,9 +60,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('embedding', pgvector.django.VectorField(dimensions=3, null=True, blank=True)),
-                ('half_embedding', pgvector.django.HalfvecField(dimensions=3, null=True, blank=True)),
+                ('half_embedding', pgvector.django.HalfVectorField(dimensions=3, null=True, blank=True)),
                 ('binary_embedding', pgvector.django.BitField(length=3, null=True, blank=True)),
-                ('sparse_embedding', pgvector.django.SparsevecField(dimensions=3, null=True, blank=True)),
+                ('sparse_embedding', pgvector.django.SparseVectorField(dimensions=3, null=True, blank=True)),
             ],
         ),
         migrations.AddIndex(

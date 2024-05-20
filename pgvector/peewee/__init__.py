@@ -1,14 +1,14 @@
 from .bit import FixedBitField
-from .halfvec import HalfvecField
-from .sparsevec import SparsevecField
+from .halfvec import HalfVectorField
+from .sparsevec import SparseVectorField
 from .vector import VectorField
 from ..utils import HalfVector, SparseVector
 
 __all__ = [
     'VectorField',
-    'HalfvecField',
+    'HalfVectorField',
     'FixedBitField',
-    'SparsevecField',
+    'SparseVectorField',
     'HalfVector',
     'SparseVector'
 ]

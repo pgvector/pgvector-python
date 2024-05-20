@@ -3,7 +3,7 @@ from ..utils import SparseVector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
-class SparsevecField(Field):
+class SparseVectorField(Field):
     description = 'Sparse vector'
     empty_strings_allowed = False
 

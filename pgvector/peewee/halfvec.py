@@ -2,12 +2,12 @@ from peewee import Expression, Field, Value
 from ..utils import HalfVector
 
 
-class HalfvecField(Field):
+class HalfVectorField(Field):
     field_type = 'halfvec'
 
     def __init__(self, dimensions=None, *args, **kwargs):
         self.dimensions = dimensions
-        super(HalfvecField, self).__init__(*args, **kwargs)
+        super(HalfVectorField, self).__init__(*args, **kwargs)
 
     def get_modifiers(self):
         return self.dimensions and [self.dimensions] or None
