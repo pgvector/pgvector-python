@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg2 import register_vector, SparseVector
+from pgvector.psycopg2 import register_vector, Bit, SparseVector
 import psycopg2
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
@@ -37,7 +37,7 @@ class TestPsycopg2:
         assert res[1][0] is None
 
     def test_bit(self):
-        embedding = '101'
+        embedding = Bit('101')
         cur.execute('INSERT INTO psycopg2_items (binary_embedding) VALUES (%s), (NULL)', (embedding,))
 
         cur.execute('SELECT binary_embedding FROM psycopg2_items ORDER BY id')
