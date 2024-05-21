@@ -170,6 +170,25 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_bit(self):
+        Item(id=1, binary_embedding='101').save()
+        item = Item.objects.get(pk=1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        distance = HammingDistance('binary_embedding', '101')
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [0, 1, 2]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        distance = JaccardDistance('binary_embedding', '101')
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [2, 3, 1]
+        # assert [v.distance for v in items] == [0, 1/3, 1]
+
     def test_sparsevec(self):
         Item(id=1, sparse_embedding=SparseVector.from_dense([1, 2, 3])).save()
         item = Item.objects.get(pk=1)
@@ -202,25 +221,6 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
-
-    def test_bit(self):
-        Item(id=1, binary_embedding='101').save()
-        item = Item.objects.get(pk=1)
-        assert item.binary_embedding == '101'
-
-    def test_bit_hamming_distance(self):
-        create_items()
-        distance = HammingDistance('binary_embedding', '101')
-        items = Item.objects.annotate(distance=distance).order_by(distance)
-        assert [v.id for v in items] == [2, 3, 1]
-        assert [v.distance for v in items] == [0, 1, 2]
-
-    def test_bit_jaccard_distance(self):
-        create_items()
-        distance = JaccardDistance('binary_embedding', '101')
-        items = Item.objects.annotate(distance=distance).order_by(distance)
-        assert [v.id for v in items] == [2, 3, 1]
-        # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_filter(self):
         create_items()

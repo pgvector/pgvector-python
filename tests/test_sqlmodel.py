@@ -134,6 +134,25 @@ class TestSqlmodel:
             items = session.exec(select(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_bit(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='101'))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
     def test_sparsevec(self):
         session = Session(engine)
         session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
@@ -164,25 +183,6 @@ class TestSqlmodel:
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
-
-    def test_bit(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='101'))
-        session.commit()
-        item = session.get(Item, 1)
-        assert item.binary_embedding == '101'
-
-    def test_bit_hamming_distance(self):
-        create_items()
-        with Session(engine) as session:
-            items = session.exec(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
-            assert [v.id for v in items] == [2, 3, 1]
-
-    def test_bit_jaccard_distance(self):
-        create_items()
-        with Session(engine) as session:
-            items = session.exec(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
-            assert [v.id for v in items] == [2, 3, 1]
 
     def test_filter(self):
         create_items()

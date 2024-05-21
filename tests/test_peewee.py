@@ -106,6 +106,25 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_bit(self):
+        Item.create(id=1, binary_embedding='101')
+        item = Item.get_by_id(1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        distance = Item.binary_embedding.hamming_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [0, 1, 2]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        distance = Item.binary_embedding.jaccard_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        # assert [v.distance for v in items] == [0, 1/3, 1]
+
     def test_sparsevec(self):
         Item.create(id=1, sparse_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
@@ -138,25 +157,6 @@ class TestPeewee:
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
-
-    def test_bit(self):
-        Item.create(id=1, binary_embedding='101')
-        item = Item.get_by_id(1)
-        assert item.binary_embedding == '101'
-
-    def test_bit_hamming_distance(self):
-        create_items()
-        distance = Item.binary_embedding.hamming_distance('101')
-        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
-        assert [v.id for v in items] == [2, 3, 1]
-        assert [v.distance for v in items] == [0, 1, 2]
-
-    def test_bit_jaccard_distance(self):
-        create_items()
-        distance = Item.binary_embedding.jaccard_distance('101')
-        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
-        assert [v.id for v in items] == [2, 3, 1]
-        # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_where(self):
         create_items()
