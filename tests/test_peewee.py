@@ -73,6 +73,11 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_halfvec(self):
+        Item.create(id=1, half_embedding=[1, 2, 3])
+        item = Item.get_by_id(1)
+        assert item.half_embedding.to_list() == [1, 2, 3]
+
     def test_halfvec_l2_distance(self):
         create_items()
         distance = Item.half_embedding.l2_distance([1, 1, 1])
@@ -101,6 +106,11 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_sparsevec(self):
+        Item.create(id=1, sparse_embedding=[1, 2, 3])
+        item = Item.get_by_id(1)
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+
     def test_sparsevec_l2_distance(self):
         create_items()
         distance = Item.sparse_embedding.l2_distance(SparseVector.from_dense([1, 1, 1]))
@@ -128,6 +138,11 @@ class TestPeewee:
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
+
+    def test_bit(self):
+        Item.create(id=1, binary_embedding='101')
+        item = Item.get_by_id(1)
+        assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self):
         create_items()
