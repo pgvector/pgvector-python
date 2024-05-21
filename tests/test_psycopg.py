@@ -20,10 +20,10 @@ class TestPsycopg:
         embedding = np.array([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
-        res = conn.execute('SELECT * FROM psycopg_items ORDER BY id').fetchall()
-        assert np.array_equal(res[0][1], embedding)
-        assert res[0][1].dtype == np.float32
-        assert res[1][1] is None
+        res = conn.execute('SELECT embedding FROM psycopg_items ORDER BY id').fetchall()
+        assert np.array_equal(res[0][0], embedding)
+        assert res[0][0].dtype == np.float32
+        assert res[1][0] is None
 
     def test_vector_binary_format(self):
         embedding = np.array([1.5, 2, 3])
@@ -53,13 +53,11 @@ class TestPsycopg:
         assert np.array_equal(res, np.array([3, 2, 1.5]))
 
     def test_halfvec(self):
-        conn.execute('DROP TABLE IF EXISTS half_items')
-        conn.execute('CREATE TABLE half_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
-
         embedding = HalfVector([1.5, 2, 3])
-        conn.execute('INSERT INTO half_items (embedding) VALUES (%s)', (embedding,))
+        conn.execute('INSERT INTO psycopg_items (half_embedding) VALUES (%s)', (embedding,))
 
-        res = conn.execute('SELECT * FROM half_items ORDER BY id').fetchall()
+        res = conn.execute('SELECT half_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        assert res.to_list() == [1.5, 2, 3]
 
     def test_halfvec_binary_format(self):
         embedding = HalfVector([1.5, 2, 3])
@@ -72,10 +70,11 @@ class TestPsycopg:
         assert res.to_list() == [1.5, 2, 3]
 
     def test_bit(self):
-        embedding = Bit([False, True, False, True, False, False, False, False, True])
-        res = conn.execute('SELECT %s::bit(9)', (embedding,)).fetchone()[0]
-        assert res == '010100001'
-        assert str(Bit(res)) == '010100001'
+        embedding = Bit([True, False, True])
+        conn.execute('INSERT INTO psycopg_items (binary_embedding) VALUES (%s)', (embedding,))
+
+        res = conn.execute('SELECT binary_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        assert res == '101'
 
     def test_bit_binary_format(self):
         embedding = Bit([False, True, False, True, False, False, False, False, True])
@@ -87,26 +86,25 @@ class TestPsycopg:
         embedding = Bit([False, True, False, True, False, False, False, False, True])
         res = conn.execute('SELECT %t::bit(9)', (embedding,)).fetchone()[0]
         assert res == '010100001'
+        assert str(Bit(res)) == '010100001'
+        assert repr(Bit(res)) == 'Bit(010100001)'
 
     def test_sparsevec(self):
-        conn.execute('DROP TABLE IF EXISTS sparse_items')
-        conn.execute('CREATE TABLE sparse_items (id bigserial PRIMARY KEY, embedding sparsevec(6))')
+        embedding = SparseVector.from_dense([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (sparse_embedding) VALUES (%s)', (embedding,))
 
-        embedding = SparseVector.from_dense([0, 1.5, 0, 2, 0, 3])
-        conn.execute('INSERT INTO sparse_items (embedding) VALUES (%s)', (embedding,))
-
-        res = conn.execute('SELECT * FROM sparse_items ORDER BY id').fetchall()
-        assert res[0][1].to_dense() == [0, 1.5, 0, 2, 0, 3]
+        res = conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        assert res.to_dense() == [1.5, 2, 3]
 
     def test_sparsevec_binary_format(self):
-        embedding = SparseVector.from_dense([1.5, 2, 3])
+        embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
-        assert res.to_dense() == [1.5, 2, 3]
+        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
 
     def test_sparsevec_text_format(self):
-        embedding = SparseVector.from_dense([1.5, 2, 3])
+        embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
-        assert res.to_dense() == [1.5, 2, 3]
+        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
 
     def test_text_copy(self):
         embedding = np.array([1.5, 2, 3])
