@@ -123,9 +123,9 @@ class TestPsycopg:
     def test_binary_copy_set_types(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.set_types(['int8', 'vector', 'halfvec', 'sparsevec'])
-            copy.write_row([1, embedding, HalfVector(embedding), SparseVector.from_dense(embedding)])
+        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
+            copy.write_row([1, embedding, HalfVector(embedding), Bit('101'), SparseVector.from_dense(embedding)])
 
     @pytest.mark.asyncio
     async def test_async(self):
