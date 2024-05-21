@@ -88,14 +88,9 @@ with connection.cursor() as cursor:
 
 
 def create_items():
-    vectors = [
-        [1, 1, 1],
-        [2, 2, 2],
-        [1, 1, 2]
-    ]
-    for i, v in enumerate(vectors):
-        item = Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVector.from_dense(v))
-        item.save()
+    Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector.from_dense([1, 1, 1])).save()
+    Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector.from_dense([2, 2, 2])).save()
+    Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2])).save()
 
 
 class ItemForm(ModelForm):
@@ -222,18 +217,14 @@ class TestDjango:
         assert [v.distance for v in items] == [0, 1, 3]
 
     def test_bit_hamming_distance(self):
-        Item(id=1, binary_embedding='000').save()
-        Item(id=2, binary_embedding='101').save()
-        Item(id=3, binary_embedding='111').save()
+        create_items()
         distance = HammingDistance('binary_embedding', '101')
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [0, 1, 2]
 
     def test_bit_jaccard_distance(self):
-        Item(id=1, binary_embedding='000').save()
-        Item(id=2, binary_embedding='101').save()
-        Item(id=3, binary_embedding='111').save()
+        create_items()
         distance = JaccardDistance('binary_embedding', '101')
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
