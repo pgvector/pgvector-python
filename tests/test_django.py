@@ -29,7 +29,7 @@ class Item(models.Model):
     sparse_embedding = SparseVectorField(dimensions=3, null=True, blank=True)
 
     class Meta:
-        app_label = 'myapp'
+        app_label = 'django_app'
         indexes = [
             IvfflatIndex(
                 name='ivfflat_idx',
@@ -77,9 +77,9 @@ class Migration(migrations.Migration):
 
 
 # probably a better way to do this
-migration = Migration('initial', 'myapp')
+migration = Migration('initial', 'django_app')
 loader = MigrationLoader(connection, replace_migrations=False)
-loader.graph.add_node(('myapp', migration.name), migration)
+loader.graph.add_node(('django_app', migration.name), migration)
 sql_statements = loader.collect_sql([(migration, False)])
 
 with connection.cursor() as cursor:

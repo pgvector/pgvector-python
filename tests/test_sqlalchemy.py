@@ -16,7 +16,7 @@ Base = declarative_base()
 
 
 class Item(Base):
-    __tablename__ = 'orm_item'
+    __tablename__ = 'sqlalchemy_orm_item'
 
     id = mapped_column(Integer, primary_key=True)
     embedding = mapped_column(Vector(3))
@@ -29,7 +29,7 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 index = Index(
-    'orm_index',
+    'sqlalchemy_orm_index',
     Item.embedding,
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
@@ -56,7 +56,7 @@ class TestSqlalchemy:
         metadata = MetaData()
 
         item_table = Table(
-            'core_item',
+            'sqlalchemy_core_item',
             metadata,
             Column('id', Integer, primary_key=True),
             Column('embedding', Vector(3)),
@@ -69,7 +69,7 @@ class TestSqlalchemy:
         metadata.create_all(engine)
 
         ivfflat_index = Index(
-            'ivfflat_core_index',
+            'sqlalchemy_core_ivfflat_index',
             item_table.c.embedding,
             postgresql_using='ivfflat',
             postgresql_with={'lists': 1},
@@ -78,7 +78,7 @@ class TestSqlalchemy:
         ivfflat_index.create(engine)
 
         hnsw_index = Index(
-            'hnsw_core_index',
+            'sqlalchemy_core_hnsw_index',
             item_table.c.embedding,
             postgresql_using='hnsw',
             postgresql_with={'m': 16, 'ef_construction': 64},
@@ -263,7 +263,7 @@ class TestSqlalchemy:
             session.commit()
 
     def test_inspect(self):
-        columns = inspect(engine).get_columns('orm_item')
+        columns = inspect(engine).get_columns('sqlalchemy_orm_item')
         assert isinstance(columns[1]['type'], Vector)
 
     def test_literal_binds(self):
@@ -277,7 +277,7 @@ class TestSqlalchemy:
         session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
 
     def test_insert_text(self):
-        session.execute(text('INSERT INTO orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
+        session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
 
     @pytest.mark.asyncio
     async def test_async(self):
