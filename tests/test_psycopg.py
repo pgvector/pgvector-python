@@ -52,25 +52,6 @@ class TestPsycopg:
         res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))
 
-    def test_text_copy(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
-            copy.write_row([embedding, HalfVector(embedding), '101', SparseVector.from_dense(embedding)])
-
-    def test_binary_copy(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.write_row([embedding])
-
-    def test_binary_copy_set_types(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.set_types(['int8', 'vector', 'halfvec', 'sparsevec'])
-            copy.write_row([1, embedding, HalfVector(embedding), SparseVector.from_dense(embedding)])
-
     def test_halfvec(self):
         conn.execute('DROP TABLE IF EXISTS half_items')
         conn.execute('CREATE TABLE half_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
@@ -126,6 +107,25 @@ class TestPsycopg:
         embedding = SparseVector.from_dense([1.5, 2, 3])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
         assert res.to_dense() == [1.5, 2, 3]
+
+    def test_text_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
+            copy.write_row([embedding, HalfVector(embedding), '101', SparseVector.from_dense(embedding)])
+
+    def test_binary_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.write_row([embedding])
+
+    def test_binary_copy_set_types(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['int8', 'vector', 'halfvec', 'sparsevec'])
+            copy.write_row([1, embedding, HalfVector(embedding), SparseVector.from_dense(embedding)])
 
     @pytest.mark.asyncio
     async def test_async(self):
