@@ -115,8 +115,8 @@ class TestPsycopg:
     def test_binary_copy(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.write_row([embedding])
+        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.write_row([embedding, HalfVector(embedding), Bit('101'), SparseVector.from_dense(embedding)])
 
     def test_binary_copy_set_types(self):
         embedding = np.array([1.5, 2, 3])
