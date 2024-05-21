@@ -83,7 +83,7 @@ loader.graph.add_node(('django_app', migration.name), migration)
 sql_statements = loader.collect_sql([(migration, False)])
 
 with connection.cursor() as cursor:
-    cursor.execute("DROP TABLE IF EXISTS myapp_item")
+    cursor.execute("DROP TABLE IF EXISTS django_app_item")
     cursor.execute('\n'.join(sql_statements))
 
 
