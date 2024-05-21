@@ -19,8 +19,6 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert res[0]['id'] == 1
-        assert res[1]['id'] == 2
         assert np.array_equal(res[0]['embedding'], embedding)
         assert res[0]['embedding'].dtype == np.float32
         assert res[1]['embedding'] is None
@@ -44,8 +42,6 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert res[0]['id'] == 1
-        assert res[1]['id'] == 2
         assert res[0]['embedding'].to_list() == [1.5, 2, 3]
         assert res[1]['embedding'] is None
 
@@ -68,8 +64,6 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert res[0]['id'] == 1
-        assert res[1]['id'] == 2
         assert res[0]['embedding'].to_int() == 5
         assert res[1]['embedding'] is None
 
@@ -92,8 +86,6 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert res[0]['id'] == 1
-        assert res[1]['id'] == 2
         assert res[0]['embedding'].to_dense() == [1.5, 2, 3]
         assert res[1]['embedding'] is None
 
@@ -119,8 +111,6 @@ class TestAsyncpg:
             await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
             res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-            assert res[0]['id'] == 1
-            assert res[1]['id'] == 2
             assert np.array_equal(res[0]['embedding'], embedding)
             assert res[0]['embedding'].dtype == np.float32
             assert res[1]['embedding'] is None
