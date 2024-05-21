@@ -104,33 +104,10 @@ class TestDjango:
         Item.objects.all().delete()
 
     def test_vector(self):
-        item = Item(id=1, embedding=[1, 2, 3])
-        item.save()
+        Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        assert item.id == 1
         assert np.array_equal(item.embedding, np.array([1, 2, 3]))
         assert item.embedding.dtype == np.float32
-
-    def test_halfvec(self):
-        item = Item(id=1, half_embedding=[1, 2, 3])
-        item.save()
-        item = Item.objects.get(pk=1)
-        assert item.id == 1
-        assert item.half_embedding.to_list() == [1, 2, 3]
-
-    def test_bit(self):
-        item = Item(id=1, binary_embedding='101')
-        item.save()
-        item = Item.objects.get(pk=1)
-        assert item.id == 1
-        assert item.binary_embedding == '101'
-
-    def test_sparsevec(self):
-        item = Item(id=1, sparse_embedding=SparseVector.from_dense([1, 2, 3]))
-        item.save()
-        item = Item.objects.get(pk=1)
-        assert item.id == 1
-        assert item.sparse_embedding.to_dense() == [1, 2, 3]
 
     def test_vector_l2_distance(self):
         create_items()
@@ -160,6 +137,11 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_halfvec(self):
+        Item(id=1, half_embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        assert item.half_embedding.to_list() == [1, 2, 3]
+
     def test_halfvec_l2_distance(self):
         create_items()
         distance = L2Distance('half_embedding', HalfVector([1, 1, 1]))
@@ -188,6 +170,11 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_sparsevec(self):
+        Item(id=1, sparse_embedding=SparseVector.from_dense([1, 2, 3])).save()
+        item = Item.objects.get(pk=1)
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+
     def test_sparsevec_l2_distance(self):
         create_items()
         distance = L2Distance('sparse_embedding', SparseVector.from_dense([1, 1, 1]))
@@ -215,6 +202,11 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
+
+    def test_bit(self):
+        Item(id=1, binary_embedding='101').save()
+        item = Item.objects.get(pk=1)
+        assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self):
         create_items()
