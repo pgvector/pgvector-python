@@ -7,7 +7,13 @@ from .vector import register_vector_info
 from ..utils import Bit, HalfVector, SparseVector, Vector
 
 
-__all__ = ['register_vector']
+__all__ = [
+    'register_vector',
+    'Vector',
+    'HalfVector',
+    'Bit',
+    'SparseVector'
+]
 
 
 def register_vector(context):

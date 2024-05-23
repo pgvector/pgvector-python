@@ -1,6 +1,10 @@
 from ..utils import Vector, HalfVector, SparseVector
 
-__all__ = ['register_vector']
+__all__ = [
+    'register_vector',
+    'HalfVector',
+    'SparseVector'
+]
 
 
 async def register_vector(conn):

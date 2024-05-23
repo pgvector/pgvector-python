@@ -2,9 +2,13 @@ import psycopg2
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
-from ..utils import SparseVector
+from ..utils import HalfVector, SparseVector
 
-__all__ = ['register_vector']
+__all__ = [
+    'register_vector',
+    'HalfVector',
+    'SparseVector'
+]
 
 
 def register_vector(conn_or_curs=None):
