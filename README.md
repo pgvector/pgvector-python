@@ -30,6 +30,7 @@ Or check out some examples:
 - [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_embeddings.py) with SentenceTransformers
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
+- [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers (unreleased)
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/hash_image_search.py) with perceptual hashing
 - [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
