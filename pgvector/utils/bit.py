@@ -13,6 +13,12 @@ class Bit:
         else:
             self.value = np.array(value, dtype=bool)
 
+    def __str__(self):
+        return self.__class__.to_db(self)
+
+    def __repr__(self):
+        return f'Bit({self})'
+
     def to_db(value):
         if not isinstance(value, Bit):
             raise ValueError('expected bit')
@@ -26,9 +32,3 @@ class Bit:
 
         value = value.value
         return pack('>i', len(value)) + np.packbits(value).tobytes()
-
-    def __str__(self):
-        return self.__class__.to_db(self)
-
-    def __repr__(self):
-        return f'Bit({self})'

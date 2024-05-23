@@ -22,6 +22,9 @@ class SparseVector:
             vec[i] = v
         return vec
 
+    def __repr__(self):
+        return f'SparseVector({self.dim}, {self.indices}, {self.values})'
+
     def to_db(value, dim=None):
         if value is None:
             return value
@@ -68,6 +71,3 @@ class SparseVector:
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
         return SparseVector(int(dim), indices, values)
-
-    def __repr__(self):
-        return f'SparseVector({self.dim}, {self.indices}, {self.values})'

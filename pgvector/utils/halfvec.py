@@ -15,6 +15,9 @@ class HalfVector:
     def to_list(self):
         return list(self.value)
 
+    def __repr__(self):
+        return f'HalfVector({self.value})'
+
     def to_db(value, dim=None):
         if value is None:
             return value
@@ -43,6 +46,3 @@ class HalfVector:
             return value
         dim, unused = unpack_from('>HH', value)
         return HalfVector(unpack_from(f'>{dim}e', value, 4))
-
-    def __repr__(self):
-        return f'HalfVector({self.value})'
