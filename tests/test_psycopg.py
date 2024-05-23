@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector
+from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector, Vector
 import psycopg
 import pytest
 
@@ -51,6 +51,16 @@ class TestPsycopg:
         assert not embedding.data.contiguous
         res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))
+
+    def test_vector_class_binary_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
+        assert np.array_equal(res, np.array([1.5, 2, 3]))
+
+    def test_vector_class_text_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        assert np.array_equal(res, np.array([1.5, 2, 3]))
 
     def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])

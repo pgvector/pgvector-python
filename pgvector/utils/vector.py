@@ -3,6 +3,15 @@ from struct import pack, unpack_from
 
 
 class Vector:
+    def __init__(self, value):
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+
+        if not isinstance(value, (list, tuple)):
+            raise ValueError('expected list or tuple')
+
+        self.value = value
+
     def from_db(value):
         # could be ndarray if already cast by lower-level driver
         if value is None or isinstance(value, np.ndarray):
@@ -29,6 +38,8 @@ class Vector:
                 raise ValueError('dtype must be numeric')
 
             value = value.tolist()
+        elif isinstance(value, Vector):
+            value = value.value
 
         if dim is not None and len(value) != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
@@ -38,6 +49,9 @@ class Vector:
     def to_db_binary(value):
         if value is None:
             return value
+
+        if isinstance(value, Vector):
+            value = value.value
 
         value = np.asarray(value, dtype='>f')
 

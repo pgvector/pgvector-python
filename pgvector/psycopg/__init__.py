@@ -4,7 +4,7 @@ from .bit import register_bit_info
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
-from ..utils import Bit, HalfVector, SparseVector
+from ..utils import Bit, HalfVector, SparseVector, Vector
 
 
 __all__ = ['register_vector']
