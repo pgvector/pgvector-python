@@ -1,18 +1,18 @@
 from .bit import BitField
 from .extensions import VectorExtension
 from .functions import L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
-from .halfvec import HalfvecField
+from .halfvec import HalfVectorField
 from .indexes import IvfflatIndex, HnswIndex
-from .sparsevec import SparsevecField
+from .sparsevec import SparseVectorField
 from .vector import VectorField
-from ..utils import HalfVec, SparseVec
+from ..utils import HalfVector, SparseVector
 
 __all__ = [
     'VectorExtension',
     'VectorField',
-    'HalfvecField',
+    'HalfVectorField',
     'BitField',
-    'SparsevecField',
+    'SparseVectorField',
     'IvfflatIndex',
     'HnswIndex',
     'L2Distance',
@@ -21,6 +21,6 @@ __all__ = [
     'L1Distance',
     'HammingDistance',
     'JaccardDistance',
-    'HalfVec',
-    'SparseVec'
+    'HalfVector',
+    'SparseVector'
 ]

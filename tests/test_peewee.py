@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector.peewee import VectorField, HalfvecField, FixedBitField, SparsevecField, SparseVec
+from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField, SparseVector
 
 db = PostgresqlDatabase('pgvector_python_test')
 
@@ -13,9 +13,9 @@ class BaseModel(Model):
 
 class Item(BaseModel):
     embedding = VectorField(dimensions=3, null=True)
-    half_embedding = HalfvecField(dimensions=3, null=True)
+    half_embedding = HalfVectorField(dimensions=3, null=True)
     binary_embedding = FixedBitField(max_length=3, null=True)
-    sparse_embedding = SparsevecField(dimensions=3, null=True)
+    sparse_embedding = SparseVectorField(dimensions=3, null=True)
 
     class Meta:
         table_name = 'peewee_item'
@@ -30,13 +30,9 @@ db.create_tables([Item])
 
 
 def create_items():
-    vectors = [
-        [1, 1, 1],
-        [2, 2, 2],
-        [1, 1, 2]
-    ]
-    for i, v in enumerate(vectors):
-        Item.create(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v))
+    Item.create(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector.from_dense([1, 1, 1]))
+    Item.create(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector.from_dense([2, 2, 2]))
+    Item.create(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2]))
 
 
 class TestPeewee:
@@ -77,6 +73,11 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_halfvec(self):
+        Item.create(id=1, half_embedding=[1, 2, 3])
+        item = Item.get_by_id(1)
+        assert item.half_embedding.to_list() == [1, 2, 3]
+
     def test_halfvec_l2_distance(self):
         create_items()
         distance = Item.half_embedding.l2_distance([1, 1, 1])
@@ -105,9 +106,33 @@ class TestPeewee:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
+    def test_bit(self):
+        Item.create(id=1, binary_embedding='101')
+        item = Item.get_by_id(1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        distance = Item.binary_embedding.hamming_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        assert [v.distance for v in items] == [0, 1, 2]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        distance = Item.binary_embedding.jaccard_distance('101')
+        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
+        assert [v.id for v in items] == [2, 3, 1]
+        # assert [v.distance for v in items] == [0, 1/3, 1]
+
+    def test_sparsevec(self):
+        Item.create(id=1, sparse_embedding=[1, 2, 3])
+        item = Item.get_by_id(1)
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+
     def test_sparsevec_l2_distance(self):
         create_items()
-        distance = Item.sparse_embedding.l2_distance(SparseVec.from_dense([1, 1, 1]))
+        distance = Item.sparse_embedding.l2_distance(SparseVector.from_dense([1, 1, 1]))
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
@@ -132,24 +157,6 @@ class TestPeewee:
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
-
-    def test_bit_hamming_distance(self):
-        Item.create(id=1, binary_embedding='000')
-        Item.create(id=2, binary_embedding='101')
-        Item.create(id=3, binary_embedding='111')
-        distance = Item.binary_embedding.hamming_distance('101')
-        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
-        assert [v.id for v in items] == [2, 3, 1]
-        assert [v.distance for v in items] == [0, 1, 2]
-
-    def test_bit_jaccard_distance(self):
-        Item.create(id=1, binary_embedding='000')
-        Item.create(id=2, binary_embedding='101')
-        Item.create(id=3, binary_embedding='111')
-        distance = Item.binary_embedding.jaccard_distance('101')
-        items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
-        assert [v.id for v in items] == [2, 3, 1]
-        # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_where(self):
         create_items()

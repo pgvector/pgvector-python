@@ -3,15 +3,15 @@ from struct import pack, unpack_from
 
 
 def to_db_value(value):
-    if isinstance(value, SparseVec):
+    if isinstance(value, SparseVector):
         return value
     elif isinstance(value, (list, np.ndarray)):
-        return SparseVec.from_dense(value)
+        return SparseVector.from_dense(value)
     else:
         raise ValueError('expected sparsevec')
 
 
-class SparseVec:
+class SparseVector:
     def __init__(self, dim, indices, values):
         self.dim = dim
         self.indices = indices
@@ -23,13 +23,16 @@ class SparseVec:
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
         values = [value[i] for i in indices]
-        return SparseVec(dim, indices, values)
+        return SparseVector(dim, indices, values)
 
     def to_dense(self):
         vec = [0] * self.dim
         for i, v in zip(self.indices, self.values):
             vec[i] = v
         return vec
+
+    def __repr__(self):
+        return f'SparseVector({self.dim}, {self.indices}, {self.values})'
 
     def to_db(value, dim=None):
         if value is None:
@@ -51,7 +54,7 @@ class SparseVec:
         return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
 
     def from_db(value):
-        if value is None or isinstance(value, SparseVec):
+        if value is None or isinstance(value, SparseVector):
             return value
         elements, dim = value.split('/')
         indices = []
@@ -60,15 +63,16 @@ class SparseVec:
             i, v = e.split(':')
             indices.append(int(i) - 1)
             values.append(float(v))
-        return SparseVec(int(dim), indices, values)
+        return SparseVector(int(dim), indices, values)
 
     def from_db_binary(value):
-        if value is None or isinstance(value, SparseVec):
+        if value is None or isinstance(value, SparseVector):
             return value
         dim, nnz, unused = unpack_from('>iii', value)
         indices = list(unpack_from(f'>{nnz}i', value, 12))
         values = list(unpack_from(f'>{nnz}f', value, 12 + nnz * 4))
-        return SparseVec(int(dim), indices, values)
+        return SparseVector(int(dim), indices, values)
 
     def __repr__(self):
-        return f'SparseVec({self.dim}, {self.indices}, {self.values})'
+        return f'SparseVector({self.dim}, {self.indices}, {self.values})'
+

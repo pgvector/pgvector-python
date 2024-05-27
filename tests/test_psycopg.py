@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg import register_vector, register_vector_async, HalfVec, SparseVec
+from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector, Vector
 import psycopg
 import pytest
 
@@ -20,10 +20,10 @@ class TestPsycopg:
         embedding = np.array([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
-        res = conn.execute('SELECT * FROM psycopg_items ORDER BY id').fetchall()
-        assert np.array_equal(res[0][1], embedding)
-        assert res[0][1].dtype == np.float32
-        assert res[1][1] is None
+        res = conn.execute('SELECT embedding FROM psycopg_items ORDER BY id').fetchall()
+        assert np.array_equal(res[0][0], embedding)
+        assert res[0][0].dtype == np.float32
+        assert res[1][0] is None
 
     def test_vector_binary_format(self):
         embedding = np.array([1.5, 2, 3])
@@ -52,75 +52,88 @@ class TestPsycopg:
         res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
         assert np.array_equal(res, np.array([3, 2, 1.5]))
 
-    def test_text_copy(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
-            copy.write_row([embedding, HalfVec(embedding), '101', SparseVec.from_dense(embedding)])
+    def test_vector_class_binary_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
+        assert np.array_equal(res, np.array([1.5, 2, 3]))
 
-    def test_binary_copy(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.write_row([embedding])
-
-    def test_binary_copy_set_types(self):
-        embedding = np.array([1.5, 2, 3])
-        cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.set_types(['int8', 'vector', 'halfvec', 'sparsevec'])
-            copy.write_row([1, embedding, HalfVec(embedding), SparseVec.from_dense(embedding)])
+    def test_vector_class_text_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        assert np.array_equal(res, np.array([1.5, 2, 3]))
 
     def test_halfvec(self):
-        conn.execute('DROP TABLE IF EXISTS half_items')
-        conn.execute('CREATE TABLE half_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
+        embedding = HalfVector([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (half_embedding) VALUES (%s)', (embedding,))
 
-        embedding = HalfVec([1.5, 2, 3])
-        conn.execute('INSERT INTO half_items (embedding) VALUES (%s)', (embedding,))
-
-        res = conn.execute('SELECT * FROM half_items ORDER BY id').fetchall()
+        res = conn.execute('SELECT half_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        assert res.to_list() == [1.5, 2, 3]
 
     def test_halfvec_binary_format(self):
-        embedding = HalfVec([1.5, 2, 3])
+        embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %b::halfvec', (embedding,), binary=True).fetchone()[0]
         assert res.to_list() == [1.5, 2, 3]
 
     def test_halfvec_text_format(self):
-        embedding = HalfVec([1.5, 2, 3])
+        embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
         assert res.to_list() == [1.5, 2, 3]
 
-    def test_sparsevec(self):
-        conn.execute('DROP TABLE IF EXISTS sparse_items')
-        conn.execute('CREATE TABLE sparse_items (id bigserial PRIMARY KEY, embedding sparsevec(6))')
-
-        embedding = SparseVec.from_dense([0, 1.5, 0, 2, 0, 3])
-        conn.execute('INSERT INTO sparse_items (embedding) VALUES (%s)', (embedding,))
-
-        res = conn.execute('SELECT * FROM sparse_items ORDER BY id').fetchall()
-        assert res[0][1].to_dense() == [0, 1.5, 0, 2, 0, 3]
-
-    def test_sparsevec_binary_format(self):
-        embedding = SparseVec.from_dense([1.5, 2, 3])
-        res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
-        assert res.to_dense() == [1.5, 2, 3]
-
-    def test_sparsevec_text_format(self):
-        embedding = SparseVec.from_dense([1.5, 2, 3])
-        res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
-        assert res.to_dense() == [1.5, 2, 3]
-
     def test_bit(self):
-        res = conn.execute('SELECT %s::bit(3)', ('101',)).fetchone()[0]
+        embedding = Bit([True, False, True])
+        conn.execute('INSERT INTO psycopg_items (binary_embedding) VALUES (%s)', (embedding,))
+
+        res = conn.execute('SELECT binary_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
         assert res == '101'
 
     def test_bit_binary_format(self):
-        res = conn.execute('SELECT %b::bit(3)', ('101',), binary=True).fetchone()[0]
-        assert res == b'\x00\x00\x00\x03\xa0'
+        embedding = Bit([False, True, False, True, False, False, False, False, True])
+        res = conn.execute('SELECT %b::bit(9)', (embedding,), binary=True).fetchone()[0]
+        assert str(Bit(res)) == '010100001'
+        assert repr(Bit(res)) == 'Bit(010100001)'
 
     def test_bit_text_format(self):
-        res = conn.execute('SELECT %t::bit(3)', ('101',)).fetchone()[0]
-        assert res == '101'
+        embedding = Bit([False, True, False, True, False, False, False, False, True])
+        res = conn.execute('SELECT %t::bit(9)', (embedding,)).fetchone()[0]
+        assert res == '010100001'
+        assert str(Bit(res)) == '010100001'
+        assert repr(Bit(res)) == 'Bit(010100001)'
+
+    def test_sparsevec(self):
+        embedding = SparseVector.from_dense([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (sparse_embedding) VALUES (%s)', (embedding,))
+
+        res = conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        assert res.to_dense() == [1.5, 2, 3]
+
+    def test_sparsevec_binary_format(self):
+        embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
+        res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
+        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
+
+    def test_sparsevec_text_format(self):
+        embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
+        res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
+        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
+
+    def test_text_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
+            copy.write_row([embedding, HalfVector(embedding), '101', SparseVector.from_dense(embedding)])
+
+    def test_binary_copy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.write_row([embedding, HalfVector(embedding), Bit('101'), SparseVector.from_dense(embedding)])
+
+    def test_binary_copy_set_types(self):
+        embedding = np.array([1.5, 2, 3])
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
+            copy.write_row([1, embedding, HalfVector(embedding), Bit('101'), SparseVector.from_dense(embedding)])
 
     @pytest.mark.asyncio
     async def test_async(self):

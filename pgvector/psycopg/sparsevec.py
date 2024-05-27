@@ -1,53 +1,53 @@
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
-from ..utils import SparseVec
+from ..utils import SparseVector
 
 
-class SparseVecDumper(Dumper):
+class SparseVectorDumper(Dumper):
 
     format = Format.TEXT
 
     def dump(self, obj):
-        return SparseVec.to_db(obj).encode('utf8')
+        return SparseVector.to_db(obj).encode('utf8')
 
 
-class SparseVecBinaryDumper(SparseVecDumper):
+class SparseVectorBinaryDumper(SparseVectorDumper):
 
     format = Format.BINARY
 
     def dump(self, obj):
-        return SparseVec.to_db_binary(obj)
+        return SparseVector.to_db_binary(obj)
 
 
-class SparseVecLoader(Loader):
+class SparseVectorLoader(Loader):
 
     format = Format.TEXT
 
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return SparseVec.from_db(data.decode('utf8'))
+        return SparseVector.from_db(data.decode('utf8'))
 
 
-class SparseVecBinaryLoader(SparseVecLoader):
+class SparseVectorBinaryLoader(SparseVectorLoader):
 
     format = Format.BINARY
 
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return SparseVec.from_db_binary(data)
+        return SparseVector.from_db_binary(data)
 
 
 def register_sparsevec_info(context, info):
     info.register(context)
 
     # add oid to anonymous class for set_types
-    text_dumper = type('', (SparseVecDumper,), {'oid': info.oid})
-    binary_dumper = type('', (SparseVecBinaryDumper,), {'oid': info.oid})
+    text_dumper = type('', (SparseVectorDumper,), {'oid': info.oid})
+    binary_dumper = type('', (SparseVectorBinaryDumper,), {'oid': info.oid})
 
     adapters = context.adapters
-    adapters.register_dumper(SparseVec, text_dumper)
-    adapters.register_dumper(SparseVec, binary_dumper)
-    adapters.register_loader(info.oid, SparseVecLoader)
-    adapters.register_loader(info.oid, SparseVecBinaryLoader)
+    adapters.register_dumper(SparseVector, text_dumper)
+    adapters.register_dumper(SparseVector, binary_dumper)
+    adapters.register_loader(info.oid, SparseVectorLoader)
+    adapters.register_loader(info.oid, SparseVectorBinaryLoader)

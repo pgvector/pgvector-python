@@ -1,9 +1,9 @@
 from django.db.models import Field
-from ..utils import SparseVec
+from ..utils import SparseVector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
-class SparsevecField(Field):
+class SparseVectorField(Field):
     description = 'Sparse vector'
     empty_strings_allowed = False
 
@@ -23,13 +23,13 @@ class SparsevecField(Field):
         return 'sparsevec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return SparseVec.from_db(value)
+        return SparseVector.from_db(value)
 
     def to_python(self, value):
-        return SparseVec.from_db(value)
+        return SparseVector.from_db(value)
 
     def get_prep_value(self, value):
-        return SparseVec.to_db(value)
+        return SparseVector.to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))

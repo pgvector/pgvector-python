@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
-from ..utils import SparseVec
+from ..utils import SparseVector
 
 
 class Sparsevec(UserDefinedType):
@@ -18,19 +18,19 @@ class Sparsevec(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return SparseVec.to_db(value, self.dim)
+            return SparseVector.to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(SparseVec.to_db(value, self.dim))
+            return string_literal_processor(SparseVector.to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return SparseVec.from_db(value)
+            return SparseVector.from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

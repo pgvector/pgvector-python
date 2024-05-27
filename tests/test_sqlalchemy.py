@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVec
+from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVector
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -16,7 +16,7 @@ Base = declarative_base()
 
 
 class Item(Base):
-    __tablename__ = 'orm_item'
+    __tablename__ = 'sqlalchemy_orm_item'
 
     id = mapped_column(Integer, primary_key=True)
     embedding = mapped_column(Vector(3))
@@ -29,7 +29,7 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 index = Index(
-    'orm_index',
+    'sqlalchemy_orm_index',
     Item.embedding,
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
@@ -39,14 +39,10 @@ index.create(engine)
 
 
 def create_items():
-    vectors = [
-        [1, 1, 1],
-        [2, 2, 2],
-        [1, 1, 2]
-    ]
     session = Session(engine)
-    for i, v in enumerate(vectors):
-        session.add(Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v)))
+    session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector.from_dense([1, 1, 1])))
+    session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector.from_dense([2, 2, 2])))
+    session.add(Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2])))
     session.commit()
 
 
@@ -60,7 +56,7 @@ class TestSqlalchemy:
         metadata = MetaData()
 
         item_table = Table(
-            'core_item',
+            'sqlalchemy_core_item',
             metadata,
             Column('id', Integer, primary_key=True),
             Column('embedding', Vector(3)),
@@ -73,7 +69,7 @@ class TestSqlalchemy:
         metadata.create_all(engine)
 
         ivfflat_index = Index(
-            'ivfflat_core_index',
+            'sqlalchemy_core_ivfflat_index',
             item_table.c.embedding,
             postgresql_using='ivfflat',
             postgresql_with={'lists': 1},
@@ -82,7 +78,7 @@ class TestSqlalchemy:
         ivfflat_index.create(engine)
 
         hnsw_index = Index(
-            'hnsw_core_index',
+            'sqlalchemy_core_hnsw_index',
             item_table.c.embedding,
             postgresql_using='hnsw',
             postgresql_with={'m': 16, 'ef_construction': 64},
@@ -112,6 +108,13 @@ class TestSqlalchemy:
             assert np.array_equal(items[1].embedding, np.array([4, 5, 6]))
             assert items[1].embedding.dtype == np.float32
             assert items[2].embedding is None
+
+    def test_vector(self):
+        session = Session(engine)
+        session.add(Item(id=1, embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.embedding.tolist() == [1, 2, 3]
 
     def test_vector_l2_distance(self):
         create_items()
@@ -161,11 +164,98 @@ class TestSqlalchemy:
             items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_halfvec(self):
+        session = Session(engine)
+        session.add(Item(id=1, half_embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.half_embedding.to_list() == [1, 2, 3]
+
     def test_halfvec_l2_distance(self):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
+
+    def test_halfvec_l2_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_halfvec_max_inner_product(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.half_embedding.max_inner_product([1, 1, 1])).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_halfvec_max_inner_product_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.half_embedding.max_inner_product([1, 1, 1])))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_halfvec_cosine_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.half_embedding.cosine_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_halfvec_cosine_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.half_embedding.cosine_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_halfvec_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_halfvec_l1_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_bit(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='101'))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.binary_embedding.hamming_distance('101')).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_hamming_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.binary_embedding.jaccard_distance('101')).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_sparsevec(self):
+        session = Session(engine)
+        session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -173,25 +263,47 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_bit_hamming_distance(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='000'))
-        session.add(Item(id=2, binary_embedding='101'))
-        session.add(Item(id=3, binary_embedding='111'))
-        session.commit()
+    def test_sparsevec_l2_distance_orm(self):
+        create_items()
         with Session(engine) as session:
-            items = session.query(Item).order_by(Item.binary_embedding.hamming_distance('101')).all()
+            items = session.scalars(select(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_sparsevec_max_inner_product(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.sparse_embedding.max_inner_product([1, 1, 1])).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_bit_jaccard_distance(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='000'))
-        session.add(Item(id=2, binary_embedding='101'))
-        session.add(Item(id=3, binary_embedding='111'))
-        session.commit()
+    def test_sparsevec_max_inner_product_orm(self):
+        create_items()
         with Session(engine) as session:
-            items = session.query(Item).order_by(Item.binary_embedding.jaccard_distance('101')).all()
+            items = session.scalars(select(Item).order_by(Item.sparse_embedding.max_inner_product([1, 1, 1])))
             assert [v.id for v in items] == [2, 3, 1]
+
+    def test_sparsevec_cosine_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.sparse_embedding.cosine_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_sparsevec_cosine_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.sparse_embedding.cosine_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 2, 3]
+
+    def test_sparsevec_l1_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_sparsevec_l1_distance_orm(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.scalars(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
+            assert [v.id for v in items] == [1, 3, 2]
 
     def test_filter(self):
         create_items()
@@ -275,7 +387,7 @@ class TestSqlalchemy:
             session.commit()
 
     def test_inspect(self):
-        columns = inspect(engine).get_columns('orm_item')
+        columns = inspect(engine).get_columns('sqlalchemy_orm_item')
         assert isinstance(columns[1]['type'], Vector)
 
     def test_literal_binds(self):
@@ -289,7 +401,7 @@ class TestSqlalchemy:
         session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
 
     def test_insert_text(self):
-        session.execute(text('INSERT INTO orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
+        session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
 
     @pytest.mark.asyncio
     async def test_async(self):

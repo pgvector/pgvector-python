@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVec
+from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVector
 import pytest
 from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
@@ -36,14 +36,10 @@ index.create(engine)
 
 
 def create_items():
-    vectors = [
-        [1, 1, 1],
-        [2, 2, 2],
-        [1, 1, 2]
-    ]
     session = Session(engine)
-    for i, v in enumerate(vectors):
-        session.add(Item(id=i + 1, embedding=v, half_embedding=v, sparse_embedding=SparseVec.from_dense(v)))
+    session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector.from_dense([1, 1, 1])))
+    session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector.from_dense([2, 2, 2])))
+    session.add(Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2])))
     session.commit()
 
 
@@ -76,6 +72,13 @@ class TestSqlmodel:
             assert items[1].embedding.dtype == np.float32
             assert items[2].embedding is None
 
+    def test_vector(self):
+        session = Session(engine)
+        session.add(Item(id=1, embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.embedding.tolist() == [1, 2, 3]
+
     def test_vector_l2_distance(self):
         create_items()
         with Session(engine) as session:
@@ -99,6 +102,13 @@ class TestSqlmodel:
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
+
+    def test_halfvec(self):
+        session = Session(engine)
+        session.add(Item(id=1, half_embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.half_embedding.to_list() == [1, 2, 3]
 
     def test_halfvec_l2_distance(self):
         create_items()
@@ -124,6 +134,32 @@ class TestSqlmodel:
             items = session.exec(select(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_bit(self):
+        session = Session(engine)
+        session.add(Item(id=1, binary_embedding='101'))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.binary_embedding == '101'
+
+    def test_bit_hamming_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_bit_jaccard_distance(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.exec(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
+            assert [v.id for v in items] == [2, 3, 1]
+
+    def test_sparsevec(self):
+        session = Session(engine)
+        session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
+        session.commit()
+        item = session.get(Item, 1)
+        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+
     def test_sparsevec_l2_distance(self):
         create_items()
         with Session(engine) as session:
@@ -147,26 +183,6 @@ class TestSqlmodel:
         with Session(engine) as session:
             items = session.exec(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
-
-    def test_bit_hamming_distance(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='000'))
-        session.add(Item(id=2, binary_embedding='101'))
-        session.add(Item(id=3, binary_embedding='111'))
-        session.commit()
-        with Session(engine) as session:
-            items = session.exec(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
-            assert [v.id for v in items] == [2, 3, 1]
-
-    def test_bit_jaccard_distance(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='000'))
-        session.add(Item(id=2, binary_embedding='101'))
-        session.add(Item(id=3, binary_embedding='111'))
-        session.commit()
-        with Session(engine) as session:
-            items = session.exec(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
-            assert [v.id for v in items] == [2, 3, 1]
 
     def test_filter(self):
         create_items()

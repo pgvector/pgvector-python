@@ -1,22 +1,22 @@
 from peewee import Expression, Field, Value
-from ..utils import HalfVec
+from ..utils import HalfVector
 
 
-class HalfvecField(Field):
+class HalfVectorField(Field):
     field_type = 'halfvec'
 
     def __init__(self, dimensions=None, *args, **kwargs):
         self.dimensions = dimensions
-        super(HalfvecField, self).__init__(*args, **kwargs)
+        super(HalfVectorField, self).__init__(*args, **kwargs)
 
     def get_modifiers(self):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        return HalfVec.to_db(value)
+        return HalfVector.to_db(value)
 
     def python_value(self, value):
-        return HalfVec.from_db(value)
+        return HalfVector.from_db(value)
 
     def _distance(self, op, vector):
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))
