@@ -10,7 +10,7 @@ class Vector:
         if not isinstance(value, (list, tuple)):
             raise ValueError('expected list or tuple')
 
-        self.value = value
+        self._value = value
 
     def from_db(value):
         # could be ndarray if already cast by lower-level driver
@@ -39,7 +39,7 @@ class Vector:
 
             value = value.tolist()
         elif isinstance(value, Vector):
-            value = value.value
+            value = value._value
 
         if dim is not None and len(value) != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
@@ -51,7 +51,7 @@ class Vector:
             return value
 
         if isinstance(value, Vector):
-            value = value.value
+            value = value._value
 
         value = np.asarray(value, dtype='>f')
 

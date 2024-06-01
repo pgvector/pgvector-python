@@ -10,19 +10,19 @@ class HalfVector:
         if not isinstance(value, (list, tuple)):
             raise ValueError('expected list or tuple')
 
-        self.value = value
+        self._value = value
 
     def to_list(self):
-        return list(self.value)
+        return list(self._value)
 
     def __repr__(self):
-        return f'HalfVector({self.value})'
+        return f'HalfVector({self._value})'
 
     def to_db(value, dim=None):
         if value is None:
             return value
         if isinstance(value, HalfVector):
-            value = value.value
+            value = value._value
 
         if dim is not None and len(value) != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
@@ -33,7 +33,7 @@ class HalfVector:
         if value is None:
             return value
         if isinstance(value, HalfVector):
-            value = value.value
+            value = value._value
         return pack(f'>HH{len(value)}e', len(value), 0, *value)
 
     def from_db(value):

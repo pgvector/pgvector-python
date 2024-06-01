@@ -13,9 +13,9 @@ def to_db_value(value):
 
 class SparseVector:
     def __init__(self, dim, indices, values):
-        self.dim = dim
-        self.indices = indices
-        self.values = values
+        self._dim = dim
+        self._indices = indices
+        self._values = values
 
     def from_dense(value):
         if isinstance(value, np.ndarray):
@@ -26,13 +26,13 @@ class SparseVector:
         return SparseVector(dim, indices, values)
 
     def to_dense(self):
-        vec = [0] * self.dim
-        for i, v in zip(self.indices, self.values):
+        vec = [0] * self._dim
+        for i, v in zip(self._indices, self._values):
             vec[i] = v
         return vec
 
     def __repr__(self):
-        return f'SparseVector({self.dim}, {self.indices}, {self.values})'
+        return f'SparseVector({self._dim}, {self._indices}, {self._values})'
 
     def to_db(value, dim=None):
         if value is None:
@@ -40,18 +40,18 @@ class SparseVector:
 
         value = to_db_value(value)
 
-        if dim is not None and value.dim != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim))
+        if dim is not None and value._dim != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value._dim))
 
-        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value.indices, value.values)]) + '}/' + str(value.dim)
+        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value._indices, value._values)]) + '}/' + str(value._dim)
 
     def to_db_binary(value):
         if value is None:
             return value
 
         value = to_db_value(value)
-        nnz = len(value.indices)
-        return pack(f'>iii{nnz}i{nnz}f', value.dim, nnz, 0, *value.indices, *value.values)
+        nnz = len(value._indices)
+        return pack(f'>iii{nnz}i{nnz}f', value._dim, nnz, 0, *value._indices, *value._values)
 
     def from_db(value):
         if value is None or isinstance(value, SparseVector):
