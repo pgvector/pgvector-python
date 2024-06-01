@@ -39,6 +39,7 @@ class HalfVector:
     def to_db(value, dim=None):
         if value is None:
             return value
+
         if not isinstance(value, HalfVector):
             value = HalfVector(value)
 
@@ -50,6 +51,7 @@ class HalfVector:
     def to_db_binary(value):
         if value is None:
             return value
+
         if not isinstance(value, HalfVector):
             value = HalfVector(value)
 
@@ -58,9 +60,11 @@ class HalfVector:
     def from_db(value):
         if value is None or isinstance(value, HalfVector):
             return value
+
         return __class__.from_text(value)
 
     def from_db_binary(value):
         if value is None or isinstance(value, HalfVector):
             return value
+
         return __class__.from_binary(value)
