@@ -26,6 +26,8 @@ class Bit:
         value = self._value
         return pack('>i', len(value)) + np.packbits(value).tobytes()
 
+    # TODO move rest
+
     def to_db(value):
         if not isinstance(value, Bit):
             raise ValueError('expected bit')

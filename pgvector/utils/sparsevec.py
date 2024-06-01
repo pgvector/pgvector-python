@@ -17,6 +17,9 @@ class SparseVector:
         self._indices = indices
         self._values = values
 
+    def __repr__(self):
+        return f'SparseVector({self._dim}, {self._indices}, {self._values})'
+
     def from_dense(value):
         if isinstance(value, np.ndarray):
             value = value.tolist()
@@ -31,8 +34,30 @@ class SparseVector:
             vec[i] = v
         return vec
 
-    def __repr__(self):
-        return f'SparseVector({self._dim}, {self._indices}, {self._values})'
+    def to_text(self):
+        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(self._indices, self._values)]) + '}/' + str(self._dim)
+
+    def to_binary(self):
+        nnz = len(self._indices)
+        return pack(f'>iii{nnz}i{nnz}f', self._dim, nnz, 0, *self._indices, *self._values)
+
+    def from_text(value):
+        elements, dim = value.split('/')
+        indices = []
+        values = []
+        for e in elements[1:-1].split(','):
+            i, v = e.split(':')
+            indices.append(int(i) - 1)
+            values.append(float(v))
+        return SparseVector(int(dim), indices, values)
+
+    def from_binary(value):
+        dim, nnz, unused = unpack_from('>iii', value)
+        indices = unpack_from(f'>{nnz}i', value, 12)
+        values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
+        return SparseVector(int(dim), indices, values)
+
+    # TODO move rest
 
     def to_db(value, dim=None):
         if value is None:
@@ -43,32 +68,24 @@ class SparseVector:
         if dim is not None and value._dim != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value._dim))
 
-        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(value._indices, value._values)]) + '}/' + str(value._dim)
+        return value.to_text()
 
     def to_db_binary(value):
         if value is None:
             return value
 
         value = to_db_value(value)
-        nnz = len(value._indices)
-        return pack(f'>iii{nnz}i{nnz}f', value._dim, nnz, 0, *value._indices, *value._values)
+
+        return value.to_binary()
 
     def from_db(value):
         if value is None or isinstance(value, SparseVector):
             return value
-        elements, dim = value.split('/')
-        indices = []
-        values = []
-        for e in elements[1:-1].split(','):
-            i, v = e.split(':')
-            indices.append(int(i) - 1)
-            values.append(float(v))
-        return SparseVector(int(dim), indices, values)
+
+        return __class__.from_text(value)
 
     def from_db_binary(value):
         if value is None or isinstance(value, SparseVector):
             return value
-        dim, nnz, unused = unpack_from('>iii', value)
-        indices = unpack_from(f'>{nnz}i', value, 12)
-        values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
-        return SparseVector(int(dim), indices, values)
+
+        return __class__.from_binary(value)

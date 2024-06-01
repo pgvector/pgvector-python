@@ -34,6 +34,8 @@ class HalfVector:
         dim, unused = unpack_from('>HH', value)
         return HalfVector(unpack_from(f'>{dim}e', value, 4))
 
+    # TODO move rest
+
     def to_db(value, dim=None):
         if value is None:
             return value
