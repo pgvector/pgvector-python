@@ -1,14 +1,16 @@
-from .bit import Bit
-from .halfvec import Halfvec
-from .sparsevec import Sparsevec
-from .vector import Vector
+from .bit import BIT
+from .halfvec import HALFVEC
+from .sparsevec import SPARSEVEC
+from .vector import VECTOR
+from .vector import VECTOR as Vector
 from ..utils import HalfVector, SparseVector
 
 __all__ = [
     'Vector',
-    'Halfvec',
-    'Bit',
-    'Sparsevec',
+    'VECTOR'
+    'HALFVEC',
+    'BIT',
+    'SPARSEVEC',
     'HalfVector',
     'SparseVector'
 ]

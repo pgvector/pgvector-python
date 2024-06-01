@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -19,10 +19,10 @@ class Item(Base):
     __tablename__ = 'sqlalchemy_orm_item'
 
     id = mapped_column(Integer, primary_key=True)
-    embedding = mapped_column(Vector(3))
-    half_embedding = mapped_column(Halfvec(3))
-    binary_embedding = mapped_column(Bit(3))
-    sparse_embedding = mapped_column(Sparsevec(3))
+    embedding = mapped_column(VECTOR(3))
+    half_embedding = mapped_column(HALFVEC(3))
+    binary_embedding = mapped_column(BIT(3))
+    sparse_embedding = mapped_column(SPARSEVEC(3))
 
 
 Base.metadata.drop_all(engine)
@@ -59,10 +59,10 @@ class TestSqlalchemy:
             'sqlalchemy_core_item',
             metadata,
             Column('id', Integer, primary_key=True),
-            Column('embedding', Vector(3)),
-            Column('half_embedding', Halfvec(3)),
-            Column('binary_embedding', Bit(3)),
-            Column('sparse_embedding', Sparsevec(3))
+            Column('embedding', VECTOR(3)),
+            Column('half_embedding', HALFVEC(3)),
+            Column('binary_embedding', BIT(3)),
+            Column('sparse_embedding', SPARSEVEC(3))
         )
 
         metadata.drop_all(engine)
@@ -388,7 +388,7 @@ class TestSqlalchemy:
 
     def test_inspect(self):
         columns = inspect(engine).get_columns('sqlalchemy_orm_item')
-        assert isinstance(columns[1]['type'], Vector)
+        assert isinstance(columns[1]['type'], VECTOR)
 
     def test_literal_binds(self):
         sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(engine, compile_kwargs={'literal_binds': True})

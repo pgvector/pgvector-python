@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import Vector, Halfvec, Bit, Sparsevec, SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector
 import pytest
 from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
@@ -16,10 +16,10 @@ class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    embedding: Optional[Any] = Field(default=None, sa_column=Column(Vector(3)))
-    half_embedding: Optional[Any] = Field(default=None, sa_column=Column(Halfvec(3)))
-    binary_embedding: Optional[Any] = Field(default=None, sa_column=Column(Bit(3)))
-    sparse_embedding: Optional[Any] = Field(default=None, sa_column=Column(Sparsevec(3)))
+    embedding: Optional[Any] = Field(default=None, sa_column=Column(VECTOR(3)))
+    half_embedding: Optional[Any] = Field(default=None, sa_column=Column(HALFVEC(3)))
+    binary_embedding: Optional[Any] = Field(default=None, sa_column=Column(BIT(3)))
+    sparse_embedding: Optional[Any] = Field(default=None, sa_column=Column(SPARSEVEC(3)))
 
 
 SQLModel.metadata.drop_all(engine)

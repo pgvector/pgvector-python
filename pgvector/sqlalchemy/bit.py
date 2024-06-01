@@ -2,7 +2,7 @@ from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float
 
 
-class Bit(UserDefinedType):
+class BIT(UserDefinedType):
     cache_ok = True
 
     def __init__(self, length=None):
@@ -23,4 +23,4 @@ class Bit(UserDefinedType):
 
 
 # for reflection
-ischema_names['bit'] = Bit
+ischema_names['bit'] = BIT

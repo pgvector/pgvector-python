@@ -3,7 +3,7 @@ from sqlalchemy.types import UserDefinedType, Float, String
 from ..utils import HalfVector
 
 
-class Halfvec(UserDefinedType):
+class HALFVEC(UserDefinedType):
     cache_ok = True
     _string = String()
 
@@ -48,4 +48,4 @@ class Halfvec(UserDefinedType):
 
 
 # for reflection
-ischema_names['halfvec'] = Halfvec
+ischema_names['halfvec'] = HALFVEC

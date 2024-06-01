@@ -3,7 +3,7 @@ from sqlalchemy.types import UserDefinedType, Float, String
 from ..utils import SparseVector
 
 
-class Sparsevec(UserDefinedType):
+class SPARSEVEC(UserDefinedType):
     cache_ok = True
     _string = String()
 
@@ -48,4 +48,4 @@ class Sparsevec(UserDefinedType):
 
 
 # for reflection
-ischema_names['sparsevec'] = Sparsevec
+ischema_names['sparsevec'] = SPARSEVEC
