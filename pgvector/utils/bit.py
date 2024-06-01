@@ -14,10 +14,13 @@ class Bit:
             self._value = np.array(value, dtype=bool)
 
     def __str__(self):
-        return ''.join(self._value.astype(np.uint8).astype(str))
+        return self.to_text()
 
     def __repr__(self):
         return f'Bit({self})'
+
+    def to_text(self):
+        return ''.join(self._value.astype(np.uint8).astype(str))
 
     def to_binary(self):
         value = self._value
@@ -27,7 +30,7 @@ class Bit:
         if not isinstance(value, Bit):
             raise ValueError('expected bit')
 
-        return str(value)
+        return value.to_text()
 
     def to_db_binary(value):
         if not isinstance(value, Bit):
