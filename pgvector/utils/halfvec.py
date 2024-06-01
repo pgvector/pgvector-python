@@ -12,29 +12,39 @@ class HalfVector:
 
         self._value = value
 
-    def to_list(self):
-        return list(self._value)
-
     def __repr__(self):
         return f'HalfVector({self._value})'
+
+    def to_text(self):
+        return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
+
+    def to_binary(self):
+        return pack(f'>HH{len(self._value)}e', len(self._value), 0, *self._value)
+
+    def dim(self):
+        return len(self._value)
+
+    def to_list(self):
+        return list(self._value)
 
     def to_db(value, dim=None):
         if value is None:
             return value
-        if isinstance(value, HalfVector):
-            value = value._value
+        if not isinstance(value, HalfVector):
+            value = HalfVector(value)
 
-        if dim is not None and len(value) != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
+        if dim is not None and value.dim() != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
-        return '[' + ','.join([str(float(v)) for v in value]) + ']'
+        return value.to_text()
 
     def to_db_binary(value):
         if value is None:
             return value
-        if isinstance(value, HalfVector):
-            value = value._value
-        return pack(f'>HH{len(value)}e', len(value), 0, *value)
+        if not isinstance(value, HalfVector):
+            value = HalfVector(value)
+
+        return value.to_binary()
 
     def from_db(value):
         if value is None or isinstance(value, HalfVector):
