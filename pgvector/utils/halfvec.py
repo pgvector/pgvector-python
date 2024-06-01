@@ -27,6 +27,13 @@ class HalfVector:
     def to_list(self):
         return list(self._value)
 
+    def from_text(value):
+        return HalfVector([float(v) for v in value[1:-1].split(',')])
+
+    def from_binary(value):
+        dim, unused = unpack_from('>HH', value)
+        return HalfVector(unpack_from(f'>{dim}e', value, 4))
+
     def to_db(value, dim=None):
         if value is None:
             return value
@@ -49,10 +56,9 @@ class HalfVector:
     def from_db(value):
         if value is None or isinstance(value, HalfVector):
             return value
-        return HalfVector([float(v) for v in value[1:-1].split(',')])
+        return __class__.from_text(value)
 
     def from_db_binary(value):
         if value is None or isinstance(value, HalfVector):
             return value
-        dim, unused = unpack_from('>HH', value)
-        return HalfVector(unpack_from(f'>{dim}e', value, 4))
+        return __class__.from_binary(value)
