@@ -3,7 +3,7 @@ from psycopg2.extensions import adapt, new_type, register_adapter, register_type
 from ..utils import Vector
 
 
-class VectorAdapter(object):
+class VectorAdapter:
     def __init__(self, value):
         self._value = value
 

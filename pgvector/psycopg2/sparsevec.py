@@ -2,7 +2,7 @@ from psycopg2.extensions import adapt, new_type, register_adapter, register_type
 from ..utils import SparseVector
 
 
-class SparsevecAdapter(object):
+class SparsevecAdapter:
     def __init__(self, value):
         self._value = value
 
