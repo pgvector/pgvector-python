@@ -45,7 +45,7 @@ class SparseVector:
         return vec
 
     def to_text(self):
-        return '{' + ','.join([f'{i + 1}:{v}' for i, v in zip(self._indices, self._values)]) + '}/' + str(self._dim)
+        return '{' + ','.join([f'{int(i) + 1}:{float(v)}' for i, v in zip(self._indices, self._values)]) + '}/' + str(int(self._dim))
 
     def to_binary(self):
         nnz = len(self._indices)

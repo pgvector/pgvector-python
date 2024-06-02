@@ -26,7 +26,7 @@ class Vector:
         return self._value
 
     def to_text(self):
-        return '[' + ','.join([str(v) for v in self._value]) + ']'
+        return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
 
     def to_binary(self):
         return pack('>HH', self.dim(), 0) + self._value.tobytes()
