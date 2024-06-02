@@ -27,8 +27,7 @@ class Bit:
         return ''.join(self._value.astype(np.uint8).astype(str))
 
     def to_binary(self):
-        value = self._value
-        return pack('>i', len(value)) + np.packbits(value).tobytes()
+        return pack('>i', len(self._value)) + np.packbits(self._value).tobytes()
 
     def from_text(value):
         return Bit(np.asarray([v != '0' for v in value], dtype=bool))

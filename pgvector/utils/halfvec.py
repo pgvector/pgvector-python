@@ -17,7 +17,7 @@ class HalfVector:
         return f'HalfVector({self.to_list()})'
 
     def dim(self):
-        return self._value.shape[0]
+        return len(self._value)
 
     def to_list(self):
         return self._value.tolist()

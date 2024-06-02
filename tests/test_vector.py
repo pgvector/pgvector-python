@@ -37,3 +37,6 @@ class TestVector:
     def test_repr(self):
         assert repr(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
         assert str(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
+
+    def test_dim(self):
+        assert Vector([1, 2, 3]).dim() == 3
