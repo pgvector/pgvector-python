@@ -383,7 +383,7 @@ class TestSqlalchemy:
         item = Item(embedding=np.array(['one', 'two', 'three']))
         session = Session(engine)
         session.add(item)
-        with pytest.raises(StatementError, match='dtype must be numeric'):
+        with pytest.raises(StatementError, match='could not convert string to float'):
             session.commit()
 
     def test_inspect(self):

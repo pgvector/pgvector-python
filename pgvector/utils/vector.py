@@ -4,58 +4,71 @@ from struct import pack, unpack_from
 
 class Vector:
     def __init__(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        # asarray still copies if same dtype
+        if not isinstance(value, np.ndarray) or value.dtype != '>f4':
+            value = np.asarray(value, dtype='>f4')
 
-        if not isinstance(value, (list, tuple)):
-            raise ValueError('expected list or tuple')
+        if value.ndim != 1:
+            raise ValueError('expected ndim to be 1')
 
         self._value = value
 
-    def from_db(value):
-        # could be ndarray if already cast by lower-level driver
-        if value is None or isinstance(value, np.ndarray):
-            return value
+    def __repr__(self):
+        return f'Vector({self.to_list()})'
 
-        return np.array(value[1:-1].split(','), dtype=np.float32)
+    def dim(self):
+        return self._value.shape[0]
 
-    def from_db_binary(value):
-        if value is None or isinstance(value, np.ndarray):
-            return value
+    def to_list(self):
+        return self._value.tolist()
 
+    def to_numpy(self):
+        return self._value
+
+    def to_text(self):
+        return '[' + ','.join([str(v) for v in self._value]) + ']'
+
+    def to_binary(self):
+        return pack('>HH', self.dim(), 0) + self._value.tobytes()
+
+    def from_text(value):
+        return Vector([float(v) for v in value[1:-1].split(',')])
+
+    def from_binary(value):
         dim, unused = unpack_from('>HH', value)
-        return np.frombuffer(value, dtype='>f', count=dim, offset=4).astype(dtype=np.float32)
+        return Vector(np.frombuffer(value, dtype='>f4', count=dim, offset=4))
+
+    # TODO move rest
 
     def to_db(value, dim=None):
         if value is None:
             return value
 
-        if isinstance(value, np.ndarray):
-            if value.ndim != 1:
-                raise ValueError('expected ndim to be 1')
+        if not isinstance(value, Vector):
+            value = Vector(value)
 
-            if not np.issubdtype(value.dtype, np.integer) and not np.issubdtype(value.dtype, np.floating):
-                raise ValueError('dtype must be numeric')
+        if dim is not None and value.dim() != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
-            value = value.tolist()
-        elif isinstance(value, Vector):
-            value = value._value
-
-        if dim is not None and len(value) != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, len(value)))
-
-        return '[' + ','.join([str(float(v)) for v in value]) + ']'
+        return value.to_text()
 
     def to_db_binary(value):
         if value is None:
             return value
 
-        if isinstance(value, Vector):
-            value = value._value
+        if not isinstance(value, Vector):
+            value = Vector(value)
 
-        value = np.asarray(value, dtype='>f')
+        return value.to_binary()
 
-        if value.ndim != 1:
-            raise ValueError('expected ndim to be 1')
+    def from_db(value):
+        if value is None or isinstance(value, np.ndarray):
+            return value
 
-        return pack('>HH', value.shape[0], 0) + value.tobytes()
+        return __class__.from_text(value).to_numpy().astype(np.float32)
+
+    def from_db_binary(value):
+        if value is None or isinstance(value, np.ndarray):
+            return value
+
+        return __class__.from_binary(value).to_numpy().astype(np.float32)
