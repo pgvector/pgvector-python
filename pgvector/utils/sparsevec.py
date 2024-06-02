@@ -13,9 +13,10 @@ def to_db_value(value):
 
 class SparseVector:
     def __init__(self, dim, indices, values):
-        self._dim = dim
-        self._indices = indices
-        self._values = values
+        # TODO improve
+        self._dim = int(dim)
+        self._indices = [int(i) for i in indices]
+        self._values = [float(v) for v in values]
 
     def __repr__(self):
         return f'SparseVector({self._dim}, {self._indices}, {self._values})'
@@ -25,7 +26,7 @@ class SparseVector:
             value = value.tolist()
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
-        values = [value[i] for i in indices]
+        values = [float(value[i]) for i in indices]
         return SparseVector(dim, indices, values)
 
     def dim(self):

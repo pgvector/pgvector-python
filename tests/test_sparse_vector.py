@@ -9,5 +9,5 @@ class TestSparseVector:
         assert SparseVector.from_dense([1, 2, 3]).to_numpy().tolist() == [1, 2, 3]
 
     def test_repr(self):
-        assert repr(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1, 2, 3])'
-        assert str(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1, 2, 3])'
+        assert repr(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1.0, 2.0, 3.0])'
+        assert str(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1.0, 2.0, 3.0])'
