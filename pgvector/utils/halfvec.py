@@ -65,10 +65,10 @@ class HalfVector:
         if value is None or isinstance(value, HalfVector):
             return value
 
-        return __class__.from_text(value)
+        return HalfVector.from_text(value)
 
     def from_db_binary(value):
         if value is None or isinstance(value, HalfVector):
             return value
 
-        return __class__.from_binary(value)
+        return HalfVector.from_binary(value)

@@ -91,10 +91,10 @@ class SparseVector:
         if value is None or isinstance(value, SparseVector):
             return value
 
-        return __class__.from_text(value)
+        return SparseVector.from_text(value)
 
     def from_db_binary(value):
         if value is None or isinstance(value, SparseVector):
             return value
 
-        return __class__.from_binary(value)
+        return SparseVector.from_binary(value)

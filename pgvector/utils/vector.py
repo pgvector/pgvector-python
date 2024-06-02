@@ -65,10 +65,10 @@ class Vector:
         if value is None or isinstance(value, np.ndarray):
             return value
 
-        return __class__.from_text(value).to_numpy().astype(np.float32)
+        return Vector.from_text(value).to_numpy().astype(np.float32)
 
     def from_db_binary(value):
         if value is None or isinstance(value, np.ndarray):
             return value
 
-        return __class__.from_binary(value).to_numpy().astype(np.float32)
+        return Vector.from_binary(value).to_numpy().astype(np.float32)
