@@ -106,17 +106,19 @@ class TestPsycopg:
         conn.execute('INSERT INTO psycopg_items (sparse_embedding) VALUES (%s)', (embedding,))
 
         res = conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
-        assert res.to_dense() == [1.5, 2, 3]
+        assert res.to_list() == [1.5, 2, 3]
 
     def test_sparsevec_binary_format(self):
         embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
-        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
+        assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
+        assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
     def test_sparsevec_text_format(self):
         embedding = SparseVector.from_dense([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
-        assert res.to_dense() == [1.5, 0, 2, 0, 3, 0]
+        assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
+        assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
     def test_text_copy(self):
         embedding = np.array([1.5, 2, 3])

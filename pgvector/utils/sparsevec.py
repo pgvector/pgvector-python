@@ -28,8 +28,14 @@ class SparseVector:
         values = [value[i] for i in indices]
         return SparseVector(dim, indices, values)
 
-    def to_dense(self):
-        vec = [0] * self._dim
+    def to_list(self):
+        vec = [0.0] * self._dim
+        for i, v in zip(self._indices, self._values):
+            vec[i] = v
+        return vec
+
+    def to_numpy(self):
+        vec = np.repeat(0.0, self._dim).astype(np.float32)
         for i, v in zip(self._indices, self._values):
             vec[i] = v
         return vec

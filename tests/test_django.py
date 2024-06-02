@@ -192,7 +192,7 @@ class TestDjango:
     def test_sparsevec(self):
         Item(id=1, sparse_embedding=SparseVector.from_dense([1, 2, 3])).save()
         item = Item.objects.get(pk=1)
-        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+        assert item.sparse_embedding.to_list() == [1, 2, 3]
 
     def test_sparsevec_l2_distance(self):
         create_items()

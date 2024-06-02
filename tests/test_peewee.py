@@ -128,7 +128,7 @@ class TestPeewee:
     def test_sparsevec(self):
         Item.create(id=1, sparse_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert item.sparse_embedding.to_dense() == [1, 2, 3]
+        assert item.sparse_embedding.to_list() == [1, 2, 3]
 
     def test_sparsevec_l2_distance(self):
         create_items()

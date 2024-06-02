@@ -51,5 +51,5 @@ class TestPsycopg2:
 
         cur.execute('SELECT sparse_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0].to_dense() == [1.5, 2, 3]
+        assert res[0][0].to_list() == [1.5, 2, 3]
         assert res[1][0] is None
