@@ -17,6 +17,15 @@ class Bit:
     def __repr__(self):
         return f'Bit({self})'
 
+    def dim(self):
+        return self._value.shape[0]
+
+    def to_list(self):
+        return self._value.tolist()
+
+    def to_numpy(self):
+        return self._value
+
     def to_text(self):
         return ''.join(self._value.astype(np.uint8).astype(str))
 
