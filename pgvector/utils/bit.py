@@ -4,9 +4,7 @@ from struct import pack, unpack_from
 
 class Bit:
     def __init__(self, value):
-        if isinstance(value, bytes):
-            self._value = __class__.from_binary(value)._value
-        elif isinstance(value, str):
+        if isinstance(value, str):
             self._value = __class__.from_text(value)._value
         else:
             value = np.asarray(value, dtype=bool)

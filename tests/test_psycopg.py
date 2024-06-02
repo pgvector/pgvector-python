@@ -91,8 +91,8 @@ class TestPsycopg:
     def test_bit_binary_format(self):
         embedding = Bit([False, True, False, True, False, False, False, False, True])
         res = conn.execute('SELECT %b::bit(9)', (embedding,), binary=True).fetchone()[0]
-        assert str(Bit(res)) == '010100001'
-        assert repr(Bit(res)) == 'Bit(010100001)'
+        assert str(Bit.from_binary(res)) == '010100001'
+        assert repr(Bit.from_binary(res)) == 'Bit(010100001)'
 
     def test_bit_text_format(self):
         embedding = Bit([False, True, False, True, False, False, False, False, True])
