@@ -9,7 +9,12 @@ class Bit:
         elif isinstance(value, str):
             self._value = __class__.from_text(value)._value
         else:
-            self._value = np.asarray(value, dtype=bool)
+            value = np.asarray(value, dtype=bool)
+
+            if value.ndim != 1:
+                raise ValueError('expected ndim to be 1')
+
+            self._value = value
 
     def __str__(self):
         return self.to_text()

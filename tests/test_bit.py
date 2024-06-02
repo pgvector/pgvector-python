@@ -18,5 +18,15 @@ class TestBit:
         assert Bit(arr).to_list() == [True, False, True]
         assert Bit(arr).to_numpy() is arr
 
+    def test_ndim_two(self):
+        with pytest.raises(ValueError) as error:
+            Bit([[True, False], [True, False]])
+        assert str(error.value) == 'expected ndim to be 1'
+
+    def test_ndim_zero(self):
+        with pytest.raises(ValueError) as error:
+            Bit(True)
+        assert str(error.value) == 'expected ndim to be 1'
+
     def test_repr(self):
         assert repr(Bit([True, False, True])) == 'Bit(101)'
