@@ -33,3 +33,6 @@ class TestHalfVector:
         with pytest.raises(ValueError) as error:
             HalfVector(1)
         assert str(error.value) == 'expected ndim to be 1'
+
+    def test_repr(self):
+        assert repr(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'
