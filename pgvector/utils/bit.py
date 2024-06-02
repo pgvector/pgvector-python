@@ -17,9 +17,6 @@ class Bit:
     def __repr__(self):
         return f'Bit({self.to_text()})'
 
-    def dim(self):
-        return self._value.shape[0]
-
     def to_list(self):
         return self._value.tolist()
 
