@@ -73,11 +73,13 @@ class TestPsycopg:
         embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %b::halfvec', (embedding,), binary=True).fetchone()[0]
         assert res.to_list() == [1.5, 2, 3]
+        assert np.array_equal(res.to_numpy(), np.array([1.5, 2, 3]))
 
     def test_halfvec_text_format(self):
         embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
         assert res.to_list() == [1.5, 2, 3]
+        assert np.array_equal(res.to_numpy(), np.array([1.5, 2, 3]))
 
     def test_bit(self):
         embedding = Bit([True, False, True])

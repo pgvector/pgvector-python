@@ -4,35 +4,37 @@ from struct import pack, unpack_from
 
 class HalfVector:
     def __init__(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        value = np.asarray(value, dtype=np.float16)
 
-        if not isinstance(value, (list, tuple)):
-            raise ValueError('expected list or tuple')
+        if value.ndim != 1:
+            raise ValueError('expected ndim to be 1')
 
         self._value = value
 
     def __repr__(self):
-        return f'HalfVector({self._value})'
-
-    def to_text(self):
-        return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
-
-    def to_binary(self):
-        return pack(f'>HH{len(self._value)}e', len(self._value), 0, *self._value)
+        return f'HalfVector({self.to_list()})'
 
     def dim(self):
-        return len(self._value)
+        return self._value.shape[0]
 
     def to_list(self):
-        return list(self._value)
+        return self._value.tolist()
+
+    def to_numpy(self):
+        return self._value
+
+    def to_text(self):
+        return '[' + ','.join([str(v) for v in self._value]) + ']'
+
+    def to_binary(self):
+        return pack('>HH', self.dim(), 0) + np.array(self._value, dtype='>f2').tobytes()
 
     def from_text(value):
         return HalfVector([float(v) for v in value[1:-1].split(',')])
 
     def from_binary(value):
         dim, unused = unpack_from('>HH', value)
-        return HalfVector(unpack_from(f'>{dim}e', value, 4))
+        return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4).astype(dtype=np.float16))
 
     # TODO move rest
 
