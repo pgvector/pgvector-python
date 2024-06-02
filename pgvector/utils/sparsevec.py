@@ -28,6 +28,9 @@ class SparseVector:
         values = [value[i] for i in indices]
         return SparseVector(dim, indices, values)
 
+    def dim(self):
+        return self._dim
+
     def to_list(self):
         vec = [0.0] * self._dim
         for i, v in zip(self._indices, self._values):
@@ -71,8 +74,8 @@ class SparseVector:
 
         value = to_db_value(value)
 
-        if dim is not None and value._dim != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value._dim))
+        if dim is not None and value.dim() != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
         return value.to_text()
 
