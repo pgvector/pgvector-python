@@ -5,13 +5,11 @@ from struct import pack, unpack_from
 class Bit:
     def __init__(self, value):
         if isinstance(value, bytes):
-            count = unpack_from('>i', value)[0]
-            buf = np.frombuffer(value[4:], dtype=np.uint8)
-            self._value = np.unpackbits(buf, count=count).astype(bool)
+            self._value = __class__.from_binary(value)._value
         elif isinstance(value, str):
-            self._value = np.array([v != '0' for v in value], dtype=bool)
+            self._value = __class__.from_text(value)._value
         else:
-            self._value = np.array(value, dtype=bool)
+            self._value = np.asarray(value, dtype=bool)
 
     def __str__(self):
         return self.to_text()
@@ -25,6 +23,14 @@ class Bit:
     def to_binary(self):
         value = self._value
         return pack('>i', len(value)) + np.packbits(value).tobytes()
+
+    def from_text(value):
+        return Bit(np.asarray([v != '0' for v in value], dtype=bool))
+
+    def from_binary(value):
+        count = unpack_from('>i', value)[0]
+        buf = np.frombuffer(value[4:], dtype=np.uint8)
+        return Bit(np.unpackbits(buf, count=count).astype(bool))
 
     # TODO move rest
 
