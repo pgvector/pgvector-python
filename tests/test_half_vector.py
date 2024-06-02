@@ -36,3 +36,4 @@ class TestHalfVector:
 
     def test_repr(self):
         assert repr(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'
+        assert str(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'

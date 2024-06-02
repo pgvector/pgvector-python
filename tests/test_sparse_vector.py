@@ -10,3 +10,4 @@ class TestSparseVector:
 
     def test_repr(self):
         assert repr(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1, 2, 3])'
+        assert str(SparseVector.from_dense([1, 2, 3])) == 'SparseVector(3, [0, 1, 2], [1, 2, 3])'

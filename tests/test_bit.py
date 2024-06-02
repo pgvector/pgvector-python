@@ -11,7 +11,7 @@ class TestBit:
         assert Bit((True, False, True)).to_list() == [True, False, True]
 
     def test_str(self):
-        assert str(Bit('101')) == '101'
+        assert Bit('101').to_list() == [True, False, True]
 
     def test_ndarray_same_object(self):
         arr = np.array([True, False, True])
@@ -30,3 +30,4 @@ class TestBit:
 
     def test_repr(self):
         assert repr(Bit([True, False, True])) == 'Bit(101)'
+        assert str(Bit([True, False, True])) == 'Bit(101)'

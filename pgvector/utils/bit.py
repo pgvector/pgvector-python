@@ -14,11 +14,8 @@ class Bit:
 
             self._value = value
 
-    def __str__(self):
-        return self.to_text()
-
     def __repr__(self):
-        return f'Bit({self})'
+        return f'Bit({self.to_text()})'
 
     def dim(self):
         return self._value.shape[0]
