@@ -17,3 +17,6 @@ class TestBit:
         arr = np.array([True, False, True])
         assert Bit(arr).to_list() == [True, False, True]
         assert Bit(arr).to_numpy() is arr
+
+    def test_repr(self):
+        assert repr(Bit([True, False, True])) == 'Bit(101)'
