@@ -4,7 +4,7 @@ from struct import pack, unpack_from
 
 class HalfVector:
     def __init__(self, value):
-        value = np.asarray(value, dtype=np.float16)
+        value = np.asarray(value, dtype='>f2')
 
         if value.ndim != 1:
             raise ValueError('expected ndim to be 1')
@@ -27,14 +27,14 @@ class HalfVector:
         return '[' + ','.join([str(v) for v in self._value]) + ']'
 
     def to_binary(self):
-        return pack('>HH', self.dim(), 0) + np.array(self._value, dtype='>f2').tobytes()
+        return pack('>HH', self.dim(), 0) + self._value.tobytes()
 
     def from_text(value):
         return HalfVector([float(v) for v in value[1:-1].split(',')])
 
     def from_binary(value):
         dim, unused = unpack_from('>HH', value)
-        return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4).astype(dtype=np.float16))
+        return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
     # TODO move rest
 
