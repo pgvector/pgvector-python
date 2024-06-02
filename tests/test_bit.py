@@ -14,6 +14,6 @@ class TestBit:
         assert str(Bit('101')) == '101'
 
     def test_ndarray_same_object(self):
-        arr = np.array([True, False, True], dtype=bool)
+        arr = np.array([True, False, True])
         assert Bit(arr).to_list() == [True, False, True]
         assert Bit(arr).to_numpy() is arr
