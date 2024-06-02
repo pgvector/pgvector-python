@@ -34,7 +34,7 @@ class Bit:
 
     def from_binary(value):
         count = unpack_from('>i', value)[0]
-        buf = np.frombuffer(value[4:], dtype=np.uint8)
+        buf = np.frombuffer(value, dtype=np.uint8, offset=4)
         return Bit(np.unpackbits(buf, count=count).astype(bool))
 
     # TODO move rest
