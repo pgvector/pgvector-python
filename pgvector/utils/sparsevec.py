@@ -56,41 +56,46 @@ class SparseVector:
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
         return SparseVector(int(dim), indices, values)
 
-    def _to_db(value, dim=None):
+    @classmethod
+    def _to_db(cls, value, dim=None):
         if value is None:
             return value
 
-        value = __class__._to_db_value(value)
+        value = cls._to_db_value(value)
 
         if dim is not None and value.dim() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
         return value.to_text()
 
-    def _to_db_binary(value):
+    @classmethod
+    def _to_db_binary(cls, value):
         if value is None:
             return value
 
-        value = __class__._to_db_value(value)
+        value = cls._to_db_value(value)
 
         return value.to_binary()
 
-    def _to_db_value(value):
-        if isinstance(value, SparseVector):
+    @classmethod
+    def _to_db_value(cls, value):
+        if isinstance(value, cls):
             return value
         elif isinstance(value, (list, np.ndarray)):
-            return SparseVector.from_dense(value)
+            return cls.from_dense(value)
         else:
             raise ValueError('expected sparsevec')
 
-    def _from_db(value):
-        if value is None or isinstance(value, SparseVector):
+    @classmethod
+    def _from_db(cls, value):
+        if value is None or isinstance(value, cls):
             return value
 
-        return SparseVector.from_text(value)
+        return cls.from_text(value)
 
-    def _from_db_binary(value):
-        if value is None or isinstance(value, SparseVector):
+    @classmethod
+    def _from_db_binary(cls, value):
+        if value is None or isinstance(value, cls):
             return value
 
-        return SparseVector.from_binary(value)
+        return cls.from_binary(value)

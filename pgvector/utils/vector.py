@@ -38,35 +38,39 @@ class Vector:
         dim, unused = unpack_from('>HH', value)
         return Vector(np.frombuffer(value, dtype='>f4', count=dim, offset=4))
 
-    def _to_db(value, dim=None):
+    @classmethod
+    def _to_db(cls, value, dim=None):
         if value is None:
             return value
 
-        if not isinstance(value, Vector):
-            value = Vector(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         if dim is not None and value.dim() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
         return value.to_text()
 
-    def _to_db_binary(value):
+    @classmethod
+    def _to_db_binary(cls, value):
         if value is None:
             return value
 
-        if not isinstance(value, Vector):
-            value = Vector(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         return value.to_binary()
 
-    def _from_db(value):
+    @classmethod
+    def _from_db(cls, value):
         if value is None or isinstance(value, np.ndarray):
             return value
 
-        return Vector.from_text(value).to_numpy().astype(np.float32)
+        return cls.from_text(value).to_numpy().astype(np.float32)
 
-    def _from_db_binary(value):
+    @classmethod
+    def _from_db_binary(cls, value):
         if value is None or isinstance(value, np.ndarray):
             return value
 
-        return Vector.from_binary(value).to_numpy().astype(np.float32)
+        return cls.from_binary(value).to_numpy().astype(np.float32)

@@ -31,42 +31,48 @@ class HalfVector:
     def to_binary(self):
         return pack('>HH', self.dim(), 0) + self._value.tobytes()
 
-    def from_text(value):
-        return HalfVector([float(v) for v in value[1:-1].split(',')])
+    @classmethod
+    def from_text(cls, value):
+        return cls([float(v) for v in value[1:-1].split(',')])
 
-    def from_binary(value):
+    @classmethod
+    def from_binary(cls, value):
         dim, unused = unpack_from('>HH', value)
-        return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
+        return cls(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
-    def _to_db(value, dim=None):
+    @classmethod
+    def _to_db(cls, value, dim=None):
         if value is None:
             return value
 
-        if not isinstance(value, HalfVector):
-            value = HalfVector(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         if dim is not None and value.dim() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
         return value.to_text()
 
-    def _to_db_binary(value):
+    @classmethod
+    def _to_db_binary(cls, value):
         if value is None:
             return value
 
-        if not isinstance(value, HalfVector):
-            value = HalfVector(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         return value.to_binary()
 
-    def _from_db(value):
-        if value is None or isinstance(value, HalfVector):
+    @classmethod
+    def _from_db(cls, value):
+        if value is None or isinstance(value, cls):
             return value
 
-        return HalfVector.from_text(value)
+        return cls.from_text(value)
 
-    def _from_db_binary(value):
-        if value is None or isinstance(value, HalfVector):
+    @classmethod
+    def _from_db_binary(cls, value):
+        if value is None or isinstance(value, cls):
             return value
 
-        return HalfVector.from_binary(value)
+        return cls.from_binary(value)

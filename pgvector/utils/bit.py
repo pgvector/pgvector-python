@@ -37,14 +37,16 @@ class Bit:
         buf = np.frombuffer(value, dtype=np.uint8, offset=4)
         return Bit(np.unpackbits(buf, count=count).astype(bool))
 
-    def _to_db(value):
-        if not isinstance(value, Bit):
+    @classmethod
+    def _to_db(cls, value):
+        if not isinstance(value, cls):
             raise ValueError('expected bit')
 
         return value.to_text()
 
-    def _to_db_binary(value):
-        if not isinstance(value, Bit):
+    @classmethod
+    def _to_db_binary(cls, value):
+        if not isinstance(value, cls):
             raise ValueError('expected bit')
 
         return value.to_binary()
