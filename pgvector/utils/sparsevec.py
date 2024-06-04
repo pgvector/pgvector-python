@@ -14,9 +14,7 @@ class SparseVector:
 
     @classmethod
     def from_coordinates(cls, coordinates, dim):
-        if isinstance(coordinates, dict):
-            coordinates = coordinates.items()
-        elements = [(i, v) for i, v in coordinates]
+        elements = [(i, v) for i, v in coordinates.items()]
         elements.sort()
         indices = [int(v[0]) for v in elements]
         values = [float(v[1]) for v in elements]
