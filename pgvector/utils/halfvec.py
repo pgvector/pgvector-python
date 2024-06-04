@@ -8,6 +8,7 @@ from struct import pack, unpack_from
 
 class HalfVector:
     def __init__(self, value):
+        # asarray still copies if same dtype
         if not isinstance(value, np.ndarray) or value.dtype != '>f2':
             value = np.asarray(value, dtype='>f2')
 
