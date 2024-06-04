@@ -13,8 +13,6 @@ class SparseVector:
         return f'SparseVector({self._dim}, {self._indices}, {self._values})'
 
     def from_dense(value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
         values = [float(value[i]) for i in indices]
