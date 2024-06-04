@@ -12,11 +12,12 @@ class SparseVector:
     def __repr__(self):
         return f'SparseVector({self._dim}, {self._indices}, {self._values})'
 
-    def from_dense(value):
+    @classmethod
+    def from_dense(cls, value):
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
         values = [float(value[i]) for i in indices]
-        return SparseVector(dim, indices, values)
+        return cls(dim, indices, values)
 
     def dim(self):
         return self._dim
