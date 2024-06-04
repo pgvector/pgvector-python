@@ -2,14 +2,20 @@ import numpy as np
 from struct import pack, unpack_from
 
 
+import numpy as np
+from struct import pack, unpack_from
+
+
 class HalfVector:
     def __init__(self, value):
-        # asarray still copies if same dtype
+        """
+        Initialize HalfVector with an array or list of floats.
+        """
         if not isinstance(value, np.ndarray) or value.dtype != '>f2':
             value = np.asarray(value, dtype='>f2')
 
         if value.ndim != 1:
-            raise ValueError('expected ndim to be 1')
+            raise ValueError('Expected ndim to be 1')
 
         self._value = value
 
@@ -17,28 +23,55 @@ class HalfVector:
         return f'HalfVector({self.to_list()})'
 
     def dim(self):
+        """
+        Get the dimension (length) of the vector.
+        """
         return len(self._value)
 
     def to_list(self):
+        """
+        Convert the vector to a list of floats.
+        """
         return self._value.tolist()
 
     def to_numpy(self):
+        """
+        Convert the vector to a numpy array.
+        """
         return self._value
 
     def to_text(self):
+        """
+        Convert the vector to a text representation.
+        """
         return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
 
     def to_binary(self):
+        """
+        Convert the vector to a binary representation.
+        """
         return pack('>HH', self.dim(), 0) + self._value.tobytes()
 
-    def from_text(value):
-        return HalfVector([float(v) for v in value[1:-1].split(',')])
+    @classmethod
+    def from_text(cls, value):
+        """
+        Create a HalfVector from a text representation.
+        """
+        return cls([float(v) for v in value[1:-1].split(',')])
 
-    def from_binary(value):
+    @classmethod
+    def from_binary(cls, value):
+        """
+        Create a HalfVector from a binary representation.
+        """
         dim, unused = unpack_from('>HH', value)
-        return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
+        return cls(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
+    @staticmethod
     def _to_db(value, dim=None):
+        """
+        Convert a value to its text representation for database storage.
+        """
         if value is None:
             return value
 
@@ -46,11 +79,15 @@ class HalfVector:
             value = HalfVector(value)
 
         if dim is not None and value.dim() != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
+            raise ValueError(f'Expected {dim} dimensions, not {value.dim()}')
 
         return value.to_text()
 
+    @staticmethod
     def _to_db_binary(value):
+        """
+        Convert a value to its binary representation for database storage.
+        """
         if value is None:
             return value
 
@@ -59,14 +96,22 @@ class HalfVector:
 
         return value.to_binary()
 
-    def _from_db(value):
+    @classmethod
+    def _from_db(cls, value):
+        """
+        Convert a text representation from the database back to a HalfVector.
+        """
         if value is None or isinstance(value, HalfVector):
             return value
 
-        return HalfVector.from_text(value)
+        return cls.from_text(value)
 
-    def _from_db_binary(value):
+    @classmethod
+    def _from_db_binary(cls, value):
+        """
+        Convert a binary representation from the database back to a HalfVector.
+        """
         if value is None or isinstance(value, HalfVector):
             return value
 
-        return HalfVector.from_binary(value)
+        return cls.from_binary(value)

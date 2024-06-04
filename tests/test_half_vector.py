@@ -27,12 +27,12 @@ class TestHalfVector:
     def test_ndim_two(self):
         with pytest.raises(ValueError) as error:
             HalfVector([[1, 2], [3, 4]])
-        assert str(error.value) == 'expected ndim to be 1'
+        assert str(error.value) == 'Expected ndim to be 1'
 
     def test_ndim_zero(self):
         with pytest.raises(ValueError) as error:
             HalfVector(1)
-        assert str(error.value) == 'expected ndim to be 1'
+        assert str(error.value) == 'Expected ndim to be 1'
 
     def test_repr(self):
         assert repr(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'
