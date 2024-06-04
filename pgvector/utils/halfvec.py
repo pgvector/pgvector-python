@@ -8,9 +8,6 @@ from struct import pack, unpack_from
 
 class HalfVector:
     def __init__(self, value):
-        """
-        Initialize HalfVector with an array or list of floats.
-        """
         if not isinstance(value, np.ndarray) or value.dtype != '>f2':
             value = np.asarray(value, dtype='>f2')
 
@@ -23,55 +20,31 @@ class HalfVector:
         return f'HalfVector({self.to_list()})'
 
     def dim(self):
-        """
-        Get the dimension (length) of the vector.
-        """
         return len(self._value)
 
     def to_list(self):
-        """
-        Convert the vector to a list of floats.
-        """
         return self._value.tolist()
 
     def to_numpy(self):
-        """
-        Convert the vector to a numpy array.
-        """
         return self._value
 
     def to_text(self):
-        """
-        Convert the vector to a text representation.
-        """
         return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
 
     def to_binary(self):
-        """
-        Convert the vector to a binary representation.
-        """
         return pack('>HH', self.dim(), 0) + self._value.tobytes()
 
     @classmethod
     def from_text(cls, value):
-        """
-        Create a HalfVector from a text representation.
-        """
         return cls([float(v) for v in value[1:-1].split(',')])
 
     @classmethod
     def from_binary(cls, value):
-        """
-        Create a HalfVector from a binary representation.
-        """
         dim, unused = unpack_from('>HH', value)
         return cls(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
     @staticmethod
     def _to_db(value, dim=None):
-        """
-        Convert a value to its text representation for database storage.
-        """
         if value is None:
             return value
 
@@ -85,9 +58,6 @@ class HalfVector:
 
     @staticmethod
     def _to_db_binary(value):
-        """
-        Convert a value to its binary representation for database storage.
-        """
         if value is None:
             return value
 
@@ -98,9 +68,6 @@ class HalfVector:
 
     @classmethod
     def _from_db(cls, value):
-        """
-        Convert a text representation from the database back to a HalfVector.
-        """
         if value is None or isinstance(value, HalfVector):
             return value
 
@@ -108,9 +75,6 @@ class HalfVector:
 
     @classmethod
     def _from_db_binary(cls, value):
-        """
-        Convert a binary representation from the database back to a HalfVector.
-        """
         if value is None or isinstance(value, HalfVector):
             return value
 
