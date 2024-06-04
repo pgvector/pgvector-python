@@ -13,6 +13,16 @@ class SparseVector:
         return f'SparseVector({self._dim}, {self._indices}, {self._values})'
 
     @classmethod
+    def from_coordinates(cls, coordinates, dim):
+        if isinstance(coordinates, dict):
+            coordinates = coordinates.items()
+        elements = [(i, v) for i, v in coordinates]
+        elements.sort()
+        indices = [int(v[0]) for v in elements]
+        values = [float(v[1]) for v in elements]
+        return cls(dim, indices, values)
+
+    @classmethod
     def from_dense(cls, value):
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
