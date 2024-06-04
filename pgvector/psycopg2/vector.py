@@ -8,11 +8,11 @@ class VectorAdapter:
         self._value = value
 
     def getquoted(self):
-        return adapt(Vector.to_db(self._value)).getquoted()
+        return adapt(Vector._to_db(self._value)).getquoted()
 
 
 def cast_vector(value, cur):
-    return Vector.from_db(value)
+    return Vector._from_db(value)
 
 
 def register_vector_info(oid):

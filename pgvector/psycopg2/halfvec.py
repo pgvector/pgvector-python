@@ -7,11 +7,11 @@ class HalfvecAdapter:
         self._value = value
 
     def getquoted(self):
-        return adapt(HalfVector.to_db(self._value)).getquoted()
+        return adapt(HalfVector._to_db(self._value)).getquoted()
 
 
 def cast_halfvec(value, cur):
-    return HalfVector.from_db(value)
+    return HalfVector._from_db(value)
 
 
 def register_halfvec_info(oid):

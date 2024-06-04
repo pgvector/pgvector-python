@@ -8,11 +8,11 @@ class DistanceBase(Func):
     def __init__(self, expression, vector, **extra):
         if not hasattr(vector, 'resolve_expression'):
             if isinstance(vector, HalfVector):
-                vector = Value(HalfVector.to_db(vector))
+                vector = Value(HalfVector._to_db(vector))
             elif isinstance(vector, SparseVector):
-                vector = Value(SparseVector.to_db(vector))
+                vector = Value(SparseVector._to_db(vector))
             else:
-                vector = Value(Vector.to_db(vector))
+                vector = Value(Vector._to_db(vector))
         super().__init__(expression, vector, **extra)
 
 

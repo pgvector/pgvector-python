@@ -7,11 +7,11 @@ class SparsevecAdapter:
         self._value = value
 
     def getquoted(self):
-        return adapt(SparseVector.to_db(self._value)).getquoted()
+        return adapt(SparseVector._to_db(self._value)).getquoted()
 
 
 def cast_sparsevec(value, cur):
-    return SparseVector.from_db(value)
+    return SparseVector._from_db(value)
 
 
 def register_sparsevec_info(oid):

@@ -2,15 +2,6 @@ import numpy as np
 from struct import pack, unpack_from
 
 
-def to_db_value(value):
-    if isinstance(value, SparseVector):
-        return value
-    elif isinstance(value, (list, np.ndarray)):
-        return SparseVector.from_dense(value)
-    else:
-        raise ValueError('expected sparsevec')
-
-
 class SparseVector:
     def __init__(self, dim, indices, values):
         # TODO improve
@@ -67,34 +58,40 @@ class SparseVector:
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
         return SparseVector(int(dim), indices, values)
 
-    # TODO move rest
-
-    def to_db(value, dim=None):
+    def _to_db(value, dim=None):
         if value is None:
             return value
 
-        value = to_db_value(value)
+        value = __class__._to_db_value(value)
 
         if dim is not None and value.dim() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
 
         return value.to_text()
 
-    def to_db_binary(value):
+    def _to_db_binary(value):
         if value is None:
             return value
 
-        value = to_db_value(value)
+        value = __class__._to_db_value(value)
 
         return value.to_binary()
 
-    def from_db(value):
+    def _to_db_value(value):
+        if isinstance(value, SparseVector):
+            return value
+        elif isinstance(value, (list, np.ndarray)):
+            return SparseVector.from_dense(value)
+        else:
+            raise ValueError('expected sparsevec')
+
+    def _from_db(value):
         if value is None or isinstance(value, SparseVector):
             return value
 
         return SparseVector.from_text(value)
 
-    def from_db_binary(value):
+    def _from_db_binary(value):
         if value is None or isinstance(value, SparseVector):
             return value
 

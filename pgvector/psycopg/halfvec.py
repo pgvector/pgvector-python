@@ -8,7 +8,7 @@ class HalfVectorDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return HalfVector.to_db(obj).encode('utf8')
+        return HalfVector._to_db(obj).encode('utf8')
 
 
 class HalfVectorBinaryDumper(HalfVectorDumper):
@@ -16,7 +16,7 @@ class HalfVectorBinaryDumper(HalfVectorDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return HalfVector.to_db_binary(obj)
+        return HalfVector._to_db_binary(obj)
 
 
 class HalfVectorLoader(Loader):
@@ -26,7 +26,7 @@ class HalfVectorLoader(Loader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return HalfVector.from_db(data.decode('utf8'))
+        return HalfVector._from_db(data.decode('utf8'))
 
 
 class HalfVectorBinaryLoader(HalfVectorLoader):
@@ -36,7 +36,7 @@ class HalfVectorBinaryLoader(HalfVectorLoader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return HalfVector.from_db_binary(data)
+        return HalfVector._from_db_binary(data)
 
 
 def register_halfvec_info(context, info):

@@ -8,7 +8,7 @@ class BitDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return Bit.to_db(obj).encode('utf8')
+        return Bit._to_db(obj).encode('utf8')
 
 
 class BitBinaryDumper(BitDumper):
@@ -16,7 +16,7 @@ class BitBinaryDumper(BitDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return Bit.to_db_binary(obj)
+        return Bit._to_db_binary(obj)
 
 
 def register_bit_info(context, info):

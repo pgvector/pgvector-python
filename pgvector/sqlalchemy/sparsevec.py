@@ -18,19 +18,19 @@ class SPARSEVEC(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return SparseVector.to_db(value, self.dim)
+            return SparseVector._to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(SparseVector.to_db(value, self.dim))
+            return string_literal_processor(SparseVector._to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return SparseVector.from_db(value)
+            return SparseVector._from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

@@ -23,13 +23,13 @@ class SparseVectorField(Field):
         return 'sparsevec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return SparseVector.from_db(value)
+        return SparseVector._from_db(value)
 
     def to_python(self, value):
-        return SparseVector.from_db(value)
+        return SparseVector._from_db(value)
 
     def get_prep_value(self, value):
-        return SparseVector.to_db(value)
+        return SparseVector._to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))

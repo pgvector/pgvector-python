@@ -8,7 +8,7 @@ class VectorDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return Vector.to_db(obj).encode('utf8')
+        return Vector._to_db(obj).encode('utf8')
 
 
 class VectorBinaryDumper(VectorDumper):
@@ -16,7 +16,7 @@ class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return Vector.to_db_binary(obj)
+        return Vector._to_db_binary(obj)
 
 
 class VectorLoader(Loader):
@@ -26,7 +26,7 @@ class VectorLoader(Loader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return Vector.from_db(data.decode('utf8'))
+        return Vector._from_db(data.decode('utf8'))
 
 
 class VectorBinaryLoader(VectorLoader):
@@ -36,7 +36,7 @@ class VectorBinaryLoader(VectorLoader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return Vector.from_db_binary(data)
+        return Vector._from_db_binary(data)
 
 
 def register_vector_info(context, info):

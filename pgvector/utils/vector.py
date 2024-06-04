@@ -38,9 +38,7 @@ class Vector:
         dim, unused = unpack_from('>HH', value)
         return Vector(np.frombuffer(value, dtype='>f4', count=dim, offset=4))
 
-    # TODO move rest
-
-    def to_db(value, dim=None):
+    def _to_db(value, dim=None):
         if value is None:
             return value
 
@@ -52,7 +50,7 @@ class Vector:
 
         return value.to_text()
 
-    def to_db_binary(value):
+    def _to_db_binary(value):
         if value is None:
             return value
 
@@ -61,13 +59,13 @@ class Vector:
 
         return value.to_binary()
 
-    def from_db(value):
+    def _from_db(value):
         if value is None or isinstance(value, np.ndarray):
             return value
 
         return Vector.from_text(value).to_numpy().astype(np.float32)
 
-    def from_db_binary(value):
+    def _from_db_binary(value):
         if value is None or isinstance(value, np.ndarray):
             return value
 

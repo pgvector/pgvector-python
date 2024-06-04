@@ -18,19 +18,19 @@ class HALFVEC(UserDefinedType):
 
     def bind_processor(self, dialect):
         def process(value):
-            return HalfVector.to_db(value, self.dim)
+            return HalfVector._to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(HalfVector.to_db(value, self.dim))
+            return string_literal_processor(HalfVector._to_db(value, self.dim))
         return process
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return HalfVector.from_db(value)
+            return HalfVector._from_db(value)
         return process
 
     class comparator_factory(UserDefinedType.Comparator):

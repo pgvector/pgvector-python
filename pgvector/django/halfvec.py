@@ -23,13 +23,13 @@ class HalfVectorField(Field):
         return 'halfvec(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return HalfVector.from_db(value)
+        return HalfVector._from_db(value)
 
     def to_python(self, value):
-        return HalfVector.from_db(value)
+        return HalfVector._from_db(value)
 
     def get_prep_value(self, value):
-        return HalfVector.to_db(value)
+        return HalfVector._to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))

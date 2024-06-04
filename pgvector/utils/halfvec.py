@@ -38,9 +38,7 @@ class HalfVector:
         dim, unused = unpack_from('>HH', value)
         return HalfVector(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
-    # TODO move rest
-
-    def to_db(value, dim=None):
+    def _to_db(value, dim=None):
         if value is None:
             return value
 
@@ -52,7 +50,7 @@ class HalfVector:
 
         return value.to_text()
 
-    def to_db_binary(value):
+    def _to_db_binary(value):
         if value is None:
             return value
 
@@ -61,13 +59,13 @@ class HalfVector:
 
         return value.to_binary()
 
-    def from_db(value):
+    def _from_db(value):
         if value is None or isinstance(value, HalfVector):
             return value
 
         return HalfVector.from_text(value)
 
-    def from_db_binary(value):
+    def _from_db_binary(value):
         if value is None or isinstance(value, HalfVector):
             return value
 

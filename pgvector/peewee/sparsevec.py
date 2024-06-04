@@ -13,10 +13,10 @@ class SparseVectorField(Field):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        return SparseVector.to_db(value)
+        return SparseVector._to_db(value)
 
     def python_value(self, value):
-        return SparseVector.from_db(value)
+        return SparseVector._from_db(value)
 
     def _distance(self, op, vector):
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))

@@ -8,7 +8,7 @@ class SparseVectorDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj):
-        return SparseVector.to_db(obj).encode('utf8')
+        return SparseVector._to_db(obj).encode('utf8')
 
 
 class SparseVectorBinaryDumper(SparseVectorDumper):
@@ -16,7 +16,7 @@ class SparseVectorBinaryDumper(SparseVectorDumper):
     format = Format.BINARY
 
     def dump(self, obj):
-        return SparseVector.to_db_binary(obj)
+        return SparseVector._to_db_binary(obj)
 
 
 class SparseVectorLoader(Loader):
@@ -26,7 +26,7 @@ class SparseVectorLoader(Loader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return SparseVector.from_db(data.decode('utf8'))
+        return SparseVector._from_db(data.decode('utf8'))
 
 
 class SparseVectorBinaryLoader(SparseVectorLoader):
@@ -36,7 +36,7 @@ class SparseVectorBinaryLoader(SparseVectorLoader):
     def load(self, data):
         if isinstance(data, memoryview):
             data = bytes(data)
-        return SparseVector.from_db_binary(data)
+        return SparseVector._from_db_binary(data)
 
 
 def register_sparsevec_info(context, info):

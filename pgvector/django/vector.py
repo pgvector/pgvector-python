@@ -25,15 +25,15 @@ class VectorField(Field):
         return 'vector(%d)' % self.dimensions
 
     def from_db_value(self, value, expression, connection):
-        return Vector.from_db(value)
+        return Vector._from_db(value)
 
     def to_python(self, value):
         if isinstance(value, list):
             return np.array(value, dtype=np.float32)
-        return Vector.from_db(value)
+        return Vector._from_db(value)
 
     def get_prep_value(self, value):
-        return Vector.to_db(value)
+        return Vector._to_db(value)
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))

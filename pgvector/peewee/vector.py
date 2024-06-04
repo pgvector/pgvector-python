@@ -13,10 +13,10 @@ class VectorField(Field):
         return self.dimensions and [self.dimensions] or None
 
     def db_value(self, value):
-        return Vector.to_db(value)
+        return Vector._to_db(value)
 
     def python_value(self, value):
-        return Vector.from_db(value)
+        return Vector._from_db(value)
 
     def _distance(self, op, vector):
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))
