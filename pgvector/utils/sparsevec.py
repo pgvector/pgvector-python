@@ -40,7 +40,8 @@ class SparseVector:
         nnz = len(self._indices)
         return pack(f'>iii{nnz}i{nnz}f', self._dim, nnz, 0, *self._indices, *self._values)
 
-    def from_text(value):
+    @classmethod
+    def from_text(cls, value):
         elements, dim = value.split('/')
         indices = []
         values = []
@@ -48,13 +49,14 @@ class SparseVector:
             i, v = e.split(':')
             indices.append(int(i) - 1)
             values.append(float(v))
-        return SparseVector(int(dim), indices, values)
+        return cls(int(dim), indices, values)
 
-    def from_binary(value):
+    @classmethod
+    def from_binary(cls, value):
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
-        return SparseVector(int(dim), indices, values)
+        return cls(int(dim), indices, values)
 
     @classmethod
     def _to_db(cls, value, dim=None):

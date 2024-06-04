@@ -31,12 +31,14 @@ class Vector:
     def to_binary(self):
         return pack('>HH', self.dim(), 0) + self._value.tobytes()
 
-    def from_text(value):
-        return Vector([float(v) for v in value[1:-1].split(',')])
+    @classmethod
+    def from_text(cls, value):
+        return cls([float(v) for v in value[1:-1].split(',')])
 
-    def from_binary(value):
+    @classmethod
+    def from_binary(cls, value):
         dim, unused = unpack_from('>HH', value)
-        return Vector(np.frombuffer(value, dtype='>f4', count=dim, offset=4))
+        return cls(np.frombuffer(value, dtype='>f4', count=dim, offset=4))
 
     @classmethod
     def _to_db(cls, value, dim=None):

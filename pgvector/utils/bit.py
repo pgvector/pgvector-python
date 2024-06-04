@@ -29,13 +29,15 @@ class Bit:
     def to_binary(self):
         return pack('>i', len(self._value)) + np.packbits(self._value).tobytes()
 
-    def from_text(value):
-        return Bit(np.asarray([v != '0' for v in value], dtype=bool))
+    @classmethod
+    def from_text(cls, value):
+        return cls(np.asarray([v != '0' for v in value], dtype=bool))
 
-    def from_binary(value):
+    @classmethod
+    def from_binary(cls, value):
         count = unpack_from('>i', value)[0]
         buf = np.frombuffer(value, dtype=np.uint8, offset=4)
-        return Bit(np.unpackbits(buf, count=count).astype(bool))
+        return cls(np.unpackbits(buf, count=count).astype(bool))
 
     @classmethod
     def _to_db(cls, value):
