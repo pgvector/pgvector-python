@@ -13,8 +13,8 @@ class SparseVector:
         return f'SparseVector({self._dim}, {self._indices}, {self._values})'
 
     @classmethod
-    def from_coordinates(cls, coordinates, dim):
-        elements = [(i, v) for i, v in coordinates.items()]
+    def from_dict(cls, d, dim):
+        elements = [(i, v) for i, v in d.items()]
         elements.sort()
         indices = [int(v[0]) for v in elements]
         values = [float(v[1]) for v in elements]
