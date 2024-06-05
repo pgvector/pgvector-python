@@ -21,6 +21,18 @@ class SparseVector:
         return cls(dim, indices, values)
 
     @classmethod
+    def from_scipy(cls, value):
+        value = value.tocoo()
+
+        if value.ndim != 1:
+            raise ValueError('expected ndim to be 1')
+
+        dim = value.shape[0]
+        indices = value.coords[0].tolist()
+        values = value.data.tolist()
+        return cls(dim, indices, values)
+
+    @classmethod
     def from_dense(cls, value):
         dim = len(value)
         indices = [i for i, v in enumerate(value) if v != 0]
