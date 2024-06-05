@@ -24,11 +24,18 @@ class SparseVector:
     def from_sparse(cls, value):
         value = value.tocoo()
 
-        if value.ndim != 1:
+        if value.ndim == 1:
+            dim = value.shape[0]
+        elif value.ndim == 2 and value.shape[0] == 1:
+            dim = value.shape[1]
+        else:
             raise ValueError('expected ndim to be 1')
 
-        dim = value.shape[0]
-        indices = value.coords[0].tolist()
+        if hasattr(value, 'coords'):
+            # scipy 1.13+
+            indices = value.coords[0].tolist()
+        else:
+            indices = value.col.tolist()
         values = value.data.tolist()
         return cls(dim, indices, values)
 
