@@ -5,7 +5,7 @@ from struct import pack, unpack_from
 class Bit:
     def __init__(self, value):
         if isinstance(value, str):
-            self._value = __class__.from_text(value)._value
+            self._value = self.from_text(value)._value
         else:
             value = np.asarray(value, dtype=bool)
 
