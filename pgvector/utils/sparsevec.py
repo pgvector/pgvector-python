@@ -21,7 +21,7 @@ class SparseVector:
         return cls(dim, indices, values)
 
     @classmethod
-    def from_scipy(cls, value):
+    def from_sparse(cls, value):
         value = value.tocoo()
 
         if value.ndim != 1:
