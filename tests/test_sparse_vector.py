@@ -26,3 +26,6 @@ class TestSparseVector:
 
     def test_dim(self):
         assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).dim() == 6
+
+    def test_to_dict(self):
+        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_dict() == {0: 1, 2: 2, 4: 3}

@@ -49,6 +49,9 @@ class SparseVector:
     def dim(self):
         return self._dim
 
+    def to_dict(self):
+        return {i: v for i, v in zip(self._indices, self._values)}
+
     def to_list(self):
         vec = [0.0] * self._dim
         for i, v in zip(self._indices, self._values):
