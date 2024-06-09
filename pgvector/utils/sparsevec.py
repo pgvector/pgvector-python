@@ -52,6 +52,12 @@ class SparseVector:
     def to_dict(self):
         return dict(zip(self._indices, self._values))
 
+    def to_coo(self):
+        from scipy.sparse import coo_array
+
+        coords = ([0] * len(self._indices), self._indices)
+        return coo_array((self._values, coords), shape=(1, self._dim))
+
     def to_list(self):
         vec = [0.0] * self._dim
         for i, v in zip(self._indices, self._values):
