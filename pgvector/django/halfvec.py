@@ -1,3 +1,5 @@
+import numpy as np
+
 from django.db.models import Field
 from ..utils import HalfVector
 
@@ -26,6 +28,8 @@ class HalfVectorField(Field):
         return HalfVector._from_db(value)
 
     def to_python(self, value):
+        if isinstance(value, list):
+            return np.array(value, dtype=np.float16)
         return HalfVector._from_db(value)
 
     def get_prep_value(self, value):

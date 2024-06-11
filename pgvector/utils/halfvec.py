@@ -68,7 +68,7 @@ class HalfVector:
         if value is None or isinstance(value, cls):
             return value
 
-        return cls.from_text(value)
+        return cls.from_text(value).to_numpy().astype(np.float16)
 
     @classmethod
     def _from_db_binary(cls, value):
