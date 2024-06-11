@@ -3,6 +3,7 @@ from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
+from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 from sqlalchemy.sql import func
@@ -402,6 +403,16 @@ class TestSqlalchemy:
 
     def test_insert_text(self):
         session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
+
+    def test_automap(self):
+        metadata = MetaData()
+        metadata.reflect(engine, only=['sqlalchemy_orm_item'])
+        AutoBase = automap_base(metadata=metadata)
+        AutoBase.prepare()
+        AutoItem = AutoBase.classes.sqlalchemy_orm_item
+        session.execute(insert(AutoItem), [{'embedding': np.array([1, 2, 3])}])
+        item = session.query(AutoItem).first()
+        assert item.embedding.tolist() == [1, 2, 3]
 
     @pytest.mark.asyncio
     async def test_async(self):
