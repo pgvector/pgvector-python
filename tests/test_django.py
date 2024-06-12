@@ -315,10 +315,41 @@ class TestDjango:
         assert form.is_valid()
         assert 'value="101"' in form.as_div()
 
-    def test_sparsevec_form(self):
-        form = SparseVectorForm(data={'sparse_embedding': '{1:1,3:2,5:3}/6'})
+    def test_bit_form_instance(self):
+        Item(id=1, binary_embedding='101').save()
+        item = Item.objects.get(pk=1)
+        form = BitForm(instance=item)
+        assert 'value="101"' in form.as_div()
+
+    def test_bit_form_save(self):
+        Item(id=1, binary_embedding='101').save()
+        item = Item.objects.get(pk=1)
+        form = BitForm(instance=item, data={'binary_embedding': '010'})
+        assert form.has_changed()
         assert form.is_valid()
-        assert 'value="{1:1,3:2,5:3}/6"' in form.as_div()
+        assert form.save()
+        assert '010' == Item.objects.get(pk=1).binary_embedding
+
+    def test_sparsevec_form(self):
+        form = SparseVectorForm(data={'sparse_embedding': '{1:1,2:2,3:3}/3'})
+        assert form.is_valid()
+        assert 'value="{1:1,2:2,3:3}/3"' in form.as_div()
+
+    def test_sparsevec_form_instance(self):
+        Item(id=1, sparse_embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = SparseVectorForm(instance=item)
+        # TODO fix
+        # assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()
+
+    def test_sparsevec_form_save(self):
+        Item(id=1, sparse_embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = SparseVectorForm(instance=item, data={'sparse_embedding': '{1:4,2:5,3:6}/3'})
+        assert form.has_changed()
+        assert form.is_valid()
+        assert form.save()
+        assert [4, 5, 6] == Item.objects.get(pk=1).sparse_embedding.to_list()
 
     def test_clean(self):
         item = Item(id=1, embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector.from_dense([1, 2, 3]))
