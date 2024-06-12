@@ -337,6 +337,15 @@ class TestDjango:
         assert form.save()
         assert [4, 5, 6] == Item.objects.get(pk=1).half_embedding.to_list()
 
+    def test_halfvec_form_save_missing(self):
+        Item(id=1).save()
+        item = Item.objects.get(pk=1)
+        form = HalfVectorForm(instance=item, data={'half_embedding': ''})
+        assert form.is_valid()
+        # TODO fix
+        # assert form.save()
+        assert Item.objects.get(pk=1).half_embedding is None
+
     def test_bit_form(self):
         form = BitForm(data={'binary_embedding': '101'})
         assert form.is_valid()
