@@ -93,10 +93,16 @@ def create_items():
     Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2])).save()
 
 
-class ItemForm(ModelForm):
+class VectorForm(ModelForm):
     class Meta:
         model = Item
         fields = ['embedding']
+
+
+class BitForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ['binary_embedding']
 
 
 class TestDjango:
@@ -270,36 +276,41 @@ class TestDjango:
                 for obj in serializers.deserialize(format, data):
                     obj.save()
 
-    def test_form(self):
-        form = ItemForm(data={'embedding': '[1, 2, 3]'})
+    def test_vector_form(self):
+        form = VectorForm(data={'embedding': '[1, 2, 3]'})
         assert form.is_valid()
         assert 'value="[1, 2, 3]"' in form.as_div()
 
-    def test_form_instance(self):
+    def test_vector_form_instance(self):
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        form = ItemForm(instance=item)
+        form = VectorForm(instance=item)
         assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()
 
-    def test_form_save(self):
+    def test_vector_form_save(self):
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        form = ItemForm(instance=item, data={'embedding': '[4, 5, 6]'})
+        form = VectorForm(instance=item, data={'embedding': '[4, 5, 6]'})
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
         assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
 
-    def test_form_save_missing(self):
+    def test_vector_form_save_missing(self):
         Item(id=1).save()
         item = Item.objects.get(pk=1)
-        form = ItemForm(instance=item, data={'embedding': ''})
+        form = VectorForm(instance=item, data={'embedding': ''})
         assert form.is_valid()
         assert form.save()
         assert Item.objects.get(pk=1).embedding is None
 
+    def test_bit_form(self):
+        form = BitForm(data={'binary_embedding': '101'})
+        assert form.is_valid()
+        assert 'value="101"' in form.as_div()
+
     def test_clean(self):
-        item = Item(id=1, embedding=[1, 2, 3])
+        item = Item(id=1, embedding=[1, 2, 3], binary_embedding='101')
         item.full_clean()
 
     def test_get_or_create(self):
@@ -308,3 +319,6 @@ class TestDjango:
     def test_missing(self):
         Item().save()
         assert Item.objects.first().embedding is None
+        assert Item.objects.first().half_embedding is None
+        assert Item.objects.first().binary_embedding is None
+        assert Item.objects.first().sparse_embedding is None
