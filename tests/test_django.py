@@ -364,6 +364,14 @@ class TestDjango:
         assert form.save()
         assert '010' == Item.objects.get(pk=1).binary_embedding
 
+    def test_bit_form_save_missing(self):
+        Item(id=1).save()
+        item = Item.objects.get(pk=1)
+        form = BitForm(instance=item, data={'binary_embedding': ''})
+        assert form.is_valid()
+        assert form.save()
+        assert Item.objects.get(pk=1).binary_embedding is None
+
     def test_sparsevec_form(self):
         form = SparseVectorForm(data={'sparse_embedding': '{1:1,2:2,3:3}/3'})
         assert form.is_valid()

@@ -1,3 +1,4 @@
+from django import forms
 from django.db.models import Field
 
 
@@ -19,3 +20,13 @@ class BitField(Field):
         if self.length is None:
             return 'bit'
         return 'bit(%d)' % self.length
+
+    def formfield(self, **kwargs):
+        return super().formfield(form_class=BitFormField, **kwargs)
+
+
+class BitFormField(forms.CharField):
+    def to_python(self, value):
+        if isinstance(value, str) and value == '':
+            return None
+        return super().to_python(value)
