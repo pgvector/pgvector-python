@@ -1,3 +1,4 @@
+from django import forms
 from django.db.models import Field
 from ..utils import HalfVector
 
@@ -38,3 +39,22 @@ class HalfVectorField(Field):
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
+
+    def formfield(self, **kwargs):
+        return super().formfield(form_class=HalfVectorFormField, **kwargs)
+
+
+class HalfVectorWidget(forms.TextInput):
+    def format_value(self, value):
+        if isinstance(value, HalfVector):
+            value = value.to_list()
+        return super().format_value(value)
+
+
+class HalfVectorFormField(forms.CharField):
+    widget = HalfVectorWidget
+
+    def to_python(self, value):
+        if isinstance(value, str) and value == '':
+            return None
+        return super().to_python(value)
