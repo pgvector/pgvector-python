@@ -99,6 +99,12 @@ class VectorForm(ModelForm):
         fields = ['embedding']
 
 
+class HalfVectorForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ['half_embedding']
+
+
 class BitForm(ModelForm):
     class Meta:
         model = Item
@@ -309,6 +315,11 @@ class TestDjango:
         assert form.is_valid()
         assert form.save()
         assert Item.objects.get(pk=1).embedding is None
+
+    def test_halfvec_form(self):
+        form = HalfVectorForm(data={'half_embedding': '[1, 2, 3]'})
+        assert form.is_valid()
+        assert 'value="[1, 2, 3]"' in form.as_div()
 
     def test_bit_form(self):
         form = BitForm(data={'binary_embedding': '101'})
