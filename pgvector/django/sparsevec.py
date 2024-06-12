@@ -1,3 +1,4 @@
+from django import forms
 from django.db.models import Field
 from ..utils import SparseVector
 
@@ -33,3 +34,13 @@ class SparseVectorField(Field):
 
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
+
+    def formfield(self, **kwargs):
+        return super().formfield(form_class=SparseVectorFormField, **kwargs)
+
+
+class SparseVectorFormField(forms.CharField):
+    def to_python(self, value):
+        if isinstance(value, str) and value == '':
+            return None
+        return super().to_python(value)
