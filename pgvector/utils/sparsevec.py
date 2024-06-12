@@ -79,11 +79,11 @@ class SparseVector:
 
     @classmethod
     def from_text(cls, value):
-        elements, dim = value.split('/')
+        elements, dim = value.split('/', 2)
         indices = []
         values = []
         for e in elements[1:-1].split(','):
-            i, v = e.split(':')
+            i, v = e.split(':', 2)
             indices.append(int(i) - 1)
             values.append(float(v))
         return cls(int(dim), indices, values)

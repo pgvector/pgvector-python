@@ -105,6 +105,12 @@ class BitForm(ModelForm):
         fields = ['binary_embedding']
 
 
+class SparseVectorForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ['sparse_embedding']
+
+
 class TestDjango:
     def setup_method(self, test_method):
         Item.objects.all().delete()
@@ -309,8 +315,13 @@ class TestDjango:
         assert form.is_valid()
         assert 'value="101"' in form.as_div()
 
+    def test_sparsevec_form(self):
+        form = SparseVectorForm(data={'sparse_embedding': '{1:1,3:2,5:3}/6'})
+        assert form.is_valid()
+        assert 'value="{1:1,3:2,5:3}/6"' in form.as_div()
+
     def test_clean(self):
-        item = Item(id=1, embedding=[1, 2, 3], binary_embedding='101')
+        item = Item(id=1, embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector.from_dense([1, 2, 3]))
         item.full_clean()
 
     def test_get_or_create(self):
