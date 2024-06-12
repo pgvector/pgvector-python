@@ -39,7 +39,16 @@ class SparseVectorField(Field):
         return super().formfield(form_class=SparseVectorFormField, **kwargs)
 
 
+class SparseVectorWidget(forms.TextInput):
+    def format_value(self, value):
+        if isinstance(value, SparseVector):
+            value = value.to_text()
+        return super().format_value(value)
+
+
 class SparseVectorFormField(forms.CharField):
+    widget = SparseVectorWidget
+
     def to_python(self, value):
         if isinstance(value, str) and value == '':
             return None
