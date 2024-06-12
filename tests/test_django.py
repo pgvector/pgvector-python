@@ -388,7 +388,7 @@ class TestDjango:
         assert [4, 5, 6] == Item.objects.get(pk=1).sparse_embedding.to_list()
 
     def test_clean(self):
-        item = Item(id=1, embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector.from_dense([1, 2, 3]))
+        item = Item(id=1, embedding=[1, 2, 3], half_embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector.from_dense([1, 2, 3]))
         item.full_clean()
 
     def test_get_or_create(self):

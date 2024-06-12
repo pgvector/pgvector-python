@@ -26,7 +26,12 @@ class HalfVectorField(Field):
         return HalfVector._from_db(value)
 
     def to_python(self, value):
-        return HalfVector._from_db(value)
+        if value is None or isinstance(value, HalfVector):
+            return value
+        elif isinstance(value, str):
+            return HalfVector._from_db(value)
+        else:
+            return HalfVector(value)
 
     def get_prep_value(self, value):
         return HalfVector._to_db(value)
