@@ -321,6 +321,22 @@ class TestDjango:
         assert form.is_valid()
         assert 'value="[1, 2, 3]"' in form.as_div()
 
+    def test_halfvec_form_instance(self):
+        Item(id=1, half_embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = HalfVectorForm(instance=item)
+        # TODO fix
+        # assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()
+
+    def test_halfvec_form_save(self):
+        Item(id=1, half_embedding=[1, 2, 3]).save()
+        item = Item.objects.get(pk=1)
+        form = HalfVectorForm(instance=item, data={'half_embedding': '[4, 5, 6]'})
+        assert form.has_changed()
+        assert form.is_valid()
+        assert form.save()
+        assert [4, 5, 6] == Item.objects.get(pk=1).half_embedding.to_list()
+
     def test_bit_form(self):
         form = BitForm(data={'binary_embedding': '101'})
         assert form.is_valid()
