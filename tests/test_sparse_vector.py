@@ -10,7 +10,7 @@ class TestSparseVector:
         assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_numpy().tolist() == [1, 0, 2, 0, 3, 0]
         assert SparseVector.from_dense(np.array([1, 0, 2, 0, 3, 0])).to_list() == [1, 0, 2, 0, 3, 0]
 
-    def test_from_coordinates(self):
+    def test_from_dict(self):
         assert SparseVector.from_dict({0: 1, 2: 2, 4: 3}, 6).to_list() == [1, 0, 2, 0, 3, 0]
 
     def test_from_sparse(self):
