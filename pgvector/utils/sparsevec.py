@@ -18,7 +18,8 @@ class SparseVector:
             self._from_dense(value)
 
     def __repr__(self):
-        return f'SparseVector({self.to_dict()}, {self.dimensions()})'
+        elements = dict(zip(self._indices, self._values))
+        return f'SparseVector({elements}, {self.dimensions()})'
 
     def _from_dict(self, d, dim):
         if dim is None:
@@ -55,8 +56,11 @@ class SparseVector:
     def dimensions(self):
         return self._dim
 
-    def to_dict(self):
-        return dict(zip(self._indices, self._values))
+    def indices(self):
+        return self._indices
+
+    def values(self):
+        return self._values
 
     def to_coo(self):
         from scipy.sparse import coo_array

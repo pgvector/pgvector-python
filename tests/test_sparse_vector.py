@@ -40,8 +40,11 @@ class TestSparseVector:
     def test_dimensions(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).dimensions() == 6
 
-    def test_to_dict(self):
-        assert SparseVector([1, 0, 2, 0, 3, 0]).to_dict() == {0: 1, 2: 2, 4: 3}
+    def test_indices(self):
+        assert SparseVector([1, 0, 2, 0, 3, 0]).indices() == [0, 2, 4]
+
+    def test_values(self):
+        assert SparseVector([1, 0, 2, 0, 3, 0]).values() == [1, 2, 3]
 
     def test_to_coo(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray().tolist() == [[1, 0, 2, 0, 3, 0]]
