@@ -21,38 +21,6 @@ class SparseVector:
         elements = dict(zip(self._indices, self._values))
         return f'SparseVector({elements}, {self.dimensions()})'
 
-    def _from_dict(self, d, dim):
-        if dim is None:
-            raise ValueError('dimensions required')
-
-        elements = [(i, v) for i, v in d.items()]
-        elements.sort()
-        self._dim = int(dim)
-        self._indices = [int(v[0]) for v in elements]
-        self._values = [float(v[1]) for v in elements]
-
-    def _from_sparse(self, value):
-        value = value.tocoo()
-
-        if value.ndim == 1:
-            self._dim = value.shape[0]
-        elif value.ndim == 2 and value.shape[0] == 1:
-            self._dim = value.shape[1]
-        else:
-            raise ValueError('expected ndim to be 1')
-
-        if hasattr(value, 'coords'):
-            # scipy 1.13+
-            self._indices = value.coords[0].tolist()
-        else:
-            self._indices = value.col.tolist()
-        self._values = value.data.tolist()
-
-    def _from_dense(self, value):
-        self._dim = len(value)
-        self._indices = [i for i, v in enumerate(value) if v != 0]
-        self._values = [float(value[i]) for i in self._indices]
-
     def dimensions(self):
         return self._dim
 
@@ -86,6 +54,38 @@ class SparseVector:
     def to_binary(self):
         nnz = len(self._indices)
         return pack(f'>iii{nnz}i{nnz}f', self._dim, nnz, 0, *self._indices, *self._values)
+
+    def _from_dict(self, d, dim):
+        if dim is None:
+            raise ValueError('dimensions required')
+
+        elements = [(i, v) for i, v in d.items()]
+        elements.sort()
+        self._dim = int(dim)
+        self._indices = [int(v[0]) for v in elements]
+        self._values = [float(v[1]) for v in elements]
+
+    def _from_sparse(self, value):
+        value = value.tocoo()
+
+        if value.ndim == 1:
+            self._dim = value.shape[0]
+        elif value.ndim == 2 and value.shape[0] == 1:
+            self._dim = value.shape[1]
+        else:
+            raise ValueError('expected ndim to be 1')
+
+        if hasattr(value, 'coords'):
+            # scipy 1.13+
+            self._indices = value.coords[0].tolist()
+        else:
+            self._indices = value.col.tolist()
+        self._values = value.data.tolist()
+
+    def _from_dense(self, value):
+        self._dim = len(value)
+        self._indices = [i for i, v in enumerate(value) if v != 0]
+        self._values = [float(value[i]) for i in self._indices]
 
     @classmethod
     def from_text(cls, value):
