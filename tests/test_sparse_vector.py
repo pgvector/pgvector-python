@@ -6,27 +6,42 @@ from scipy.sparse import coo_array
 
 class TestSparseVector:
     def test_from_dense(self):
-        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_list() == [1, 0, 2, 0, 3, 0]
-        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_numpy().tolist() == [1, 0, 2, 0, 3, 0]
-        assert SparseVector.from_dense(np.array([1, 0, 2, 0, 3, 0])).to_list() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector([1, 0, 2, 0, 3, 0]).to_list() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector([1, 0, 2, 0, 3, 0]).to_numpy().tolist() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector(np.array([1, 0, 2, 0, 3, 0])).to_list() == [1, 0, 2, 0, 3, 0]
+
+    def test_from_dense_dimensions(self):
+        with pytest.raises(ValueError) as error:
+            SparseVector([1, 0, 2, 0, 3, 0], 6)
+        assert str(error.value) == 'dimensions not allowed'
 
     def test_from_dict(self):
-        assert SparseVector.from_dict({0: 1, 2: 2, 4: 3}, 6).to_list() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector({0: 1, 2: 2, 4: 3}, 6).to_list() == [1, 0, 2, 0, 3, 0]
+
+    def test_from_dict_no_dimensions(self):
+        with pytest.raises(ValueError) as error:
+            SparseVector({0: 1, 2: 2, 4: 3})
+        assert str(error.value) == 'dimensions required'
 
     def test_from_sparse(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0]))
-        assert SparseVector.from_sparse(arr).to_list() == [1, 0, 2, 0, 3, 0]
-        assert SparseVector.from_sparse(arr.todok()).to_list() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector(arr).to_list() == [1, 0, 2, 0, 3, 0]
+        assert SparseVector(arr.todok()).to_list() == [1, 0, 2, 0, 3, 0]
+
+    def test_from_sparse_dimensions(self):
+        with pytest.raises(ValueError) as error:
+            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)
+        assert str(error.value) == 'dimensions not allowed'
 
     def test_repr(self):
-        assert repr(SparseVector.from_dense([1, 0, 2, 0, 3, 0])) == 'SparseVector(6, [0, 2, 4], [1.0, 2.0, 3.0])'
-        assert str(SparseVector.from_dense([1, 0, 2, 0, 3, 0])) == 'SparseVector(6, [0, 2, 4], [1.0, 2.0, 3.0])'
+        assert repr(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
+        assert str(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
 
     def test_dim(self):
-        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).dim() == 6
+        assert SparseVector([1, 0, 2, 0, 3, 0]).dim() == 6
 
     def test_to_dict(self):
-        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_dict() == {0: 1, 2: 2, 4: 3}
+        assert SparseVector([1, 0, 2, 0, 3, 0]).to_dict() == {0: 1, 2: 2, 4: 3}
 
     def test_to_coo(self):
-        assert SparseVector.from_dense([1, 0, 2, 0, 3, 0]).to_coo().toarray().tolist() == [[1, 0, 2, 0, 3, 0]]
+        assert SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray().tolist() == [[1, 0, 2, 0, 3, 0]]

@@ -88,9 +88,9 @@ with connection.cursor() as cursor:
 
 
 def create_items():
-    Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector.from_dense([1, 1, 1])).save()
-    Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector.from_dense([2, 2, 2])).save()
-    Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector.from_dense([1, 1, 2])).save()
+    Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])).save()
+    Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector([2, 2, 2])).save()
+    Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector([1, 1, 2])).save()
 
 
 class VectorForm(ModelForm):
@@ -208,34 +208,34 @@ class TestDjango:
         # assert [v.distance for v in items] == [0, 1/3, 1]
 
     def test_sparsevec(self):
-        Item(id=1, sparse_embedding=SparseVector.from_dense([1, 2, 3])).save()
+        Item(id=1, sparse_embedding=SparseVector([1, 2, 3])).save()
         item = Item.objects.get(pk=1)
         assert item.sparse_embedding.to_list() == [1, 2, 3]
 
     def test_sparsevec_l2_distance(self):
         create_items()
-        distance = L2Distance('sparse_embedding', SparseVector.from_dense([1, 1, 1]))
+        distance = L2Distance('sparse_embedding', SparseVector([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_sparsevec_max_inner_product(self):
         create_items()
-        distance = MaxInnerProduct('sparse_embedding', SparseVector.from_dense([1, 1, 1]))
+        distance = MaxInnerProduct('sparse_embedding', SparseVector([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_sparsevec_cosine_distance(self):
         create_items()
-        distance = CosineDistance('sparse_embedding', SparseVector.from_dense([1, 1, 1]))
+        distance = CosineDistance('sparse_embedding', SparseVector([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
     def test_sparsevec_l1_distance(self):
         create_items()
-        distance = L1Distance('sparse_embedding', SparseVector.from_dense([1, 1, 1]))
+        distance = L1Distance('sparse_embedding', SparseVector([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
@@ -402,7 +402,7 @@ class TestDjango:
         assert Item.objects.get(pk=1).sparse_embedding is None
 
     def test_clean(self):
-        item = Item(id=1, embedding=[1, 2, 3], half_embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector.from_dense([1, 2, 3]))
+        item = Item(id=1, embedding=[1, 2, 3], half_embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector([1, 2, 3]))
         item.full_clean()
 
     def test_get_or_create(self):

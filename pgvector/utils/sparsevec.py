@@ -3,48 +3,54 @@ from struct import pack, unpack_from
 
 
 class SparseVector:
-    def __init__(self, dim, indices, values):
-        # TODO improve
-        self._dim = int(dim)
-        self._indices = [int(i) for i in indices]
-        self._values = [float(v) for v in values]
+    def __init__(self, value, dimensions=None):
+        if value.__class__.__module__ == 'scipy.sparse._arrays':
+            if dimensions is not None:
+                raise ValueError('dimensions not allowed')
+
+            self._from_sparse(value)
+        elif isinstance(value, dict):
+            self._from_dict(value, dimensions)
+        else:
+            if dimensions is not None:
+                raise ValueError('dimensions not allowed')
+
+            self._from_dense(value)
 
     def __repr__(self):
-        return f'SparseVector({self._dim}, {self._indices}, {self._values})'
+        return f'SparseVector({self.to_dict()}, {self.dim()})'
 
-    @classmethod
-    def from_dict(cls, d, dim):
+    def _from_dict(self, d, dim):
+        if dim is None:
+            raise ValueError('dimensions required')
+
         elements = [(i, v) for i, v in d.items()]
         elements.sort()
-        indices = [int(v[0]) for v in elements]
-        values = [float(v[1]) for v in elements]
-        return cls(dim, indices, values)
+        self._dim = int(dim)
+        self._indices = [int(v[0]) for v in elements]
+        self._values = [float(v[1]) for v in elements]
 
-    @classmethod
-    def from_sparse(cls, value):
+    def _from_sparse(self, value):
         value = value.tocoo()
 
         if value.ndim == 1:
-            dim = value.shape[0]
+            self._dim = value.shape[0]
         elif value.ndim == 2 and value.shape[0] == 1:
-            dim = value.shape[1]
+            self._dim = value.shape[1]
         else:
             raise ValueError('expected ndim to be 1')
 
         if hasattr(value, 'coords'):
             # scipy 1.13+
-            indices = value.coords[0].tolist()
+            self._indices = value.coords[0].tolist()
         else:
-            indices = value.col.tolist()
-        values = value.data.tolist()
-        return cls(dim, indices, values)
+            self._indices = value.col.tolist()
+        self._values = value.data.tolist()
 
-    @classmethod
-    def from_dense(cls, value):
-        dim = len(value)
-        indices = [i for i, v in enumerate(value) if v != 0]
-        values = [float(value[i]) for i in indices]
-        return cls(dim, indices, values)
+    def _from_dense(self, value):
+        self._dim = len(value)
+        self._indices = [i for i, v in enumerate(value) if v != 0]
+        self._values = [float(value[i]) for i in self._indices]
 
     def dim(self):
         return self._dim
@@ -86,21 +92,30 @@ class SparseVector:
             i, v = e.split(':', 2)
             indices.append(int(i) - 1)
             values.append(float(v))
-        return cls(int(dim), indices, values)
+        return cls._from_parts(int(dim), indices, values)
 
     @classmethod
     def from_binary(cls, value):
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
-        return cls(int(dim), indices, values)
+        return cls._from_parts(int(dim), indices, values)
+
+    @classmethod
+    def _from_parts(cls, dim, indices, values):
+        vec = cls.__new__(cls)
+        vec._dim = dim
+        vec._indices = indices
+        vec._values = values
+        return vec
 
     @classmethod
     def _to_db(cls, value, dim=None):
         if value is None:
             return value
 
-        value = cls._to_db_value(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         if dim is not None and value.dim() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
@@ -112,18 +127,10 @@ class SparseVector:
         if value is None:
             return value
 
-        value = cls._to_db_value(value)
+        if not isinstance(value, cls):
+            value = cls(value)
 
         return value.to_binary()
-
-    @classmethod
-    def _to_db_value(cls, value):
-        if isinstance(value, cls):
-            return value
-        elif isinstance(value, (list, np.ndarray)):
-            return cls.from_dense(value)
-        else:
-            raise ValueError('expected sparsevec')
 
     @classmethod
     def _from_db(cls, value):

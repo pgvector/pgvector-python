@@ -82,7 +82,7 @@ class TestAsyncpg:
 
         await register_vector(conn)
 
-        embedding = SparseVector.from_dense([1.5, 2, 3])
+        embedding = SparseVector([1.5, 2, 3])
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")

@@ -45,10 +45,10 @@ input = [
 ]
 embeddings = fetch_embeddings(input)
 for content, embedding in zip(input, embeddings):
-    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, SparseVector.from_dense(embedding)))
+    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, SparseVector(embedding)))
 
 query = 'forest'
 query_embedding = fetch_embeddings([query])[0]
-result = conn.execute('SELECT content FROM documents ORDER BY embedding <#> %s LIMIT 5', (SparseVector.from_dense(query_embedding),)).fetchall()
+result = conn.execute('SELECT content FROM documents ORDER BY embedding <#> %s LIMIT 5', (SparseVector(query_embedding),)).fetchall()
 for row in result:
     print(row[0])
