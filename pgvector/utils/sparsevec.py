@@ -18,7 +18,7 @@ class SparseVector:
             self._from_dense(value)
 
     def __repr__(self):
-        return f'SparseVector({self.to_dict()}, {self.dim()})'
+        return f'SparseVector({self.to_dict()}, {self.dimensions()})'
 
     def _from_dict(self, d, dim):
         if dim is None:
@@ -52,7 +52,7 @@ class SparseVector:
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
 
-    def dim(self):
+    def dimensions(self):
         return self._dim
 
     def to_dict(self):
@@ -117,8 +117,8 @@ class SparseVector:
         if not isinstance(value, cls):
             value = cls(value)
 
-        if dim is not None and value.dim() != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
+        if dim is not None and value.dimensions() != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dimensions()))
 
         return value.to_text()
 

@@ -37,8 +37,8 @@ class TestSparseVector:
         assert repr(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
         assert str(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
 
-    def test_dim(self):
-        assert SparseVector([1, 0, 2, 0, 3, 0]).dim() == 6
+    def test_dimensions(self):
+        assert SparseVector([1, 0, 2, 0, 3, 0]).dimensions() == 6
 
     def test_to_dict(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).to_dict() == {0: 1, 2: 2, 4: 3}

@@ -16,7 +16,7 @@ class HalfVector:
     def __repr__(self):
         return f'HalfVector({self.to_list()})'
 
-    def dim(self):
+    def dimensions(self):
         return len(self._value)
 
     def to_list(self):
@@ -29,7 +29,7 @@ class HalfVector:
         return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
 
     def to_binary(self):
-        return pack('>HH', self.dim(), 0) + self._value.tobytes()
+        return pack('>HH', self.dimensions(), 0) + self._value.tobytes()
 
     @classmethod
     def from_text(cls, value):
@@ -48,8 +48,8 @@ class HalfVector:
         if not isinstance(value, cls):
             value = cls(value)
 
-        if dim is not None and value.dim() != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value.dim()))
+        if dim is not None and value.dimensions() != dim:
+            raise ValueError('expected %d dimensions, not %d' % (dim, value.dimensions()))
 
         return value.to_text()
 
