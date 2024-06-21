@@ -3,7 +3,7 @@ from struct import pack, unpack_from
 
 
 class SparseVector:
-    def __init__(self, value, dimensions=None):
+    def __init__(self, value, dimensions=None, /):
         if value.__class__.__module__ == 'scipy.sparse._arrays':
             if dimensions is not None:
                 raise ValueError('dimensions not allowed')
