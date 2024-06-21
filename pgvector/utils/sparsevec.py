@@ -61,6 +61,7 @@ class SparseVector:
 
         elements = [(i, v) for i, v in d.items() if v != 0]
         elements.sort()
+
         self._dim = int(dim)
         self._indices = [int(v[0]) for v in elements]
         self._values = [float(v[1]) for v in elements]
