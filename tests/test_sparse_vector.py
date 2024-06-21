@@ -16,8 +16,9 @@ class TestSparseVector:
         assert str(error.value) == 'dimensions not allowed'
 
     def test_from_dict(self):
-        assert SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6).to_list() == [1, 0, 2, 0, 3, 0]
-        assert SparseVector([1, 0, 2, 0, 3, 0]).indices() == [0, 2, 4]
+        vec = SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
+        assert vec.to_list() == [1, 0, 2, 0, 3, 0]
+        assert vec.indices() == [0, 2, 4]
 
     def test_from_dict_no_dimensions(self):
         with pytest.raises(ValueError) as error:

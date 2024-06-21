@@ -59,7 +59,7 @@ class SparseVector:
         if dim is None:
             raise ValueError('dimensions required')
 
-        elements = [(i, v) for i, v in d.items()]
+        elements = [(i, v) for i, v in d.items() if v != 0]
         elements.sort()
         self._dim = int(dim)
         self._indices = [int(v[0]) for v in elements]
