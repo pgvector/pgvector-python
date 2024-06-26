@@ -24,7 +24,7 @@ class SparseVector:
 
     def __repr__(self):
         elements = dict(zip(self._indices, self._values))
-        return f'SparseVector({elements}, {self.dimensions()})'
+        return f'SparseVector({elements}, {self._dim})'
 
     def dimensions(self):
         return self._dim
