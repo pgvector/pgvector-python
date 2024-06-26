@@ -8,17 +8,17 @@ class SparseVector:
     def __init__(self, value, dimensions=NO_DEFAULT, /):
         if value.__class__.__module__.startswith('scipy.sparse.'):
             if dimensions is not NO_DEFAULT:
-                raise ValueError('dimensions not allowed')
+                raise ValueError('extra argument')
 
             self._from_sparse(value)
         elif isinstance(value, dict):
             if dimensions is NO_DEFAULT:
-                raise ValueError('dimensions required')
+                raise ValueError('missing dimensions')
 
             self._from_dict(value, dimensions)
         else:
             if dimensions is not NO_DEFAULT:
-                raise ValueError('dimensions not allowed')
+                raise ValueError('extra argument')
 
             self._from_dense(value)
 

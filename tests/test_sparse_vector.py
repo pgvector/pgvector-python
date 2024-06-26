@@ -14,7 +14,7 @@ class TestSparseVector:
     def test_list_dimensions(self):
         with pytest.raises(ValueError) as error:
             SparseVector([1, 0, 2, 0, 3, 0], 6)
-        assert str(error.value) == 'dimensions not allowed'
+        assert str(error.value) == 'extra argument'
 
     def test_ndarray(self):
         vec = SparseVector(np.array([1, 0, 2, 0, 3, 0]))
@@ -29,7 +29,7 @@ class TestSparseVector:
     def test_dict_no_dimensions(self):
         with pytest.raises(ValueError) as error:
             SparseVector({0: 1, 2: 2, 4: 3})
-        assert str(error.value) == 'dimensions required'
+        assert str(error.value) == 'missing dimensions'
 
     def test_coo_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0]))
@@ -40,7 +40,7 @@ class TestSparseVector:
     def test_coo_array_dimensions(self):
         with pytest.raises(ValueError) as error:
             SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)
-        assert str(error.value) == 'dimensions not allowed'
+        assert str(error.value) == 'extra argument'
 
     def test_dok_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
