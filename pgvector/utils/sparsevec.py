@@ -6,7 +6,7 @@ NO_DEFAULT = object()
 
 class SparseVector:
     def __init__(self, value, dimensions=NO_DEFAULT, /):
-        if value.__class__.__module__ == 'scipy.sparse._arrays':
+        if value.__class__.__module__.startswith('scipy.sparse.'):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('dimensions not allowed')
 
