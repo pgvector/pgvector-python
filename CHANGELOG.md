@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2024-06-25)
 
 - Added support for `halfvec`, `bit`, and `sparsevec` types to Django
 - Added support for `halfvec`, `bit`, and `sparsevec` types to SQLAlchemy and SQLModel

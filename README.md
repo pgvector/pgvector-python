@@ -30,7 +30,7 @@ Or check out some examples:
 - [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_embeddings.py) with SentenceTransformers
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
-- [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers (unreleased)
+- [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/hash_image_search.py) with perceptual hashing
 - [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
@@ -61,7 +61,7 @@ class Item(models.Model):
     embedding = VectorField(dimensions=3)
 ```
 
-Also supports `HalfVectorField` (unreleased), `BitField` (unreleased), and `SparseVectorField` (unreleased)
+Also supports `HalfVectorField`, `BitField`, and `SparseVectorField`
 
 Insert a vector
 
@@ -78,7 +78,7 @@ from pgvector.django import L2Distance
 Item.objects.order_by(L2Distance('embedding', [3, 1, 2]))[:5]
 ```
 
-Also supports `MaxInnerProduct`, `CosineDistance`, `L1Distance` (unreleased), `HammingDistance` (unreleased), and `JaccardDistance` (unreleased)
+Also supports `MaxInnerProduct`, `CosineDistance`, `L1Distance`, `HammingDistance`, and `JaccardDistance`
 
 Get the distance
 
@@ -146,7 +146,7 @@ class Item(Base):
     embedding = mapped_column(Vector(3))
 ```
 
-Also supports `HALFVEC` (unreleased), `BIT` (unreleased), and `SPARSEVEC` (unreleased)
+Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
 
 Insert a vector
 
@@ -162,7 +162,7 @@ Get the nearest neighbors to a vector
 session.scalars(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5))
 ```
 
-Also supports `max_inner_product`, `cosine_distance`, `l1_distance` (unreleased), `hamming_distance` (unreleased), and `jaccard_distance` (unreleased)
+Also supports `max_inner_product`, `cosine_distance`, `l1_distance`, `hamming_distance`, and `jaccard_distance`
 
 Get the distance
 
@@ -228,7 +228,7 @@ class Item(SQLModel, table=True):
     embedding: Any = Field(sa_column=Column(Vector(3)))
 ```
 
-Also supports `HALFVEC` (unreleased), `BIT` (unreleased), and `SPARSEVEC` (unreleased)
+Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
 
 Insert a vector
 
@@ -244,7 +244,7 @@ Get the nearest neighbors to a vector
 session.exec(select(Item).order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5))
 ```
 
-Also supports `max_inner_product`, `cosine_distance`, `l1_distance` (unreleased), `hamming_distance` (unreleased), and `jaccard_distance` (unreleased)
+Also supports `max_inner_product`, `cosine_distance`, `l1_distance`, `hamming_distance`, and `jaccard_distance`
 
 Get the distance
 
@@ -459,7 +459,7 @@ class Item(BaseModel):
     embedding = VectorField(dimensions=3)
 ```
 
-Also supports `HalfVectorField` (unreleased), `FixedBitField` (unreleased), and `SparseVectorField` (unreleased)
+Also supports `HalfVectorField`, `FixedBitField`, and `SparseVectorField`
 
 Insert a vector
 
@@ -473,7 +473,7 @@ Get the nearest neighbors to a vector
 Item.select().order_by(Item.embedding.l2_distance([3, 1, 2])).limit(5)
 ```
 
-Also supports `max_inner_product`, `cosine_distance`, `l1_distance` (unreleased), `hamming_distance` (unreleased), and `jaccard_distance` (unreleased)
+Also supports `max_inner_product`, `cosine_distance`, `l1_distance`, `hamming_distance`, and `jaccard_distance`
 
 Get the distance
 
