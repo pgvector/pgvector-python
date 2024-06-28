@@ -1,5 +1,6 @@
 from datasets import load_dataset
 import matplotlib.pyplot as plt
+from pgvector.psycopg import register_vector, Bit
 import psycopg
 from imagehash import phash
 
@@ -9,6 +10,9 @@ def hash_image(img):
 
 
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
+
+conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
+register_vector(conn)
 
 conn.execute('DROP TABLE IF EXISTS images')
 conn.execute('CREATE TABLE images (id bigserial PRIMARY KEY, hash bit(64))')
@@ -23,13 +27,13 @@ print('Storing hashes')
 cur = conn.cursor()
 with cur.copy('COPY images (hash) FROM STDIN') as copy:
     for image in images:
-        copy.write_row([image['hash']])
+        copy.write_row([Bit(image['hash'])])
 
 print('Querying hashes')
 results = []
 for i in range(5):
     image = dataset['test'][i]['image']
-    result = conn.execute('SELECT id FROM images ORDER BY bit_count(hash # %s) LIMIT 5', (hash_image(image),)).fetchall()
+    result = conn.execute('SELECT id FROM images ORDER BY hash <~> %s LIMIT 5', (hash_image(image),)).fetchall()
     nearest_images = [dataset['train'][row[0] - 1]['image'] for row in result]
     results.append([image] + nearest_images)
 
