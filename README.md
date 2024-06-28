@@ -33,6 +33,7 @@ Or check out some examples:
 - [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/hash_image_search.py) with perceptual hashing
+- [Morgan fingerprints](https://github.com/pgvector/pgvector-python/blob/master/examples/morgan_fingerprints.py) with RDKit
 - [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
 - [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise_recs.py) with Surprise
 - [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm_recs.py) with LightFM
