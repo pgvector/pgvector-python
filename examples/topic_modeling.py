@@ -19,9 +19,9 @@ input = [
     'The bear is growling'
 ]
 
-tokens = [simple_preprocess(content) for content in input]
-dictionary = Dictionary(tokens)
-corpus = [dictionary.doc2bow(token) for token in tokens]
+docs = [simple_preprocess(content) for content in input]
+dictionary = Dictionary(docs)
+corpus = [dictionary.doc2bow(tokens) for tokens in docs]
 model = LdaModel(corpus, num_topics=20)
 
 for content, doc in zip(input, corpus):
