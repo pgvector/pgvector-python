@@ -24,8 +24,8 @@ dictionary = Dictionary(docs)
 corpus = [dictionary.doc2bow(tokens) for tokens in docs]
 model = LdaModel(corpus, num_topics=20)
 
-for content, doc in zip(input, corpus):
-    embedding = np.array([v[1] for v in model.get_document_topics(doc, minimum_probability=0)])
+for content, bow in zip(input, corpus):
+    embedding = np.array([v[1] for v in model.get_document_topics(bow, minimum_probability=0)])
     conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
 
 document_id = 1
