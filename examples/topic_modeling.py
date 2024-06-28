@@ -21,6 +21,7 @@ input = [
 
 docs = [simple_preprocess(content) for content in input]
 dictionary = Dictionary(docs)
+dictionary.filter_extremes(no_below=1)
 corpus = [dictionary.doc2bow(tokens) for tokens in docs]
 model = LdaModel(corpus, num_topics=20)
 
