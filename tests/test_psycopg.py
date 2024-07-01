@@ -139,28 +139,34 @@ class TestPsycopg:
 
     def test_text_copy_to(self):
         embedding = np.array([1.5, 2, 3])
-        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        half_embedding = HalfVector([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) TO STDOUT") as copy:
+        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT") as copy:
             for row in copy.rows():
                 assert row[0] == "[1.5,2,3]"
+                assert row[1] == "[1.5,2,3]"
 
     def test_binary_copy_to(self):
         embedding = np.array([1.5, 2, 3])
-        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        half_embedding = HalfVector([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
             for row in copy.rows():
                 assert Vector.from_binary(row[0]).to_list() == [1.5, 2, 3]
+                assert HalfVector.from_binary(row[1]).to_list() == [1.5, 2, 3]
 
     def test_binary_copy_to_set_types(self):
         embedding = np.array([1.5, 2, 3])
-        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        half_embedding = HalfVector([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
-            copy.set_types(['vector'])
+        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['vector', 'halfvec'])
             for row in copy.rows():
                 assert np.array_equal(row[0], embedding)
+                assert row[1].to_list() == [1.5, 2, 3]
 
     @pytest.mark.asyncio
     async def test_async(self):
