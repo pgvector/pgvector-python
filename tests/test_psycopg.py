@@ -118,24 +118,33 @@ class TestPsycopg:
         assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
         assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
-    def test_text_copy(self):
+    def test_text_copy_from(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
             copy.write_row([embedding, HalfVector(embedding), '101', SparseVector(embedding)])
 
-    def test_binary_copy(self):
+    def test_binary_copy_from(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.write_row([embedding, HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
-    def test_binary_copy_set_types(self):
+    def test_binary_copy_from_set_types(self):
         embedding = np.array([1.5, 2, 3])
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
             copy.write_row([1, embedding, HalfVector(embedding), Bit('101'), SparseVector(embedding)])
+
+    def test_binary_copy_to_set_types(self):
+        embedding = np.array([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+            copy.set_types(['vector'])
+            for row in copy.rows():
+                assert np.array_equal(row[0], embedding)
 
     @pytest.mark.asyncio
     async def test_async(self):
