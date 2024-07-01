@@ -137,6 +137,22 @@ class TestPsycopg:
             copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
             copy.write_row([1, embedding, HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
+    def test_text_copy_to(self):
+        embedding = np.array([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding) TO STDOUT") as copy:
+            for row in copy.rows():
+                assert row[0] == "[1.5,2,3]"
+
+    def test_binary_copy_to(self):
+        embedding = np.array([1.5, 2, 3])
+        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
+        cur = conn.cursor()
+        with cur.copy("COPY psycopg_items (embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+            for row in copy.rows():
+                assert Vector.from_binary(row[0]).to_list() == [1.5, 2, 3]
+
     def test_binary_copy_to_set_types(self):
         embedding = np.array([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s)', (embedding,))
