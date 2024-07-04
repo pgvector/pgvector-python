@@ -7,6 +7,7 @@ import itertools
 from pgvector.psycopg import register_vector_async
 import psycopg
 from sentence_transformers import CrossEncoder, SentenceTransformer
+import json
 
 sentences = [
     'The dog is barking',
@@ -37,9 +38,9 @@ async def insert_data(conn):
 async def semantic_search(conn, query):
     model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
     embedding = model.encode(query)
-
+    embedding_json = json.dumps(embedding.tolist())
     async with conn.cursor() as cur:
-        await cur.execute('SELECT id, content FROM documents ORDER BY embedding <=> %s LIMIT 5', (embedding,))
+        await cur.execute('SELECT id, content FROM documents ORDER BY embedding <=> %s LIMIT 5', (embedding_json,))
         return await cur.fetchall()
 
 
