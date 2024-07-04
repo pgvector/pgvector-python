@@ -1,3 +1,4 @@
+import psycopg
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from ..utils import Vector
