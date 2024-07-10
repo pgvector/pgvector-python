@@ -95,10 +95,12 @@ class SparseVector:
         elements, dim = value.split('/', 2)
         indices = []
         values = []
-        for e in elements[1:-1].split(','):
-            i, v = e.split(':', 2)
-            indices.append(int(i) - 1)
-            values.append(float(v))
+        # split on empty string returns single element list
+        if len(elements) > 2:
+            for e in elements[1:-1].split(','):
+                i, v = e.split(':', 2)
+                indices.append(int(i) - 1)
+                values.append(float(v))
         return cls._from_parts(int(dim), indices, values)
 
     @classmethod

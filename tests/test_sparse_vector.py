@@ -63,3 +63,7 @@ class TestSparseVector:
 
     def test_to_coo(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray().tolist() == [[1, 0, 2, 0, 3, 0]]
+
+    def test_zero_vector_text(self):
+        vec = SparseVector({}, 3)
+        assert vec.to_list() == SparseVector.from_text(vec.to_text()).to_list()

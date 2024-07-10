@@ -1,5 +1,6 @@
 ## 0.3.1 (unreleased)
 
+- Fixed error parsing zero sparse vectors
 - Fixed error with Psycopg 2 and pgvector < 0.7
 - Fixed error message when `vector` type not found with Psycopg 3
 
