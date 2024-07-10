@@ -1,3 +1,7 @@
+## 0.3.1 (unreleased)
+
+- Fixed error with Psycopg 2 and pgvector < 0.7
+
 ## 0.3.0 (2024-06-25)
 
 - Added support for `halfvec`, `bit`, and `sparsevec` types to Django

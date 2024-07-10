@@ -7,20 +7,16 @@ from .vector import register_vector_info
 def register_vector(conn_or_curs=None):
     cur = conn_or_curs.cursor() if hasattr(conn_or_curs, 'cursor') else conn_or_curs
 
-    try:
-        cur.execute('SELECT NULL::vector')
-        register_vector_info(cur.description[0][1])
-    except psycopg2.errors.UndefinedObject:
+    cur.execute("SELECT typname, oid FROM pg_type WHERE typname IN ('vector', 'halfvec', 'sparsevec')")
+    type_info = dict(cur.fetchall())
+
+    if 'vector' not in type_info:
         raise psycopg2.ProgrammingError('vector type not found in the database')
 
-    try:
-        cur.execute('SELECT NULL::halfvec')
-        register_halfvec_info(cur.description[0][1])
-    except psycopg2.errors.UndefinedObject:
-        pass
+    register_vector_info(type_info['vector'])
 
-    try:
-        cur.execute('SELECT NULL::sparsevec')
-        register_sparsevec_info(cur.description[0][1])
-    except psycopg2.errors.UndefinedObject:
-        pass
+    if 'halfvec' in type_info:
+        register_halfvec_info(type_info['halfvec'])
+
+    if 'sparsevec' in type_info:
+        register_sparsevec_info(type_info['sparsevec'])
