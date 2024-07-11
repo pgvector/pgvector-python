@@ -1,4 +1,4 @@
-## 0.3.1 (unreleased)
+## 0.3.1 (2024-07-10)
 
 - Fixed error parsing zero sparse vectors
 - Fixed error with Psycopg 2 and pgvector < 0.7
