@@ -7,7 +7,8 @@ from .vector import register_vector_info
 def register_vector(conn_or_curs=None):
     cur = conn_or_curs.cursor() if hasattr(conn_or_curs, 'cursor') else conn_or_curs
 
-    cur.execute("SELECT typname, oid FROM pg_type WHERE typname IN ('vector', 'halfvec', 'sparsevec')")
+    # use to_regtype to get first matching type in search path
+    cur.execute("SELECT typname, oid FROM pg_type WHERE oid IN (to_regtype('vector'), to_regtype('halfvec'), to_regtype('sparsevec'))")
     type_info = dict(cur.fetchall())
 
     if 'vector' not in type_info:
