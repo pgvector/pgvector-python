@@ -27,6 +27,7 @@ And follow the instructions for your database library:
 Or check out some examples:
 
 - [Embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/openai_embeddings.py) with OpenAI
+- [Binary embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/cohere_embeddings.py) with Cohere
 - [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_embeddings.py) with SentenceTransformers
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)

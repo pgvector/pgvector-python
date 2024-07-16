@@ -1,3 +1,4 @@
+cohere
 datasets
 gensim
 imagehash
