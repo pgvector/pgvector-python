@@ -1,3 +1,7 @@
+## 0.3.2 (unreleased)
+
+- Fixed error with asyncpg and pgvector < 0.7
+
 ## 0.3.1 (2024-07-10)
 
 - Fixed error parsing zero sparse vectors
