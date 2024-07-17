@@ -7,7 +7,12 @@ class Bit:
         if isinstance(value, str):
             self._value = self.from_text(value)._value
         else:
-            # TODO use np.unpackbits for uint8 array
+            # TODO change in 0.4.0
+            # if isinstance(value, np.ndarray) and value.dtype == np.uint8:
+            #     value = np.unpackbits(value)
+            # else:
+            #     value = np.asarray(value, dtype=bool)
+
             value = np.asarray(value, dtype=bool)
 
             if value.ndim != 1:
