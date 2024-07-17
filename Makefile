@@ -4,7 +4,7 @@ lint:
 publish: clean
 	python3 setup.py bdist_wheel --universal
 	ls dist
-	# twine upload dist/*
+	twine upload dist/*
 	make clean
 
 clean:
