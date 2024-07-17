@@ -8,6 +8,7 @@ class Bit:
             self._value = self.from_text(value)._value
         else:
             # TODO change in 0.4.0
+            # TODO raise if dtype not bool or uint8
             # if isinstance(value, np.ndarray) and value.dtype == np.uint8:
             #     value = np.unpackbits(value)
             # else:
