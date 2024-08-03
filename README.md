@@ -536,5 +536,6 @@ To run an example:
 ```sh
 cd examples
 pip install -r requirements.txt
+createdb pgvector_example
 python3 bulk_loading.py
 ```
