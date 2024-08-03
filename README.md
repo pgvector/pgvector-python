@@ -530,3 +530,11 @@ pip install -r requirements.txt
 createdb pgvector_python_test
 pytest
 ```
+
+To run an example:
+
+```sh
+cd examples
+pip install -r requirements.txt
+python3 bulk_loading.py
+```
