@@ -7,7 +7,7 @@ conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 conn.execute('DROP TABLE IF EXISTS psycopg_items')
-conn.execute('CREATE TABLE psycopg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))')
+conn.execute('CREATE TABLE psycopg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), embeddings vector[])')
 
 register_vector(conn)
 
@@ -167,6 +167,14 @@ class TestPsycopg:
             for row in copy.rows():
                 assert np.array_equal(row[0], embedding)
                 assert row[1].to_list() == [1.5, 2, 3]
+
+    def test_vector_array(self):
+        embeddings = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        conn.execute('INSERT INTO psycopg_items (embeddings) VALUES (%s)', (embeddings,))
+
+        res = conn.execute('SELECT embeddings FROM psycopg_items ORDER BY id').fetchone()
+        assert np.array_equal(res[0][0], embeddings[0])
+        assert np.array_equal(res[0][1], embeddings[1])
 
     @pytest.mark.asyncio
     async def test_async(self):
