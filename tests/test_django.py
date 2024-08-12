@@ -7,6 +7,7 @@ from django.db.migrations.loader import MigrationLoader
 from django.forms import ModelForm
 from math import sqrt
 import numpy as np
+import os
 import pgvector.django
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance, HalfVector, SparseVector
 from unittest import mock
@@ -17,7 +18,25 @@ settings.configure(
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'pgvector_python_test',
         }
-    }
+    },
+    LOGGING={
+        'version': 1,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler'
+            }
+        },
+        'loggers': {
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'DEBUG'
+            },
+            'django.db.backends.schema': {
+                'level': 'WARNING'
+            }
+        }
+    },
+    DEBUG=('VERBOSE' in os.environ)
 )
 django.setup()
 
