@@ -19,6 +19,7 @@ settings.configure(
             'NAME': 'pgvector_python_test',
         }
     },
+    DEBUG=('VERBOSE' in os.environ),
     LOGGING={
         'version': 1,
         'handlers': {
@@ -35,8 +36,7 @@ settings.configure(
                 'level': 'WARNING'
             }
         }
-    },
-    DEBUG=('VERBOSE' in os.environ)
+    }
 )
 django.setup()
 
