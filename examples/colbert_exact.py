@@ -35,9 +35,9 @@ input = [
     'The cat is purring',
     'The bear is growling'
 ]
-doc_embeddings = checkpoint.docFromText(input)
+doc_embeddings = checkpoint.docFromText(input, keep_dims=False)
 for content, embeddings in zip(input, doc_embeddings):
-    embeddings = [e.numpy() for e in embeddings if e.count_nonzero() > 0]
+    embeddings = [e.numpy() for e in embeddings]
     conn.execute('INSERT INTO documents (content, embeddings) VALUES (%s, %s)', (content, embeddings))
 
 query = 'puppy'
