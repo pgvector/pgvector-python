@@ -32,6 +32,7 @@ Or check out some examples:
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
 - [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers
+- [Late interaction search](https://github.com/pgvector/pgvector-python/blob/master/examples/colbert_exact.py) with ColBERT
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/hash_image_search.py) with perceptual hashing
 - [Morgan fingerprints](https://github.com/pgvector/pgvector-python/blob/master/examples/morgan_fingerprints.py) with RDKit

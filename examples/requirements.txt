@@ -1,4 +1,5 @@
 cohere
+colbert-ai
 datasets
 gensim
 imagehash
