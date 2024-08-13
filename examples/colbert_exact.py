@@ -1,6 +1,5 @@
 from colbert.infra import ColBERTConfig
 from colbert.modeling.checkpoint import Checkpoint
-import numpy as np
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -29,7 +28,7 @@ CREATE OR REPLACE FUNCTION max_sim(document vector[], query vector[]) RETURNS do
 $$ LANGUAGE SQL
 """)
 
-checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=ColBERTConfig())
+checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=ColBERTConfig(), verbose=0)
 
 input = [
     'The dog is barking',
@@ -42,7 +41,7 @@ for content, embeddings in zip(input, doc_embeddings):
     conn.execute('INSERT INTO documents (content, embeddings) VALUES (%s, %s)', (content, embeddings))
 
 query = 'puppy'
-query_embeddings = [e.numpy() for e in checkpoint.queryFromText([query], bsize=1)[0]]
+query_embeddings = [e.numpy() for e in checkpoint.queryFromText([query])[0]]
 result = conn.execute('SELECT content, max_sim(embeddings, %s) AS max_sim FROM documents ORDER BY max_sim DESC LIMIT 5', (query_embeddings,)).fetchall()
 for row in result:
     print(row)
