@@ -28,7 +28,8 @@ CREATE OR REPLACE FUNCTION max_sim(document vector[], query vector[]) RETURNS do
 $$ LANGUAGE SQL
 """)
 
-checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=ColBERTConfig(), verbose=0)
+config = ColBERTConfig(query_maxlen=5)
+checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=config, verbose=0)
 
 input = [
     'The dog is barking',
