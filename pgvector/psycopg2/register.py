@@ -1,11 +1,13 @@
 import psycopg2
+from psycopg2.extensions import cursor
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
 
 
 def register_vector(conn_or_curs=None):
-    cur = conn_or_curs.cursor() if hasattr(conn_or_curs, 'cursor') else conn_or_curs
+    conn = conn_or_curs if hasattr(conn_or_curs, 'cursor') else conn_or_curs.connection
+    cur = conn.cursor(cursor_factory=cursor)
 
     # use to_regtype to get first matching type in search path
     cur.execute("SELECT typname, oid FROM pg_type WHERE oid IN (to_regtype('vector'), to_regtype('halfvec'), to_regtype('sparsevec'))")

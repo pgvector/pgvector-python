@@ -1,3 +1,7 @@
+## 0.3.3 (unreleased)
+
+- Improved support for cursor factories with Psycopg 2
+
 ## 0.3.2 (2024-07-17)
 
 - Fixed error with asyncpg and pgvector < 0.7
