@@ -1,6 +1,7 @@
 import numpy as np
 from pgvector.psycopg2 import register_vector, SparseVector
 import psycopg2
+from psycopg2.extras import DictCursor, NamedTupleCursor
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
 conn.autocommit = True
@@ -53,3 +54,16 @@ class TestPsycopg2:
         res = cur.fetchall()
         assert res[0][0].to_list() == [1.5, 2, 3]
         assert res[1][0] is None
+
+    def test_cursor_factory(self):
+        for cursor_factory in [DictCursor, NamedTupleCursor]:
+            conn = psycopg2.connect(dbname='pgvector_python_test')
+            cur = conn.cursor(cursor_factory=cursor_factory)
+            register_vector(cur)
+            conn.close()
+
+    def test_cursor_factory_connection(self):
+        for cursor_factory in [DictCursor, NamedTupleCursor]:
+            conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)
+            register_vector(conn)
+            conn.close()
