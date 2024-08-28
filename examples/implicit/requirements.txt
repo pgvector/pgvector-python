@@ -1,0 +1,4 @@
+implicit
+pgvector
+psycopg[binary]
+SQLAlchemy

@@ -1,0 +1,3 @@
+colbert-ai
+pgvector
+psycopg[binary]

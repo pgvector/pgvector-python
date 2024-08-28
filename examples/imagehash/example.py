@@ -1,8 +1,8 @@
 from datasets import load_dataset
+from imagehash import phash
 import matplotlib.pyplot as plt
 from pgvector.psycopg import register_vector, Bit
 import psycopg
-from imagehash import phash
 
 
 def hash_image(img):

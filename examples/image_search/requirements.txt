@@ -1,0 +1,6 @@
+matplotlib
+pgvector
+psycopg[binary]
+torch
+torchvision
+tqdm

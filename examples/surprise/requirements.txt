@@ -1,0 +1,4 @@
+pgvector
+psycopg[binary]
+scikit-surprise
+SQLAlchemy

@@ -1,0 +1,3 @@
+cohere
+pgvector
+psycopg[binary]

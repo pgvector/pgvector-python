@@ -1,0 +1,5 @@
+datasets
+imagehash
+matplotlib
+pgvector
+psycopg[binary]

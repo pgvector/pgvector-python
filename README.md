@@ -26,22 +26,22 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
-- [Embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/openai_embeddings.py) with OpenAI
-- [Binary embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/cohere_embeddings.py) with Cohere
-- [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_embeddings.py) with SentenceTransformers
-- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search_rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
-- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search.py) with SentenceTransformers (cross-encoder)
-- [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search.py) with Transformers
-- [Late interaction search](https://github.com/pgvector/pgvector-python/blob/master/examples/colbert_exact.py) with ColBERT
-- [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/pytorch_image_search.py) with PyTorch
-- [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/hash_image_search.py) with perceptual hashing
-- [Morgan fingerprints](https://github.com/pgvector/pgvector-python/blob/master/examples/morgan_fingerprints.py) with RDKit
-- [Topic modeling](https://github.com/pgvector/pgvector-python/blob/master/examples/topic_modeling.py) with Gensim
-- [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit_recs.py) with Implicit
-- [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise_recs.py) with Surprise
-- [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm_recs.py) with LightFM
-- [Horizontal scaling](https://github.com/pgvector/pgvector-python/blob/master/examples/citus.py) with Citus
-- [Bulk loading](https://github.com/pgvector/pgvector-python/blob/master/examples/bulk_loading.py) with `COPY`
+- [Embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/openai/example.py) with OpenAI
+- [Binary embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/cohere/example.py) with Cohere
+- [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_transformers/example.py) with SentenceTransformers
+- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search/rrf.py) with SentenceTransformers (Reciprocal Rank Fusion)
+- [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search/cross_encoder.py) with SentenceTransformers (cross-encoder)
+- [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search/example.py) with Transformers
+- [Late interaction search](https://github.com/pgvector/pgvector-python/blob/master/examples/colbert/exact.py) with ColBERT
+- [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/image_search/example.py) with PyTorch
+- [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/imagehash/example.py) with perceptual hashing
+- [Morgan fingerprints](https://github.com/pgvector/pgvector-python/blob/master/examples/rdkit/example.py) with RDKit
+- [Topic modeling](https://github.com/pgvector/pgvector-python/blob/master/examples/gensim/example.py) with Gensim
+- [Implicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/implicit/example.py) with Implicit
+- [Explicit feedback recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/surprise/example.py) with Surprise
+- [Recommendations](https://github.com/pgvector/pgvector-python/blob/master/examples/lightfm/example.py) with LightFM
+- [Horizontal scaling](https://github.com/pgvector/pgvector-python/blob/master/examples/citus/example.py) with Citus
+- [Bulk loading](https://github.com/pgvector/pgvector-python/blob/master/examples/loading/example.py) with `COPY`
 
 ## Django
 
@@ -535,8 +535,8 @@ pytest
 To run an example:
 
 ```sh
-cd examples
+cd examples/loading
 pip install -r requirements.txt
 createdb pgvector_example
-python3 bulk_loading.py
+python3 example.py
 ```
