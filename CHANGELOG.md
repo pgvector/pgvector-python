@@ -1,4 +1,4 @@
-## 0.3.3 (unreleased)
+## 0.3.3 (2024-09-09)
 
 - Improved support for cursor factories with Psycopg 2
 
