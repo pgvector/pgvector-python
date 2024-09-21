@@ -1,3 +1,7 @@
+## 0.3.4 (unreleased)
+
+- Added `schema` option for asyncpg
+
 ## 0.3.3 (2024-09-09)
 
 - Improved support for cursor factories with Psycopg 2
