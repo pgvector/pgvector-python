@@ -31,10 +31,6 @@ with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
 
         copy.write_row([embedding])
 
-        # flush data
-        while conn.pgconn.flush() == 1:
-            pass
-
 print('\nSuccess!')
 
 # create any indexes *after* loading initial data (skipping for this example)
