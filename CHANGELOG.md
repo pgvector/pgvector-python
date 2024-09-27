@@ -1,4 +1,4 @@
-## 0.3.4 (unreleased)
+## 0.3.4 (2024-09-26)
 
 - Added `schema` option for asyncpg
 
