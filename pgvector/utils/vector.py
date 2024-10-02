@@ -33,7 +33,10 @@ class Vector:
 
     @classmethod
     def from_text(cls, value):
-        return cls([float(v) for v in value[1:-1].split(',')])
+        if isinstance(value, float):
+            return cls([value])
+        elif isinstance(value, str):
+            return cls([float(v) for v in value[1:-1].split(',')])
 
     @classmethod
     def from_binary(cls, value):
