@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
 import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
@@ -339,41 +339,39 @@ class TestSqlalchemy:
 
     def test_avg(self):
         with Session(engine) as session:
-            avg = session.query(func.avg(Item.embedding)).first()[0]
-            assert avg is None
+            res = session.query(avg(Item.embedding)).first()[0]
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            avg = session.query(func.avg(Item.embedding)).first()[0]
-            # does not type cast
-            assert avg == '[2.5,3.5,4.5]'
+            res = session.query(avg(Item.embedding)).first()[0]
+            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
 
     def test_avg_orm(self):
         with Session(engine) as session:
-            avg = session.scalars(select(func.avg(Item.embedding))).first()
-            assert avg is None
+            res = session.scalars(select(avg(Item.embedding))).first()
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            avg = session.scalars(select(func.avg(Item.embedding))).first()
-            # does not type cast
-            assert avg == '[2.5,3.5,4.5]'
+            res = session.scalars(select(avg(Item.embedding))).first()
+            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
 
     def test_sum(self):
         with Session(engine) as session:
-            sum = session.query(func.sum(Item.embedding)).first()[0]
-            assert sum is None
+            res = session.query(sum(Item.embedding)).first()[0]
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            sum = session.query(func.sum(Item.embedding)).first()[0]
-            assert np.array_equal(sum, np.array([5, 7, 9]))
+            res = session.query(sum(Item.embedding)).first()[0]
+            assert np.array_equal(res, np.array([5, 7, 9]))
 
     def test_sum_orm(self):
         with Session(engine) as session:
-            sum = session.scalars(select(func.sum(Item.embedding))).first()
-            assert sum is None
+            res = session.scalars(select(sum(Item.embedding))).first()
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            sum = session.scalars(select(func.sum(Item.embedding))).first()
-            assert np.array_equal(sum, np.array([5, 7, 9]))
+            res = session.scalars(select(sum(Item.embedding))).first()
+            assert np.array_equal(res, np.array([5, 7, 9]))
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])

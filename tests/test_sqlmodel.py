@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
 import pytest
 from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
@@ -198,41 +198,39 @@ class TestSqlmodel:
 
     def test_vector_avg(self):
         with Session(engine) as session:
-            avg = session.exec(select(func.avg(Item.embedding))).first()
-            assert avg is None
+            res = session.exec(select(avg(Item.embedding))).first()
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            avg = session.exec(select(func.avg(Item.embedding))).first()
-            # does not type cast
-            assert avg == '[2.5,3.5,4.5]'
+            res = session.exec(select(avg(Item.embedding))).first()
+            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
 
     def test_vector_sum(self):
         with Session(engine) as session:
-            sum = session.exec(select(func.sum(Item.embedding))).first()
-            assert sum is None
+            res = session.exec(select(sum(Item.embedding))).first()
+            assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            sum = session.exec(select(func.sum(Item.embedding))).first()
-            assert np.array_equal(sum, np.array([5, 7, 9]))
+            res = session.exec(select(sum(Item.embedding))).first()
+            assert np.array_equal(res, np.array([5, 7, 9]))
 
     def test_halfvec_avg(self):
         with Session(engine) as session:
-            avg = session.exec(select(func.avg(Item.half_embedding))).first()
-            assert avg is None
+            res = session.exec(select(avg(Item.half_embedding))).first()
+            assert res is None
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
-            avg = session.exec(select(func.avg(Item.half_embedding))).first()
-            # does not type cast
-            assert avg == '[2.5,3.5,4.5]'
+            res = session.exec(select(avg(Item.half_embedding))).first()
+            assert res.to_list() == [2.5, 3.5, 4.5]
 
     def test_halfvec_sum(self):
         with Session(engine) as session:
-            sum = session.exec(select(func.sum(Item.half_embedding))).first()
-            assert sum is None
+            res = session.exec(select(sum(Item.half_embedding))).first()
+            assert res is None
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
-            sum = session.exec(select(func.sum(Item.half_embedding))).first()
-            assert sum.to_list() == [5, 7, 9]
+            res = session.exec(select(sum(Item.half_embedding))).first()
+            assert res.to_list() == [5, 7, 9]
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])

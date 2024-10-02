@@ -1,5 +1,6 @@
 ## 0.3.5 (unreleased)
 
+- Added `avg` function with type casting to SQLAlchemy
 - Added `globally` option for Psycopg 2
 
 ## 0.3.4 (2024-09-26)

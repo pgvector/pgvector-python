@@ -1,4 +1,5 @@
 from .bit import BIT
+from .functions import avg, sum
 from .halfvec import HALFVEC
 from .sparsevec import SPARSEVEC
 from .vector import VECTOR
@@ -12,5 +13,7 @@ __all__ = [
     'BIT',
     'SPARSEVEC',
     'HalfVector',
-    'SparseVector'
+    'SparseVector',
+    'avg',
+    'sum'
 ]
