@@ -14,6 +14,7 @@ __all__ = [
     'SPARSEVEC',
     'HalfVector',
     'SparseVector',
-    'avg',
-    'sum'
+    # TODO add avg and sum in 0.4.0
+    # 'avg',
+    # 'sum'
 ]
