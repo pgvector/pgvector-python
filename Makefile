@@ -1,11 +1,13 @@
+.PHONY: lint build publish clean
+
 lint:
 	pycodestyle . --ignore=E501
 
-publish: clean
+build:
 	python3 -m build
-	ls dist
+
+publish: clean build
 	twine upload dist/*
-	make clean
 
 clean:
-	rm -rf .pytest_cache build dist pgvector.egg-info
+	rm -rf .pytest_cache dist pgvector.egg-info
