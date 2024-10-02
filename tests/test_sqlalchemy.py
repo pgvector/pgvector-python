@@ -4,9 +4,16 @@ import pytest
 from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import declarative_base, mapped_column, Session
+from sqlalchemy.orm import declarative_base, Session
 from sqlalchemy.sql import func
+
+try:
+    from sqlalchemy.orm import mapped_column
+    from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+    sqlalchemy_version = 2
+except ImportError:
+    mapped_column = Column
+    sqlalchemy_version = 1
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
@@ -418,6 +425,7 @@ class TestSqlalchemy:
         assert item.embedding.tolist() == [1, 2, 3]
 
     @pytest.mark.asyncio
+    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_async(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
