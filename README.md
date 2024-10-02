@@ -496,7 +496,7 @@ Average vectors
 ```python
 from peewee import fn
 
-Item.select(fn.avg(Item.embedding)).scalar()
+Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
 ```
 
 Also supports `sum`
