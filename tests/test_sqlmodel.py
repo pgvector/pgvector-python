@@ -203,7 +203,8 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             avg = session.exec(select(func.avg(Item.embedding))).first()
-            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+             # does not type cast
+            assert avg == '[2.5,3.5,4.5]'
 
     def test_vector_sum(self):
         with Session(engine) as session:
@@ -221,7 +222,8 @@ class TestSqlmodel:
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
             avg = session.exec(select(func.avg(Item.half_embedding))).first()
-            assert avg.to_list() == [2.5, 3.5, 4.5]
+            # does not type cast
+            assert avg == '[2.5,3.5,4.5]'
 
     def test_halfvec_sum(self):
         with Session(engine) as session:

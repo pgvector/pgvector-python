@@ -169,7 +169,8 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.embedding)).scalar()
-        assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+        # does not type cast
+        assert avg == '[2.5,3.5,4.5]'
 
     def test_vector_sum(self):
         sum = Item.select(fn.sum(Item.embedding)).scalar()
@@ -177,7 +178,8 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.embedding)).scalar()
-        assert np.array_equal(sum, np.array([5, 7, 9]))
+        # does not type cast
+        assert sum == '[5,7,9]'
 
     def test_halfvec_avg(self):
         avg = Item.select(fn.avg(Item.half_embedding)).scalar()
@@ -185,7 +187,8 @@ class TestPeewee:
         Item.create(half_embedding=[1, 2, 3])
         Item.create(half_embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.half_embedding)).scalar()
-        assert avg.to_list() == [2.5, 3.5, 4.5]
+        # does not type cast
+        assert avg == '[2.5,3.5,4.5]'
 
     def test_halfvec_sum(self):
         sum = Item.select(fn.sum(Item.half_embedding)).scalar()
@@ -193,7 +196,8 @@ class TestPeewee:
         Item.create(half_embedding=[1, 2, 3])
         Item.create(half_embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.half_embedding)).scalar()
-        assert sum.to_list() == [5, 7, 9]
+        # does not type cast
+        assert sum == '[5,7,9]'
 
     def test_get_or_create(self):
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})

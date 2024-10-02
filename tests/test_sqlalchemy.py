@@ -337,7 +337,8 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             avg = session.query(func.avg(Item.embedding)).first()[0]
-            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+            # does not type cast
+            assert avg == '[2.5,3.5,4.5]'
 
     def test_avg_orm(self):
         with Session(engine) as session:
@@ -346,7 +347,8 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             avg = session.scalars(select(func.avg(Item.embedding))).first()
-            assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+            # does not type cast
+            assert avg == '[2.5,3.5,4.5]'
 
     def test_sum(self):
         with Session(engine) as session:
