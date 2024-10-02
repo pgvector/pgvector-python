@@ -203,7 +203,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             avg = session.exec(select(func.avg(Item.embedding))).first()
-             # does not type cast
+            # does not type cast
             assert avg == '[2.5,3.5,4.5]'
 
     def test_vector_sum(self):
