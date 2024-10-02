@@ -403,8 +403,9 @@ class TestSqlalchemy:
     def test_insert_bulk(self):
         session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
 
-    def test_insert_text(self):
-        session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
+    # register_vector in psycopg2 tests change this behavior
+    # def test_insert_text(self):
+    #     session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
 
     def test_automap(self):
         metadata = MetaData()
