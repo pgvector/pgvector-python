@@ -21,3 +21,4 @@ Homepage = "https://github.com/pgvector/pgvector-python"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
