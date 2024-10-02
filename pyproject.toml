@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pgvector"
+version = "0.3.4"
+description = "pgvector support for Python"
+readme = "README.md"
+authors = [
+    {name = "Andrew Kane", email = "andrew@ankane.org"}
+]
+license = {text = "MIT"}
+requires-python = ">= 3.8"
+dependencies = [
+    "numpy"
+]
+
+[project.urls]
+Homepage = "https://github.com/pgvector/pgvector-python"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
