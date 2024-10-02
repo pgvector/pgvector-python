@@ -15,7 +15,7 @@ def cast_vector(value, cur):
     return Vector._from_db(value)
 
 
-def register_vector_info(oid):
+def register_vector_info(oid, scope):
     vector = new_type((oid,), 'VECTOR', cast_vector)
-    register_type(vector)
+    register_type(vector, scope)
     register_adapter(np.ndarray, VectorAdapter)

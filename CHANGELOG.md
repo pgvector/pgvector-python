@@ -1,3 +1,7 @@
+## 0.3.5 (unreleased)
+
+- Added `globally` option for Psycopg 2
+
 ## 0.3.4 (2024-09-26)
 
 - Added `schema` option for asyncpg

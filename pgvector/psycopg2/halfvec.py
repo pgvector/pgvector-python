@@ -14,7 +14,7 @@ def cast_halfvec(value, cur):
     return HalfVector._from_db(value)
 
 
-def register_halfvec_info(oid):
+def register_halfvec_info(oid, scope):
     halfvec = new_type((oid,), 'HALFVEC', cast_halfvec)
-    register_type(halfvec)
+    register_type(halfvec, scope)
     register_adapter(HalfVector, HalfvecAdapter)

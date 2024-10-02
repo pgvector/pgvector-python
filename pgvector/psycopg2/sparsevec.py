@@ -14,7 +14,7 @@ def cast_sparsevec(value, cur):
     return SparseVector._from_db(value)
 
 
-def register_sparsevec_info(oid):
+def register_sparsevec_info(oid, scope):
     sparsevec = new_type((oid,), 'SPARSEVEC', cast_sparsevec)
-    register_type(sparsevec)
+    register_type(sparsevec, scope)
     register_adapter(SparseVector, SparsevecAdapter)
