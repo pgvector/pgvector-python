@@ -1,4 +1,3 @@
-import psycopg
 from psycopg.types import TypeInfo
 from .bit import register_bit_info
 from .halfvec import register_halfvec_info

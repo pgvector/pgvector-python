@@ -1,4 +1,4 @@
-from psycopg.adapt import Loader, Dumper
+from psycopg.adapt import Dumper
 from psycopg.pq import Format
 from ..utils import Bit
 

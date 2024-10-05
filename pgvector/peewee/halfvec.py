@@ -1,4 +1,4 @@
-from peewee import Expression, Field, Value
+from peewee import Expression, Field
 from ..utils import HalfVector
 
 

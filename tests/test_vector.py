@@ -8,7 +8,7 @@ class TestVector:
         assert Vector([1, 2, 3]).to_list() == [1, 2, 3]
 
     def test_list_str(self):
-        with pytest.raises(ValueError, match='could not convert string to float') as error:
+        with pytest.raises(ValueError, match='could not convert string to float'):
             Vector([1, 'two', 3])
 
     def test_tuple(self):

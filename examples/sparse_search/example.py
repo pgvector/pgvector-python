@@ -2,7 +2,6 @@
 # https://opensearch.org/blog/improving-document-retrieval-with-sparse-semantic-encoders/
 # https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v1
 
-import numpy as np
 from pgvector.psycopg import register_vector, SparseVector
 import psycopg
 import torch
