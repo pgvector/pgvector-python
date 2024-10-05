@@ -8,13 +8,12 @@ from ..utils import HalfVector, SparseVector
 
 __all__ = [
     'Vector',
-    'VECTOR'
+    'VECTOR',
     'HALFVEC',
     'BIT',
     'SPARSEVEC',
     'HalfVector',
     'SparseVector',
-    # TODO add avg and sum in 0.4.0
-    # 'avg',
-    # 'sum'
+    'avg',
+    'sum'
 ]

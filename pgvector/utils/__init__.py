@@ -1,4 +1,11 @@
-from .bit import *
-from .halfvec import *
-from .sparsevec import *
-from .vector import *
+from .bit import Bit
+from .halfvec import HalfVector
+from .sparsevec import SparseVector
+from .vector import Vector
+
+__all__ = [
+    'Vector',
+    'HalfVector',
+    'Bit',
+    'SparseVector'
+]
