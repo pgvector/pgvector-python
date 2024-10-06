@@ -1,4 +1,4 @@
-## 0.3.5 (unreleased)
+## 0.3.5 (2024-10-05)
 
 - Added `avg` function with type casting to SQLAlchemy
 - Added `globally` option for Psycopg 2

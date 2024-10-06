@@ -183,7 +183,7 @@ session.scalars(select(Item).filter(Item.embedding.l2_distance([3, 1, 2]) < 5))
 Average vectors
 
 ```python
-from sqlalchemy.sql import func
+from pgvector.sqlalchemy import avg
 
 session.scalars(select(func.avg(Item.embedding))).first()
 ```
@@ -265,7 +265,7 @@ session.exec(select(Item).filter(Item.embedding.l2_distance([3, 1, 2]) < 5))
 Average vectors
 
 ```python
-from sqlalchemy.sql import func
+from pgvector.sqlalchemy import avg
 
 session.exec(select(func.avg(Item.embedding))).first()
 ```
