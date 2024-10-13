@@ -440,5 +440,11 @@ class TestDjango:
     def test_vector_array(self):
         Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]).save()
 
-        # this fails if the driver does not cast arrays
-        # item = Item.objects.get(pk=1)
+        with connection.cursor() as cursor:
+            from pgvector.psycopg import register_vector
+            register_vector(cursor.connection)
+
+            # this fails if the driver does not cast arrays
+            item = Item.objects.get(pk=1)
+            assert item.embeddings[0].tolist() == [1, 2, 3]
+            assert item.embeddings[1].tolist() == [4, 5, 6]
