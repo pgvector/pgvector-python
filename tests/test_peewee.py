@@ -199,3 +199,25 @@ class TestPeewee:
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
         Item.get_or_create(embedding=np.array([4, 5, 6]))
         Item.get_or_create(embedding=Item.embedding.to_value([7, 8, 9]))
+
+    def test_vector_array(self):
+        from playhouse.postgres_ext import PostgresqlExtDatabase, ArrayField
+
+        ext_db = PostgresqlExtDatabase('pgvector_python_test')
+
+        class ExtItem(BaseModel):
+            embeddings = ArrayField(VectorField, field_kwargs={'dimensions': 3}, index=False)
+
+            class Meta:
+                database = ext_db
+                table_name = 'peewee_ext_item'
+
+        ext_db.connect()
+        ext_db.drop_tables([ExtItem])
+        ext_db.create_tables([ExtItem])
+
+        # fails with column "embeddings" is of type vector[] but expression is of type text[]
+        # ExtItem.create(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])])
+        # item = ExtItem.get_by_id(1)
+        # assert np.array_equal(item.embeddings[0], np.array([1, 2, 3]))
+        # assert np.array_equal(item.embeddings[1], np.array([4, 5, 6]))
