@@ -1,5 +1,6 @@
 import django
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.core import serializers
 from django.db import connection, migrations, models
 from django.db.models import Avg, Sum
@@ -46,6 +47,7 @@ class Item(models.Model):
     half_embedding = HalfVectorField(dimensions=3, null=True, blank=True)
     binary_embedding = BitField(length=3, null=True, blank=True)
     sparse_embedding = SparseVectorField(dimensions=3, null=True, blank=True)
+    embeddings = ArrayField(VectorField(dimensions=3), null=True, blank=True)
 
     class Meta:
         app_label = 'django_app'
@@ -82,6 +84,7 @@ class Migration(migrations.Migration):
                 ('half_embedding', pgvector.django.HalfVectorField(dimensions=3, null=True, blank=True)),
                 ('binary_embedding', pgvector.django.BitField(length=3, null=True, blank=True)),
                 ('sparse_embedding', pgvector.django.SparseVectorField(dimensions=3, null=True, blank=True)),
+                ('embeddings', ArrayField(pgvector.django.VectorField(dimensions=3), null=True, blank=True)),
             ],
         ),
         migrations.AddIndex(
@@ -433,3 +436,9 @@ class TestDjango:
         assert Item.objects.first().half_embedding is None
         assert Item.objects.first().binary_embedding is None
         assert Item.objects.first().sparse_embedding is None
+
+    def test_vector_array(self):
+        Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]).save()
+
+        # this fails if the driver does not cast arrays
+        # item = Item.objects.get(pk=1)
