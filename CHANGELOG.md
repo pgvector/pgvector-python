@@ -1,3 +1,7 @@
+## 0.3.6 (unreleased)
+
+- Added `arrays` option for Psycopg 2
+
 ## 0.3.5 (2024-10-05)
 
 - Added `avg` function with type casting to SQLAlchemy

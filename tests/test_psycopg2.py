@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg2 import register_vector, SparseVector
+from pgvector.psycopg2 import register_vector, HalfVector, SparseVector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
 
@@ -9,9 +9,9 @@ conn.autocommit = True
 cur = conn.cursor()
 cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 cur.execute('DROP TABLE IF EXISTS psycopg2_items')
-cur.execute('CREATE TABLE psycopg2_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))')
+cur.execute('CREATE TABLE psycopg2_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), embeddings vector[], half_embeddings halfvec[], sparse_embeddings sparsevec[])')
 
-register_vector(cur, globally=False)
+register_vector(cur, globally=False, arrays=True)
 
 
 class TestPsycopg2:
@@ -54,6 +54,33 @@ class TestPsycopg2:
         res = cur.fetchall()
         assert res[0][0].to_list() == [1.5, 2, 3]
         assert res[1][0] is None
+
+    def test_vector_array(self):
+        embeddings = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        cur.execute('INSERT INTO psycopg2_items (embeddings) VALUES (%s::vector[])', (embeddings,))
+
+        cur.execute('SELECT embeddings FROM psycopg2_items ORDER BY id')
+        res = cur.fetchone()
+        assert np.array_equal(res[0][0], embeddings[0])
+        assert np.array_equal(res[0][1], embeddings[1])
+
+    def test_halfvec_array(self):
+        embeddings = [HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])]
+        cur.execute('INSERT INTO psycopg2_items (half_embeddings) VALUES (%s::halfvec[])', (embeddings,))
+
+        cur.execute('SELECT half_embeddings FROM psycopg2_items ORDER BY id')
+        res = cur.fetchone()
+        assert res[0][0].to_list() == [1.5, 2, 3]
+        assert res[0][1].to_list() == [4.5, 5, 6]
+
+    def test_sparsevec_array(self):
+        embeddings = [SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])]
+        cur.execute('INSERT INTO psycopg2_items (sparse_embeddings) VALUES (%s::sparsevec[])', (embeddings,))
+
+        cur.execute('SELECT sparse_embeddings FROM psycopg2_items ORDER BY id')
+        res = cur.fetchone()
+        assert res[0][0].to_list() == [1.5, 2, 3]
+        assert res[0][1].to_list() == [4.5, 5, 6]
 
     def test_cursor_factory(self):
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:

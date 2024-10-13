@@ -1,5 +1,5 @@
 import numpy as np
-from psycopg2.extensions import adapt, new_type, register_adapter, register_type
+from psycopg2.extensions import adapt, new_array_type, new_type, register_adapter, register_type
 from ..utils import Vector
 
 
@@ -15,7 +15,12 @@ def cast_vector(value, cur):
     return Vector._from_db(value)
 
 
-def register_vector_info(oid, scope):
+def register_vector_info(oid, array_oid, scope):
     vector = new_type((oid,), 'VECTOR', cast_vector)
     register_type(vector, scope)
+
+    if array_oid is not None:
+        vectorarray = new_array_type((array_oid,), 'VECTORARRAY', vector)
+        register_type(vectorarray, scope)
+
     register_adapter(np.ndarray, VectorAdapter)
