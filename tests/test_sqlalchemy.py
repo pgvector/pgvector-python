@@ -425,13 +425,12 @@ class TestSqlalchemy:
         assert item.embedding.tolist() == [1, 2, 3]
 
     def test_vector_array(self):
-        from pgvector.psycopg2 import register_vector
-
         session = Session(engine)
         session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
         session.commit()
 
         with engine.connect() as connection:
+            from pgvector.psycopg2 import register_vector
             register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
 
             # this fails if the driver does not cast arrays
