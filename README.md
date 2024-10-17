@@ -185,7 +185,7 @@ Average vectors
 ```python
 from pgvector.sqlalchemy import avg
 
-session.scalars(select(func.avg(Item.embedding))).first()
+session.scalars(select(avg(Item.embedding))).first()
 ```
 
 Also supports `sum`
@@ -267,7 +267,7 @@ Average vectors
 ```python
 from pgvector.sqlalchemy import avg
 
-session.exec(select(func.avg(Item.embedding))).first()
+session.exec(select(avg(Item.embedding))).first()
 ```
 
 Also supports `sum`
