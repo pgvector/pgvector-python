@@ -1,4 +1,4 @@
-## 0.3.6 (unreleased)
+## 0.3.6 (2024-10-26)
 
 - Added `arrays` option for Psycopg 2
 
