@@ -227,7 +227,7 @@ index = Index(
     func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
-    postgresql_ops={'embedding': 'vector_l2_ops'}
+    postgresql_ops={'embedding': 'halfvec_l2_ops'}
 )
 ```
 
