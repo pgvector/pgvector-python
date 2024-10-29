@@ -214,6 +214,29 @@ index.create(engine)
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+#### Half-Precision Indexing
+
+Index vectors at half-precision
+
+```python
+from pgvector.sqlalchemy import HALFVEC
+from sqlalchemy.sql import func
+
+index = Index(
+    'my_index',
+    func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'vector_l2_ops'}
+)
+```
+
+Get the nearest neighbors
+
+```python
+session.scalars(select(Item).order_by(func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])).limit(5))
+```
+
 ## SQLModel
 
 Enable the extension
