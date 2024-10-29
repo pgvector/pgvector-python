@@ -234,7 +234,8 @@ index = Index(
 Get the nearest neighbors
 
 ```python
-session.scalars(select(Item).order_by(func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])).limit(5))
+order = func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])
+session.scalars(select(Item).order_by(order).limit(5))
 ```
 
 ## SQLModel
