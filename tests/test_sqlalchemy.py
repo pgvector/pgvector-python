@@ -46,6 +46,15 @@ index = Index(
 )
 index.create(engine)
 
+half_precision_index = Index(
+    'sqlalchemy_orm_half_precision_index',
+    func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'halfvec_l2_ops'}
+)
+half_precision_index.create(engine)
+
 
 def create_items():
     session = Session(engine)
@@ -437,6 +446,12 @@ class TestSqlalchemy:
             item = Session(bind=connection).get(Item, 1)
             assert item.embeddings[0].tolist() == [1, 2, 3]
             assert item.embeddings[1].tolist() == [4, 5, 6]
+
+    def test_half_precision(self):
+        create_items()
+        with Session(engine) as session:
+            items = session.query(Item).order_by(func.cast(Item.embedding, HALFVEC(3)).l2_distance([1, 1, 1])).all()
+            assert [v.id for v in items] == [1, 3, 2]
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
