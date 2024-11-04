@@ -65,7 +65,7 @@ class Item(models.Model):
                 name='hnsw_idx',
                 fields=['embedding'],
                 m=16,
-                ef_construction=100,
+                ef_construction=64,
                 opclasses=['vector_l2_ops']
             )
         ]
