@@ -1,6 +1,7 @@
 import django
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import OpClass
 from django.core import serializers
 from django.db import connection, migrations, models
 from django.db.models import Avg, Sum, FloatField, DecimalField
@@ -38,7 +39,12 @@ settings.configure(
                 'level': 'WARNING'
             }
         }
-    }
+    },
+    # needed for OpClass
+    # https://docs.djangoproject.com/en/5.1/ref/contrib/postgres/indexes/#opclass-expressions
+    INSTALLED_APPS=[
+        'django.contrib.postgres'
+    ]
 )
 django.setup()
 
@@ -67,6 +73,12 @@ class Item(models.Model):
                 m=16,
                 ef_construction=64,
                 opclasses=['vector_l2_ops']
+            ),
+            HnswIndex(
+                OpClass(Cast('embedding', HalfVectorField(dimensions=3)), name='halfvec_l2_ops'),
+                name='hnsw_half_precision_idx',
+                m=16,
+                ef_construction=64
             )
         ]
 
@@ -99,6 +111,10 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name='item',
             index=pgvector.django.HnswIndex(fields=['embedding'], m=16, ef_construction=64, name='hnsw_idx', opclasses=['vector_l2_ops']),
+        ),
+        migrations.AddIndex(
+            model_name='item',
+            index=pgvector.django.HnswIndex(OpClass(Cast('embedding', HalfVectorField(dimensions=3)), name='halfvec_l2_ops'), m=16, ef_construction=64, name='hnsw_half_precision_idx'),
         )
     ]
 
@@ -473,3 +489,10 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
         assert items[1].numeric_embedding == [1, 1, 2]
+
+    def test_half_precision(self):
+        create_items()
+        distance = L2Distance(Cast('embedding', HalfVectorField(dimensions=3)), [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, sqrt(3)]

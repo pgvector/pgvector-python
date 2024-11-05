@@ -133,6 +133,31 @@ class Item(models.Model):
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+#### Half-Precision Indexing
+
+Index vectors at half-precision
+
+```python
+from django.contrib.postgres.indexes import OpClass
+from django.db.models.functions import Cast
+from pgvector.django import HalfVectorField
+
+index = HnswIndex(
+    OpClass(Cast('embedding', HalfVectorField(dimensions=3)), name='halfvec_l2_ops'),
+    name='my_index',
+    m=16,
+    ef_construction=64
+)
+```
+
+Note: Add `'django.contrib.postgres'` to `INSTALLED_APPS` to use `OpClass`
+
+Get the nearest neighbors
+
+```python
+Item.objects.order_by(L2Distance(Cast('embedding', HalfVectorField(dimensions=3)), [3, 1, 2]))[:5]
+```
+
 ## SQLAlchemy
 
 Enable the extension
