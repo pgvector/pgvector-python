@@ -1,6 +1,7 @@
 import numpy as np
 from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector, Vector
 import psycopg
+from psycopg_pool import ConnectionPool, AsyncConnectionPool
 import pytest
 
 conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
@@ -176,6 +177,18 @@ class TestPsycopg:
         assert np.array_equal(res[0][0], embeddings[0])
         assert np.array_equal(res[0][1], embeddings[1])
 
+    def test_pool(self):
+        def configure(conn):
+            register_vector(conn)
+
+        pool = ConnectionPool(conninfo='postgres://localhost/pgvector_python_test', open=True, configure=configure)
+
+        with pool.connection() as conn:
+            res = conn.execute("SELECT '[1,2,3]'::vector").fetchone()
+            assert np.array_equal(res[0], np.array([1, 2, 3]))
+
+        pool.close()
+
     @pytest.mark.asyncio
     async def test_async(self):
         conn = await psycopg.AsyncConnection.connect(dbname='pgvector_python_test', autocommit=True)
@@ -195,3 +208,19 @@ class TestPsycopg:
             assert np.array_equal(res[0][1], embedding)
             assert res[0][1].dtype == np.float32
             assert res[1][1] is None
+
+    @pytest.mark.asyncio
+    async def test_async_pool(self):
+        async def configure(conn):
+            await register_vector_async(conn)
+
+        pool = AsyncConnectionPool(conninfo='postgres://localhost/pgvector_python_test', open=False, configure=configure)
+        await pool.open()
+
+        async with pool.connection() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("SELECT '[1,2,3]'::vector")
+                res = await cur.fetchone()
+                assert np.array_equal(res[0], np.array([1, 2, 3]))
+
+        await pool.close()

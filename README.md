@@ -338,6 +338,15 @@ from pgvector.psycopg import register_vector
 register_vector(conn)
 ```
 
+For [connection pools](https://www.psycopg.org/psycopg3/docs/advanced/pool.html), use
+
+```python
+def configure(conn):
+    register_vector(conn)
+
+pool = ConnectionPool(configure=configure)
+```
+
 For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use
 
 ```python
