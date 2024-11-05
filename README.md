@@ -344,7 +344,7 @@ For [connection pools](https://www.psycopg.org/psycopg3/docs/advanced/pool.html)
 def configure(conn):
     register_vector(conn)
 
-pool = ConnectionPool(configure=configure)
+pool = ConnectionPool(..., configure=configure)
 ```
 
 For [async connections](https://www.psycopg.org/psycopg3/docs/advanced/async.html), use
