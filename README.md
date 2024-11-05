@@ -155,7 +155,8 @@ Note: Add `'django.contrib.postgres'` to `INSTALLED_APPS` to use `OpClass`
 Get the nearest neighbors
 
 ```python
-Item.objects.order_by(L2Distance(Cast('embedding', HalfVectorField(dimensions=3)), [3, 1, 2]))[:5]
+distance = L2Distance(Cast('embedding', HalfVectorField(dimensions=3)), [3, 1, 2])
+Item.objects.order_by(distance)[:5]
 ```
 
 ## SQLAlchemy
