@@ -140,7 +140,7 @@ Index vectors at half-precision
 ```python
 from django.contrib.postgres.indexes import OpClass
 from django.db.models.functions import Cast
-from pgvector.django import HalfVectorField
+from pgvector.django import HnswIndex, HalfVectorField
 
 class Item(models.Model):
     class Meta:
