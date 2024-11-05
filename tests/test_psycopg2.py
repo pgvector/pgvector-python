@@ -101,7 +101,7 @@ class TestPsycopg2:
 
         conn = pool.getconn()
         try:
-            # use globally=True for apps
+            # use globally=True for apps to ensure registered with all connections
             register_vector(conn, globally=False)
         finally:
             pool.putconn(conn)
