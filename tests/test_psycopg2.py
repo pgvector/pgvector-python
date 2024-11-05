@@ -2,6 +2,7 @@ import numpy as np
 from pgvector.psycopg2 import register_vector, HalfVector, SparseVector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
+from psycopg2.pool import ThreadedConnectionPool
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
 conn.autocommit = True
@@ -94,3 +95,21 @@ class TestPsycopg2:
             conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)
             register_vector(conn, globally=False)
             conn.close()
+
+    def test_pool(self):
+        pool = ThreadedConnectionPool(1, 3, dbname='pgvector_python_test')
+
+        conn = pool.getconn()
+        try:
+            cur = conn.cursor()
+
+            # use globally=True for apps
+            register_vector(cur, globally=False)
+
+            cur.execute("SELECT '[1,2,3]'::vector")
+            res = cur.fetchone()
+            assert np.array_equal(res[0], np.array([1, 2, 3]))
+        finally:
+            pool.putconn(conn)
+
+        pool.closeall()
