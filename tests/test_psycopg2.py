@@ -101,11 +101,14 @@ class TestPsycopg2:
 
         conn = pool.getconn()
         try:
-            cur = conn.cursor()
-
             # use globally=True for apps
-            register_vector(cur, globally=False)
+            register_vector(conn, globally=False)
+        finally:
+            pool.putconn(conn)
 
+        conn = pool.getconn()
+        try:
+            cur = conn.cursor()
             cur.execute("SELECT '[1,2,3]'::vector")
             res = cur.fetchone()
             assert np.array_equal(res[0], np.array([1, 2, 3]))
