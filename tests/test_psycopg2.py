@@ -97,7 +97,7 @@ class TestPsycopg2:
             conn.close()
 
     def test_pool(self):
-        pool = ThreadedConnectionPool(1, 3, dbname='pgvector_python_test')
+        pool = ThreadedConnectionPool(1, 1, dbname='pgvector_python_test')
 
         conn = pool.getconn()
         try:
