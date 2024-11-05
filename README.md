@@ -142,12 +142,16 @@ from django.contrib.postgres.indexes import OpClass
 from django.db.models.functions import Cast
 from pgvector.django import HalfVectorField
 
-index = HnswIndex(
-    OpClass(Cast('embedding', HalfVectorField(dimensions=3)), name='halfvec_l2_ops'),
-    name='my_index',
-    m=16,
-    ef_construction=64
-)
+class Item(models.Model):
+    class Meta:
+        indexes = [
+            HnswIndex(
+                OpClass(Cast('embedding', HalfVectorField(dimensions=3)), name='halfvec_l2_ops'),
+                name='my_index',
+                m=16,
+                ef_construction=64
+            )
+        ]
 ```
 
 Note: Add `'django.contrib.postgres'` to `INSTALLED_APPS` to use `OpClass`
