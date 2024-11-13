@@ -282,6 +282,30 @@ class Item(Base):
 
 And register the types with the underlying driver
 
+For Psycopg 3, use
+
+```python
+from pgvector.psycopg import register_vector
+from sqlalchemy import event
+
+@event.listens_for(engine, "connect")
+def connect(dbapi_connection, connection_record):
+    register_vector(dbapi_connection)
+```
+
+For [async connections](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html) with Psycopg 3, use
+
+```python
+from pgvector.psycopg import register_vector_async
+from sqlalchemy import event
+
+@event.listens_for(engine.sync_engine, "connect")
+def connect(dbapi_connection, connection_record):
+    dbapi_connection.run_async(register_vector_async)
+```
+
+For Psycopg 2, use
+
 ```python
 from pgvector.psycopg2 import register_vector
 from sqlalchemy import event
