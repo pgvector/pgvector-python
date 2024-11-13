@@ -483,3 +483,25 @@ class TestSqlalchemy:
                 assert avg.first() == '[2.5,3.5,4.5]'
 
         await engine.dispose()
+
+    @pytest.mark.asyncio
+    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+    async def test_async_vector_array(self):
+        engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        @event.listens_for(engine.sync_engine, "connect")
+        def connect(dbapi_connection, connection_record):
+            from pgvector.psycopg import register_vector_async
+            dbapi_connection.run_async(register_vector_async)
+
+        async with async_session() as session:
+            async with session.begin():
+                session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+
+                # this fails if the driver does not cast arrays
+                item = await session.get(Item, 1)
+                assert item.embeddings[0].tolist() == [1, 2, 3]
+                assert item.embeddings[1].tolist() == [4, 5, 6]
+
+        await engine.dispose()
