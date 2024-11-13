@@ -284,7 +284,7 @@ And register the types with the underlying driver
 
 ```python
 from pgvector.psycopg2 import register_vector
-from sqlalchemy import engine
+from sqlalchemy import event
 
 @event.listens_for(engine, "connect")
 def connect(dbapi_connection, connection_record):
