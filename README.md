@@ -284,9 +284,11 @@ And register the types with the underlying driver
 
 ```python
 from pgvector.psycopg2 import register_vector
+from sqlalchemy import engine
 
-with session.connection() as connection:
-    register_vector(connection.connection.dbapi_connection, globally=True, arrays=True)
+@event.listens_for(engine, "connect")
+def connect(dbapi_connection, connection_record):
+    register_vector(dbapi_connection, arrays=True)
 ```
 
 ## SQLModel

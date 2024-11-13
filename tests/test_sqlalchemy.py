@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
 import pytest
-from sqlalchemy import create_engine, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
+from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import declarative_base, Session
@@ -19,6 +19,15 @@ engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
     session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     session.commit()
+
+array_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
+
+
+@event.listens_for(array_engine, "connect")
+def connect(dbapi_connection, connection_record):
+    from pgvector.psycopg2 import register_vector
+    register_vector(dbapi_connection, globally=False, arrays=True)
+
 
 Base = declarative_base()
 
@@ -435,32 +444,24 @@ class TestSqlalchemy:
         assert item.embedding.tolist() == [1, 2, 3]
 
     def test_vector_array(self):
-        session = Session(engine)
+        session = Session(array_engine)
         session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
         session.commit()
 
-        with session.connection() as connection:
-            from pgvector.psycopg2 import register_vector
-            register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
-
-            # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
-            assert item.embeddings[0].tolist() == [1, 2, 3]
-            assert item.embeddings[1].tolist() == [4, 5, 6]
+        # this fails if the driver does not cast arrays
+        item = session.get(Item, 1)
+        assert item.embeddings[0].tolist() == [1, 2, 3]
+        assert item.embeddings[1].tolist() == [4, 5, 6]
 
     def test_halfvec_array(self):
-        session = Session(engine)
+        session = Session(array_engine)
         session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
         session.commit()
 
-        with session.connection() as connection:
-            from pgvector.psycopg2 import register_vector
-            register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
-
-            # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
-            assert item.half_embeddings[0].to_list() == [1, 2, 3]
-            assert item.half_embeddings[1].to_list() == [4, 5, 6]
+        # this fails if the driver does not cast arrays
+        item = session.get(Item, 1)
+        assert item.half_embeddings[0].to_list() == [1, 2, 3]
+        assert item.half_embeddings[1].to_list() == [4, 5, 6]
 
     def test_half_precision(self):
         create_items()
