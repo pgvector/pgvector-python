@@ -268,6 +268,27 @@ order = func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])
 session.scalars(select(Item).order_by(order).limit(5))
 ```
 
+#### Arrays
+
+Add an array column
+
+```python
+from pgvector.sqlalchemy import Vector
+from sqlalchemy import ARRAY
+
+class Item(Base):
+    embeddings = mapped_column(ARRAY(Vector(3)))
+```
+
+And register the types with the underlying driver
+
+```python
+from pgvector.psycopg2 import register_vector
+
+with engine.connect() as connection:
+    register_vector(connection.connection.dbapi_connection, globally=True, arrays=True)
+```
+
 ## SQLModel
 
 Enable the extension
