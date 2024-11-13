@@ -32,6 +32,7 @@ class Item(Base):
     binary_embedding = mapped_column(BIT(3))
     sparse_embedding = mapped_column(SPARSEVEC(3))
     embeddings = mapped_column(ARRAY(VECTOR(3)))
+    half_embeddings = mapped_column(ARRAY(HALFVEC(3)))
 
 
 Base.metadata.drop_all(engine)
@@ -446,6 +447,20 @@ class TestSqlalchemy:
             item = Session(bind=connection).get(Item, 1)
             assert item.embeddings[0].tolist() == [1, 2, 3]
             assert item.embeddings[1].tolist() == [4, 5, 6]
+
+    def test_halfvec_array(self):
+        session = Session(engine)
+        session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+        session.commit()
+
+        with engine.connect() as connection:
+            from pgvector.psycopg2 import register_vector
+            register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
+
+            # this fails if the driver does not cast arrays
+            item = Session(bind=connection).get(Item, 1)
+            assert item.half_embeddings[0].to_list() == [1, 2, 3]
+            assert item.half_embeddings[1].to_list() == [4, 5, 6]
 
     def test_half_precision(self):
         create_items()
