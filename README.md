@@ -285,7 +285,7 @@ And register the types with the underlying driver
 ```python
 from pgvector.psycopg2 import register_vector
 
-with engine.connect() as connection:
+with session.connection() as connection:
     register_vector(connection.connection.dbapi_connection, globally=True, arrays=True)
 ```
 

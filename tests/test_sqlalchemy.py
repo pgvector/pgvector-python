@@ -439,12 +439,12 @@ class TestSqlalchemy:
         session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
         session.commit()
 
-        with engine.connect() as connection:
+        with session.connection() as connection:
             from pgvector.psycopg2 import register_vector
             register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
 
             # this fails if the driver does not cast arrays
-            item = Session(bind=connection).get(Item, 1)
+            item = session.get(Item, 1)
             assert item.embeddings[0].tolist() == [1, 2, 3]
             assert item.embeddings[1].tolist() == [4, 5, 6]
 
@@ -453,12 +453,12 @@ class TestSqlalchemy:
         session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
         session.commit()
 
-        with engine.connect() as connection:
+        with session.connection() as connection:
             from pgvector.psycopg2 import register_vector
             register_vector(connection.connection.dbapi_connection, globally=False, arrays=True)
 
             # this fails if the driver does not cast arrays
-            item = Session(bind=connection).get(Item, 1)
+            item = session.get(Item, 1)
             assert item.half_embeddings[0].to_list() == [1, 2, 3]
             assert item.half_embeddings[1].to_list() == [4, 5, 6]
 
