@@ -45,7 +45,13 @@ Or check out some examples:
 
 ## Django
 
-Create a migration to enable the extension
+Create an empty migration file
+
+```python
+python manage.py makemigrations <your-app-name> --name enable_pgvector --empty
+```
+
+Add a migration in that file to enable the extension
 
 ```python
 from pgvector.django import VectorExtension
@@ -56,13 +62,27 @@ class Migration(migrations.Migration):
     ]
 ```
 
-Add a vector field to your model
+Migrate
+
+```sh
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+Add a vector field in the model.py
 
 ```python
 from pgvector.django import VectorField
 
 class Item(models.Model):
     embedding = VectorField(dimensions=3)
+```
+
+Migrate
+
+```sh
+python3 manage.py makemigrations
+python3 manage.py migrate
 ```
 
 Also supports `HalfVectorField`, `BitField`, and `SparseVectorField`
