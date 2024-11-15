@@ -78,14 +78,14 @@ class Item(models.Model):
     embedding = VectorField(dimensions=3)
 ```
 
+Also supports `HalfVectorField`, `BitField`, and `SparseVectorField`
+
 Migrate
 
 ```sh
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
-
-Also supports `HalfVectorField`, `BitField`, and `SparseVectorField`
 
 Insert a vector
 
