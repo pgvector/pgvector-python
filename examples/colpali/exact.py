@@ -1,4 +1,5 @@
 from colpali_engine.models import ColQwen2, ColQwen2Processor
+from colpali_engine.utils.torch_utils import get_torch_device
 from datasets import load_dataset
 from pgvector.psycopg import register_vector, Bit
 import psycopg
@@ -30,7 +31,7 @@ $$ LANGUAGE SQL
 """)
 
 
-device = 'mps' if torch.backends.mps.is_available() else 'cpu'
+device = get_torch_device('auto')
 model = ColQwen2.from_pretrained('vidore/colqwen2-v1.0', torch_dtype=torch.bfloat16, device_map=device).eval()
 processor = ColQwen2Processor.from_pretrained('vidore/colqwen2-v1.0')
 
