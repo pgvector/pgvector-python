@@ -30,7 +30,6 @@ CREATE OR REPLACE FUNCTION max_sim(document bit[], query bit[]) RETURNS double p
 $$ LANGUAGE SQL
 """)
 
-
 device = get_torch_device('auto')
 model = ColQwen2.from_pretrained('vidore/colqwen2-v1.0', torch_dtype=torch.bfloat16, device_map=device).eval()
 processor = ColQwen2Processor.from_pretrained('vidore/colqwen2-v1.0')
