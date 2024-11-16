@@ -69,7 +69,7 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 ```
 
-Add a vector field in the model.py
+Add a vector field in the models.py
 
 ```python
 from pgvector.django import VectorField
