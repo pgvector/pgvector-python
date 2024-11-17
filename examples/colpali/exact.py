@@ -37,20 +37,20 @@ processor = ColQwen2Processor.from_pretrained('vidore/colqwen2-v1.0')
 
 def generate_embeddings(processed):
     with torch.no_grad():
-        return model(**processed.to(model.device)).to(device='cpu', dtype=torch.float32)
+        return model(**processed.to(model.device))
 
 
 def binary_quantize(embedding):
-    return Bit(embedding > 0)
+    return Bit(embedding.gt(0).numpy(force=True))
 
 
 input = load_dataset('vidore/docvqa_test_subsampled', split='test[:3]')['image']
 for content in input:
-    embeddings = [binary_quantize(e.numpy()) for e in generate_embeddings(processor.process_images([content]))[0]]
+    embeddings = [binary_quantize(e) for e in generate_embeddings(processor.process_images([content]))[0]]
     conn.execute('INSERT INTO documents (embeddings) VALUES (%s)', (embeddings,))
 
 query = 'dividend'
-query_embeddings = [binary_quantize(e.numpy()) for e in generate_embeddings(processor.process_queries([query]))[0]]
+query_embeddings = [binary_quantize(e) for e in generate_embeddings(processor.process_queries([query]))[0]]
 result = conn.execute('SELECT id, max_sim(embeddings, %s) AS max_sim FROM documents ORDER BY max_sim DESC LIMIT 5', (query_embeddings,)).fetchall()
 for row in result:
     print(row)
