@@ -1,0 +1,4 @@
+colpali-engine
+datasets
+pgvector
+psycopg[binary]
