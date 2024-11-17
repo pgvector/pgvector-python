@@ -37,11 +37,11 @@ processor = ColQwen2Processor.from_pretrained('vidore/colqwen2-v1.0')
 
 def generate_embeddings(processed):
     with torch.no_grad():
-        return model(**processed.to(model.device))
+        return model(**processed.to(model.device)).to(torch.float32).numpy(force=True)
 
 
 def binary_quantize(embedding):
-    return Bit(embedding.gt(0).numpy(force=True))
+    return Bit(embedding > 0)
 
 
 input = load_dataset('vidore/docvqa_test_subsampled', split='test[:3]')['image']
