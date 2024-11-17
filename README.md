@@ -33,7 +33,7 @@ Or check out some examples:
 - [Hybrid search](https://github.com/pgvector/pgvector-python/blob/master/examples/hybrid_search/cross_encoder.py) with SentenceTransformers (cross-encoder)
 - [Sparse search](https://github.com/pgvector/pgvector-python/blob/master/examples/sparse_search/example.py) with Transformers
 - [Late interaction search](https://github.com/pgvector/pgvector-python/blob/master/examples/colbert/exact.py) with ColBERT
-- [Document retrieval](https://github.com/pgvector/pgvector-python/blob/master/examples/colpali/exact.py) with ColPali
+- [Visual document retrieval](https://github.com/pgvector/pgvector-python/blob/master/examples/colpali/exact.py) with ColPali
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/image_search/example.py) with PyTorch
 - [Image search](https://github.com/pgvector/pgvector-python/blob/master/examples/imagehash/example.py) with perceptual hashing
 - [Morgan fingerprints](https://github.com/pgvector/pgvector-python/blob/master/examples/rdkit/example.py) with RDKit
