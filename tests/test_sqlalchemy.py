@@ -65,6 +65,14 @@ half_precision_index = Index(
 )
 half_precision_index.create(engine)
 
+binary_quantize_index = Index(
+    'sqlalchemy_orm_binary_quantize_index',
+    func.cast(func.binary_quantize(Item.embedding), BIT(3)).label('embedding'),
+    postgresql_using='hnsw',
+    postgresql_with={'m': 16, 'ef_construction': 64},
+    postgresql_ops={'embedding': 'bit_hamming_ops'}
+)
+binary_quantize_index.create(engine)
 
 def create_items():
     session = Session(engine)
@@ -468,6 +476,18 @@ class TestSqlalchemy:
         with Session(engine) as session:
             items = session.query(Item).order_by(func.cast(Item.embedding, HALFVEC(3)).l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
+
+    def test_binary_quantize(self):
+        session = Session(engine)
+        session.add(Item(id=1, embedding=[-1, -2, -3]))
+        session.add(Item(id=2, embedding=[1, -2, 3]))
+        session.add(Item(id=3, embedding=[1, 2, 3]))
+        session.commit()
+
+        with Session(engine) as session:
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+            items = session.query(Item).order_by(distance).all()
+            assert [v.id for v in items] == [2, 3, 1]
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
