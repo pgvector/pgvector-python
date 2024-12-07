@@ -38,6 +38,14 @@ class MaxInnerProduct(DistanceBase):
 class CosineDistance(DistanceBase):
     function = ''
     arg_joiner = ' <=> '
+    
+class CosineSimilarity(DistanceBase):
+    function = ''
+    arg_joiner = ' <=> '
+    
+    def as_sql(self, compiler, connection):
+        sql, params = super().as_sql(compiler, connection)
+        return f"1 - ({sql})", params
 
 
 class L1Distance(DistanceBase):

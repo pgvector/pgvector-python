@@ -12,7 +12,7 @@ from math import sqrt
 import numpy as np
 import os
 import pgvector.django
-from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance, HalfVector, SparseVector
+from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, CosineSimilarity, L1Distance, HammingDistance, JaccardDistance, HalfVector, SparseVector
 from unittest import mock
 
 settings.configure(
@@ -190,6 +190,13 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+        
+    def test_vector_cosine_similarity(self):     
+        create_items()
+        similarity = CosineSimilarity('embedding', [1, 1, 1])
+        items = Item.objects.annotate(similarity=similarity).order_by('-similarity')
+        assert [v.id for v in items] == [1, 2, 3]
+        assert [v.similarity for v in items] == [1.0, 1.0, 0.9428090415820635]
 
     def test_vector_l1_distance(self):
         create_items()
