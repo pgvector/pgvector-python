@@ -230,6 +230,13 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+        
+    def test_halfvec_cosine_similarity(self):
+        create_items()
+        similarity = CosineSimilarity('half_embedding', HalfVector([1, 1, 1]))
+        items = Item.objects.annotate(similarity=similarity).order_by('-similarity')
+        assert [v.id for v in items] == [1, 2, 3]
+        assert [v.similarity for v in items] == [1.0, 1.0, 0.9428090415820635]
 
     def test_halfvec_l1_distance(self):
         create_items()
@@ -282,6 +289,13 @@ class TestDjango:
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
+        
+    def test_sparsevec_cosine_similarity(self):
+        create_items()
+        similarity = CosineSimilarity('sparse_embedding', SparseVector([1, 1, 1]))
+        items = Item.objects.annotate(similarity=similarity).order_by('-similarity')
+        assert [v.id for v in items] == [1, 2, 3]
+        assert [v.similarity for v in items] == [1.0, 1.0, 0.9428090415820635]
 
     def test_sparsevec_l1_distance(self):
         create_items()
