@@ -59,10 +59,11 @@ class TestAsyncpg:
 
         await register_vector(conn)
 
-        embedding = asyncpg.BitString.from_int(5, length=3)
+        embedding = asyncpg.BitString('101')
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
+        assert res[0]['embedding'].as_string() == '101'
         assert res[0]['embedding'].to_int() == 5
         assert res[1]['embedding'] is None
 
