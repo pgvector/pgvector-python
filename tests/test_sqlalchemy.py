@@ -74,6 +74,7 @@ binary_quantize_index = Index(
 )
 binary_quantize_index.create(engine)
 
+
 def create_items():
     session = Session(engine)
     session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])))
