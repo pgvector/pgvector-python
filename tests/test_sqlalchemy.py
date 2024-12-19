@@ -526,3 +526,20 @@ class TestSqlalchemy:
                 assert item.embeddings[1].tolist() == [4, 5, 6]
 
         await engine.dispose()
+
+    @pytest.mark.asyncio
+    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+    async def test_asyncpg_bit(self):
+        import asyncpg
+
+        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = asyncpg.BitString('101')
+                session.add(Item(id=1, binary_embedding=embedding))
+                item = await session.get(Item, 1)
+                assert item.binary_embedding == embedding
+
+        await engine.dispose()
