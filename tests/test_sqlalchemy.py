@@ -544,7 +544,61 @@ class TestSqlalchemyAsync:
         delete_items()
 
     @pytest.mark.asyncio
-    async def test_psycopg_async_avg(self, engine):
+    async def test_vector(self, engine):
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = np.array([1, 2, 3])
+                session.add(Item(id=1, embedding=embedding))
+                item = await session.get(Item, 1)
+                assert np.array_equal(item.embedding, embedding)
+
+        await engine.dispose()
+
+    @pytest.mark.asyncio
+    async def test_halfvec(self, engine):
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = [1, 2, 3]
+                session.add(Item(id=1, half_embedding=embedding))
+                item = await session.get(Item, 1)
+                assert item.half_embedding.to_list() == embedding
+
+        await engine.dispose()
+
+    @pytest.mark.asyncio
+    async def test_bit(self, engine):
+        import asyncpg
+
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'
+                session.add(Item(id=1, binary_embedding=embedding))
+                item = await session.get(Item, 1)
+                assert item.binary_embedding == embedding
+
+        await engine.dispose()
+
+    @pytest.mark.asyncio
+    async def test_sparsevec(self, engine):
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = [1, 2, 3]
+                session.add(Item(id=1, sparse_embedding=embedding))
+                item = await session.get(Item, 1)
+                assert item.sparse_embedding.to_list() == embedding
+
+        await engine.dispose()
+
+    @pytest.mark.asyncio
+    async def test_avg(self, engine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -580,86 +634,6 @@ class TestSqlalchemyAsync2:
                 item = await session.get(Item, 1)
                 assert item.embeddings[0].tolist() == [1, 2, 3]
                 assert item.embeddings[1].tolist() == [4, 5, 6]
-
-        await engine.dispose()
-
-    @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_asyncpg_vector(self):
-        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        # TODO do not throw error when types are registered
-        # @event.listens_for(engine.sync_engine, "connect")
-        # def connect(dbapi_connection, connection_record):
-        #     from pgvector.asyncpg import register_vector
-        #     dbapi_connection.run_async(register_vector)
-
-        async with async_session() as session:
-            async with session.begin():
-                embedding = np.array([1, 2, 3])
-                session.add(Item(id=1, embedding=embedding))
-                item = await session.get(Item, 1)
-                assert np.array_equal(item.embedding, embedding)
-
-        await engine.dispose()
-
-    @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_asyncpg_halfvec(self):
-        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        # TODO do not throw error when types are registered
-        # @event.listens_for(engine.sync_engine, "connect")
-        # def connect(dbapi_connection, connection_record):
-        #     from pgvector.asyncpg import register_vector
-        #     dbapi_connection.run_async(register_vector)
-
-        async with async_session() as session:
-            async with session.begin():
-                embedding = [1, 2, 3]
-                session.add(Item(id=1, half_embedding=embedding))
-                item = await session.get(Item, 1)
-                assert item.half_embedding.to_list() == embedding
-
-        await engine.dispose()
-
-    @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_asyncpg_bit(self):
-        import asyncpg
-
-        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        async with async_session() as session:
-            async with session.begin():
-                embedding = asyncpg.BitString('101')
-                session.add(Item(id=1, binary_embedding=embedding))
-                item = await session.get(Item, 1)
-                assert item.binary_embedding == embedding
-
-        await engine.dispose()
-
-    @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_asyncpg_sparsevec(self):
-        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        # TODO do not throw error when types are registered
-        # @event.listens_for(engine.sync_engine, "connect")
-        # def connect(dbapi_connection, connection_record):
-        #     from pgvector.asyncpg import register_vector
-        #     dbapi_connection.run_async(register_vector)
-
-        async with async_session() as session:
-            async with session.begin():
-                embedding = [1, 2, 3]
-                session.add(Item(id=1, sparse_embedding=embedding))
-                item = await session.get(Item, 1)
-                assert item.sparse_embedding.to_list() == embedding
 
         await engine.dispose()
 
