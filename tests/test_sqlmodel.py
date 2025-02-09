@@ -34,11 +34,11 @@ index.create(engine)
 
 
 def create_items():
-    session = Session(engine)
-    session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])))
-    session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector([2, 2, 2])))
-    session.add(Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector([1, 1, 2])))
-    session.commit()
+    with Session(engine) as session:
+        session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])))
+        session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector([2, 2, 2])))
+        session.add(Item(id=3, embedding=[1, 1, 2], half_embedding=[1, 1, 2], binary_embedding='111', sparse_embedding=SparseVector([1, 1, 2])))
+        session.commit()
 
 
 class TestSqlmodel:
@@ -52,11 +52,11 @@ class TestSqlmodel:
         item2 = Item(embedding=[4, 5, 6])
         item3 = Item()
 
-        session = Session(engine)
-        session.add(item)
-        session.add(item2)
-        session.add(item3)
-        session.commit()
+        with Session(engine) as session:
+            session.add(item)
+            session.add(item2)
+            session.add(item3)
+            session.commit()
 
         stmt = select(Item)
         with Session(engine) as session:
@@ -71,11 +71,11 @@ class TestSqlmodel:
             assert items[2].embedding is None
 
     def test_vector(self):
-        session = Session(engine)
-        session.add(Item(id=1, embedding=[1, 2, 3]))
-        session.commit()
-        item = session.get(Item, 1)
-        assert item.embedding.tolist() == [1, 2, 3]
+        with Session(engine) as session:
+            session.add(Item(id=1, embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.embedding.tolist() == [1, 2, 3]
 
     def test_vector_l2_distance(self):
         create_items()
@@ -102,11 +102,11 @@ class TestSqlmodel:
             assert [v.id for v in items] == [1, 3, 2]
 
     def test_halfvec(self):
-        session = Session(engine)
-        session.add(Item(id=1, half_embedding=[1, 2, 3]))
-        session.commit()
-        item = session.get(Item, 1)
-        assert item.half_embedding.to_list() == [1, 2, 3]
+        with Session(engine) as session:
+            session.add(Item(id=1, half_embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.half_embedding.to_list() == [1, 2, 3]
 
     def test_halfvec_l2_distance(self):
         create_items()
@@ -133,11 +133,11 @@ class TestSqlmodel:
             assert [v.id for v in items] == [1, 3, 2]
 
     def test_bit(self):
-        session = Session(engine)
-        session.add(Item(id=1, binary_embedding='101'))
-        session.commit()
-        item = session.get(Item, 1)
-        assert item.binary_embedding == '101'
+        with Session(engine) as session:
+            session.add(Item(id=1, binary_embedding='101'))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self):
         create_items()
@@ -152,11 +152,11 @@ class TestSqlmodel:
             assert [v.id for v in items] == [2, 3, 1]
 
     def test_sparsevec(self):
-        session = Session(engine)
-        session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
-        session.commit()
-        item = session.get(Item, 1)
-        assert item.sparse_embedding.to_list() == [1, 2, 3]
+        with Session(engine) as session:
+            session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.sparse_embedding.to_list() == [1, 2, 3]
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -232,7 +232,7 @@ class TestSqlmodel:
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])
-        session = Session(engine)
-        session.add(item)
-        with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
-            session.commit()
+        with Session(engine) as session:
+            session.add(item)
+            with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
+                session.commit()
