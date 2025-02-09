@@ -530,8 +530,6 @@ class TestSqlalchemy:
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_asyncpg_vector(self):
-        import asyncpg
-
         engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -553,8 +551,6 @@ class TestSqlalchemy:
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_asyncpg_halfvec(self):
-        import asyncpg
-
         engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -593,8 +589,6 @@ class TestSqlalchemy:
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_asyncpg_sparsevec(self):
-        import asyncpg
-
         engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
