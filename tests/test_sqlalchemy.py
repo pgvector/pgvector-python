@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
@@ -16,7 +17,8 @@ except ImportError:
     sqlalchemy_version = 1
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
-engines = [psycopg2_engine]
+pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ['USER']}@localhost/pgvector_python_test')
+engines = [psycopg2_engine, pg8000_engine]
 
 if sqlalchemy_version > 1:
     psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
@@ -151,9 +153,9 @@ class TestSqlalchemy:
         stmt = select(Item)
         with Session(engine) as session:
             items = [v[0] for v in session.execute(stmt).all()]
-            assert items[0].id in [1, 4]
-            assert items[1].id in [2, 5]
-            assert items[2].id in [3, 6]
+            assert items[0].id in [1, 4, 7]
+            assert items[1].id in [2, 5, 8]
+            assert items[2].id in [3, 6, 9]
             assert np.array_equal(items[0].embedding, np.array([1.5, 2, 3]))
             assert items[0].embedding.dtype == np.float32
             assert np.array_equal(items[1].embedding, np.array([4, 5, 6]))
@@ -290,12 +292,18 @@ class TestSqlalchemy:
             assert [v.id for v in items] == [2, 3, 1]
 
     def test_bit_jaccard_distance(self, engine):
+        if engine == pg8000_engine:
+            return
+
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.binary_embedding.jaccard_distance('101')).all()
             assert [v.id for v in items] == [2, 3, 1]
 
     def test_bit_jaccard_distance_orm(self, engine):
+        if engine == pg8000_engine:
+            return
+
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))

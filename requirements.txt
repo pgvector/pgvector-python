@@ -2,6 +2,7 @@ asyncpg
 Django
 numpy
 peewee
+pg8000
 psycopg[binary,pool]
 psycopg2-binary
 pytest
