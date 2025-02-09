@@ -36,7 +36,7 @@ def create_items():
 
 
 class TestPeewee:
-    def setup_method(self, test_method):
+    def setup_method(self):
         Item.truncate_table()
 
     def test_vector(self):

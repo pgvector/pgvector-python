@@ -158,7 +158,7 @@ class SparseVectorForm(ModelForm):
 
 
 class TestDjango:
-    def setup_method(self, test_method):
+    def setup_method(self):
         Item.objects.all().delete()
 
     def test_vector(self):

@@ -42,7 +42,7 @@ def create_items():
 
 
 class TestSqlmodel:
-    def setup_method(self, test_method):
+    def setup_method(self):
         with Session(engine) as session:
             session.exec(delete(Item))
             session.commit()

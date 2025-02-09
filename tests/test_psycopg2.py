@@ -16,7 +16,7 @@ register_vector(cur, globally=False, arrays=True)
 
 
 class TestPsycopg2:
-    def setup_method(self, test_method):
+    def setup_method(self):
         cur.execute('DELETE FROM psycopg2_items')
 
     def test_vector(self):

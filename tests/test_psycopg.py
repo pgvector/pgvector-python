@@ -14,7 +14,7 @@ register_vector(conn)
 
 
 class TestPsycopg:
-    def setup_method(self, test_method):
+    def setup_method(self):
         conn.execute('DELETE FROM psycopg_items')
 
     def test_vector(self):
