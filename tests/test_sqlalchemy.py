@@ -1,3 +1,4 @@
+import asyncpg
 import numpy as np
 import os
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
@@ -571,8 +572,6 @@ class TestSqlalchemyAsync:
 
     @pytest.mark.asyncio
     async def test_bit(self, engine):
-        import asyncpg
-
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -611,13 +610,13 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
 
-class TestSqlalchemyAsync2:
+@pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+class TestSqlalchemyAsyncArray:
     def setup_method(self):
         delete_items()
 
     @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_psycopg_async_vector_array(self):
+    async def test_psycopg_vector_array(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -638,7 +637,6 @@ class TestSqlalchemyAsync2:
         await engine.dispose()
 
     @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_asyncpg_vector_array(self):
         engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
