@@ -529,6 +529,29 @@ class TestSqlalchemy:
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+    async def test_asyncpg_vector(self):
+        import asyncpg
+
+        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        # TODO do not throw error when types are registered
+        # @event.listens_for(engine.sync_engine, "connect")
+        # def connect(dbapi_connection, connection_record):
+        #     from pgvector.asyncpg import register_vector
+        #     dbapi_connection.run_async(register_vector)
+
+        async with async_session() as session:
+            async with session.begin():
+                embedding = np.array([1, 2, 3])
+                session.add(Item(id=1, embedding=embedding))
+                item = await session.get(Item, 1)
+                assert np.array_equal(item.embedding, embedding)
+
+        await engine.dispose()
+
+    @pytest.mark.asyncio
+    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
     async def test_asyncpg_bit(self):
         import asyncpg
 
