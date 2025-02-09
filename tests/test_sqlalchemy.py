@@ -99,7 +99,7 @@ def delete_items():
         session.commit()
 
 
-@pytest.mark.parametrize("engine", engines)
+@pytest.mark.parametrize('engine', engines)
 class TestSqlalchemy:
     def setup_method(self):
         delete_items()
@@ -495,7 +495,7 @@ class TestSqlalchemy:
             assert [v.id for v in items] == [2, 3, 1]
 
 
-@pytest.mark.parametrize("engine", array_engines)
+@pytest.mark.parametrize('engine', array_engines)
 class TestSqlalchemyArray:
     def setup_method(self):
         delete_items()
