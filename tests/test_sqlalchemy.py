@@ -34,9 +34,19 @@ array_engines = [psycopg2_array_engine]
 
 
 @event.listens_for(psycopg2_array_engine, "connect")
-def connect(dbapi_connection, connection_record):
+def psycopg2_connect(dbapi_connection, connection_record):
     from pgvector.psycopg2 import register_vector
     register_vector(dbapi_connection, globally=False, arrays=True)
+
+
+if sqlalchemy_version > 1:
+    psycopg_array_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    array_engines.append(psycopg_array_engine)
+
+    @event.listens_for(psycopg_array_engine, "connect")
+    def psycopg_connect(dbapi_connection, connection_record):
+        from pgvector.psycopg import register_vector
+        register_vector(dbapi_connection)
 
 
 Base = declarative_base()
