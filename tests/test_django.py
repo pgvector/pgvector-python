@@ -86,9 +86,6 @@ class Item(models.Model):
 class Migration(migrations.Migration):
     initial = True
 
-    dependencies = [
-    ]
-
     operations = [
         VectorExtension(),
         migrations.CreateModel(
