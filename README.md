@@ -175,10 +175,10 @@ session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
 Add a vector column
 
 ```python
-from pgvector.sqlalchemy import VECTOR
+from pgvector.sqlalchemy import Vector
 
 class Item(Base):
-    embedding = mapped_column(VECTOR(3))
+    embedding = mapped_column(Vector(3))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
@@ -274,11 +274,11 @@ session.scalars(select(Item).order_by(order).limit(5))
 Add an array column
 
 ```python
-from pgvector.sqlalchemy import VECTOR
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import ARRAY
 
 class Item(Base):
-    embeddings = mapped_column(ARRAY(VECTOR(3)))
+    embeddings = mapped_column(ARRAY(Vector(3)))
 ```
 
 And register the types with the underlying driver
@@ -327,10 +327,10 @@ session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))
 Add a vector column
 
 ```python
-from pgvector.sqlalchemy import VECTOR
+from pgvector.sqlalchemy import Vector
 
 class Item(SQLModel, table=True):
-    embedding: Any = Field(sa_type=VECTOR(3))
+    embedding: Any = Field(sa_type=Vector(3))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
