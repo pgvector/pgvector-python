@@ -29,6 +29,8 @@ def connect(dbapi_connection, connection_record):
     register_vector(dbapi_connection, globally=False, arrays=True)
 
 
+psycopg3_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
+
 Base = declarative_base()
 
 
@@ -492,6 +494,34 @@ class TestSqlalchemy:
             distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
+
+    def test_psycopg_vector(self):
+        with Session(psycopg3_engine) as session:
+            session.add(Item(id=1, embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.embedding.tolist() == [1, 2, 3]
+
+    def test_psycopg_halfvec(self):
+        with Session(psycopg3_engine) as session:
+            session.add(Item(id=1, half_embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.half_embedding.to_list() == [1, 2, 3]
+
+    def test_psycopg_bit(self):
+        with Session(psycopg3_engine) as session:
+            session.add(Item(id=1, binary_embedding='101'))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.binary_embedding == '101'
+
+    def test_psycopg_sparsevec(self):
+        with Session(psycopg3_engine) as session:
+            session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.sparse_embedding.to_list() == [1, 2, 3]
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
