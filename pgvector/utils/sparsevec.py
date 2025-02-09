@@ -108,6 +108,7 @@ class SparseVector:
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
+        # TODO convert indices and values to lists in 0.4.0
         return cls._from_parts(int(dim), indices, values)
 
     @classmethod
