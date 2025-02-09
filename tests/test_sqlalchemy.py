@@ -619,11 +619,8 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 session.add(Item(embedding=[1, 2, 3]))
                 session.add(Item(embedding=[4, 5, 6]))
-                avg = await session.scalars(select(func.avg(Item.embedding)))
-                if engine == psycopg_async_type_engine:
-                    assert avg.first().tolist() == [2.5, 3.5, 4.5]
-                else:
-                    assert avg.first() == '[2.5,3.5,4.5]'
+                res = await session.scalars(select(avg(Item.embedding)))
+                assert res.first().tolist() == [2.5, 3.5, 4.5]
 
         await engine.dispose()
 
