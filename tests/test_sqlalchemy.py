@@ -17,7 +17,7 @@ except ImportError:
     sqlalchemy_version = 1
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
-pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ['USER']}@localhost/pgvector_python_test')
+pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
 engines = [psycopg2_engine, pg8000_engine]
 
 if sqlalchemy_version > 1:
