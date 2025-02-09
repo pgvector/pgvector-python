@@ -19,7 +19,17 @@ except ImportError:
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
+psycopg2_array_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
+
+
+@event.listens_for(psycopg2_array_engine, "connect")
+def psycopg2_connect(dbapi_connection, connection_record):
+    from pgvector.psycopg2 import register_vector
+    register_vector(dbapi_connection, globally=False, arrays=True)
+
+
 engines = [psycopg2_engine, pg8000_engine]
+array_engines = [psycopg2_array_engine]
 async_engines = []
 
 if sqlalchemy_version > 1:
@@ -32,22 +42,6 @@ if sqlalchemy_version > 1:
     asyncpg_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
     async_engines.append(asyncpg_engine)
 
-setup_engine = engines[0]
-with Session(setup_engine) as session:
-    session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
-    session.commit()
-
-psycopg2_array_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
-array_engines = [psycopg2_array_engine]
-
-
-@event.listens_for(psycopg2_array_engine, "connect")
-def psycopg2_connect(dbapi_connection, connection_record):
-    from pgvector.psycopg2 import register_vector
-    register_vector(dbapi_connection, globally=False, arrays=True)
-
-
-if sqlalchemy_version > 1:
     psycopg_array_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
     array_engines.append(psycopg_array_engine)
 
@@ -56,6 +50,10 @@ if sqlalchemy_version > 1:
         from pgvector.psycopg import register_vector
         register_vector(dbapi_connection)
 
+setup_engine = engines[0]
+with Session(setup_engine) as session:
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+    session.commit()
 
 Base = declarative_base()
 
