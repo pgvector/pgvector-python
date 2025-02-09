@@ -27,10 +27,11 @@ with Session(setup_engine) as session:
     session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     session.commit()
 
-array_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
+psycopg2_array_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
+array_engines = [psycopg2_array_engine]
 
 
-@event.listens_for(array_engine, "connect")
+@event.listens_for(psycopg2_array_engine, "connect")
 def connect(dbapi_connection, connection_record):
     from pgvector.psycopg2 import register_vector
     register_vector(dbapi_connection, globally=False, arrays=True)
@@ -468,26 +469,6 @@ class TestSqlalchemy:
             item = session.query(AutoItem).first()
             assert item.embedding.tolist() == [1, 2, 3]
 
-    def test_vector_array(self, engine):
-        with Session(array_engine) as session:
-            session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-            session.commit()
-
-            # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
-            assert item.embeddings[0].tolist() == [1, 2, 3]
-            assert item.embeddings[1].tolist() == [4, 5, 6]
-
-    def test_halfvec_array(self, engine):
-        with Session(array_engine) as session:
-            session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-            session.commit()
-
-            # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
-            assert item.half_embeddings[0].to_list() == [1, 2, 3]
-            assert item.half_embeddings[1].to_list() == [4, 5, 6]
-
     def test_half_precision(self, engine):
         create_items()
         with Session(engine) as session:
@@ -504,6 +485,32 @@ class TestSqlalchemy:
             distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
+
+
+@pytest.mark.parametrize("engine", array_engines)
+class TestSqlalchemyArray:
+    def setup_method(self):
+        delete_items()
+
+    def test_vector_array(self, engine):
+        with Session(engine) as session:
+            session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+            session.commit()
+
+            # this fails if the driver does not cast arrays
+            item = session.get(Item, 1)
+            assert item.embeddings[0].tolist() == [1, 2, 3]
+            assert item.embeddings[1].tolist() == [4, 5, 6]
+
+    def test_halfvec_array(self, engine):
+        with Session(engine) as session:
+            session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+            session.commit()
+
+            # this fails if the driver does not cast arrays
+            item = session.get(Item, 1)
+            assert item.half_embeddings[0].to_list() == [1, 2, 3]
+            assert item.half_embeddings[1].to_list() == [4, 5, 6]
 
 
 class TestSqlalchemyAsync:
