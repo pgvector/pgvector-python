@@ -62,8 +62,8 @@ async_array_engines = []
 if sqlalchemy_version > 1:
     engines += [psycopg_engine, psycopg_type_engine]
     array_engines += [psycopg_type_engine]
+    # TODO support asyncpg_type_engine
     async_engines += [psycopg_async_engine, psycopg_async_type_engine, asyncpg_engine]
-    # TODO add asyncpg_type_engine
     async_array_engines += [psycopg_async_type_engine, asyncpg_engine]
 
 setup_engine = engines[0]
