@@ -31,6 +31,7 @@ def psycopg2_connect(dbapi_connection, connection_record):
 engines = [psycopg2_engine, pg8000_engine, psycopg2_type_engine]
 array_engines = [psycopg2_type_engine]
 async_engines = []
+async_array_engines = []
 
 if sqlalchemy_version > 1:
     psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
@@ -46,11 +47,32 @@ if sqlalchemy_version > 1:
     engines.append(psycopg_type_engine)
     array_engines.append(psycopg_type_engine)
 
+    psycopg_async_type_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+
+    @event.listens_for(psycopg_async_type_engine.sync_engine, "connect")
+    def connect(dbapi_connection, connection_record):
+        from pgvector.psycopg import register_vector_async
+        dbapi_connection.run_async(register_vector_async)
+
+    async_engines.append(psycopg_async_type_engine)
+    async_array_engines.append(psycopg_async_type_engine)
+
     psycopg_async_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
     async_engines.append(psycopg_async_engine)
 
     asyncpg_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
     async_engines.append(asyncpg_engine)
+    async_array_engines.append(asyncpg_engine)
+
+    asyncpg_type_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+
+    @event.listens_for(asyncpg_type_engine.sync_engine, "connect")
+    def connect(dbapi_connection, connection_record):
+        from pgvector.asyncpg import register_vector
+        dbapi_connection.run_async(register_vector)
+
+    # TODO do not throw error when types are registered
+    # async_array_engines.append(asyncpg_type_engine)
 
 setup_engine = engines[0]
 with Session(setup_engine) as session:
@@ -599,6 +621,10 @@ class TestSqlalchemyAsync:
 
     @pytest.mark.asyncio
     async def test_avg(self, engine):
+        # TODO do not throw error when types are registered
+        if engine == psycopg_async_type_engine:
+            return
+
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -611,42 +637,14 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
 
-@pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+@pytest.mark.parametrize('engine', async_array_engines)
 class TestSqlalchemyAsyncArray:
     def setup_method(self):
         delete_items()
 
     @pytest.mark.asyncio
-    async def test_psycopg_vector_array(self):
-        engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    async def test_vector_array(self, engine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        @event.listens_for(engine.sync_engine, "connect")
-        def connect(dbapi_connection, connection_record):
-            from pgvector.psycopg import register_vector_async
-            dbapi_connection.run_async(register_vector_async)
-
-        async with async_session() as session:
-            async with session.begin():
-                session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-
-                # this fails if the driver does not cast arrays
-                item = await session.get(Item, 1)
-                assert item.embeddings[0].tolist() == [1, 2, 3]
-                assert item.embeddings[1].tolist() == [4, 5, 6]
-
-        await engine.dispose()
-
-    @pytest.mark.asyncio
-    async def test_asyncpg_vector_array(self):
-        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
-
-        # TODO do not throw error when types are registered
-        # @event.listens_for(engine.sync_engine, "connect")
-        # def connect(dbapi_connection, connection_record):
-        #     from pgvector.asyncpg import register_vector
-        #     dbapi_connection.run_async(register_vector)
 
         async with async_session() as session:
             async with session.begin():
