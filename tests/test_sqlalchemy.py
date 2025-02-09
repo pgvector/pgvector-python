@@ -606,3 +606,26 @@ class TestSqlalchemy:
                 assert item.sparse_embedding.to_list() == embedding
 
         await engine.dispose()
+
+    @pytest.mark.asyncio
+    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
+    async def test_asyncpg_vector_array(self):
+        engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+        # TODO do not throw error when types are registered
+        # @event.listens_for(engine.sync_engine, "connect")
+        # def connect(dbapi_connection, connection_record):
+        #     from pgvector.asyncpg import register_vector
+        #     dbapi_connection.run_async(register_vector)
+
+        async with async_session() as session:
+            async with session.begin():
+                session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+
+                # this fails if the driver does not cast arrays
+                item = await session.get(Item, 1)
+                assert item.embeddings[0].tolist() == [1, 2, 3]
+                assert item.embeddings[1].tolist() == [4, 5, 6]
+
+        await engine.dispose()
