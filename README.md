@@ -328,10 +328,9 @@ Add a vector column
 
 ```python
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column
 
 class Item(SQLModel, table=True):
-    embedding: Any = Field(sa_column=Column(Vector(3)))
+    embedding: Any = Field(sa_type=Vector(3))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`

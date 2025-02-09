@@ -15,10 +15,10 @@ class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    embedding: Optional[Any] = Field(default=None, sa_column=Column(VECTOR(3)))
-    half_embedding: Optional[Any] = Field(default=None, sa_column=Column(HALFVEC(3)))
-    binary_embedding: Optional[Any] = Field(default=None, sa_column=Column(BIT(3)))
-    sparse_embedding: Optional[Any] = Field(default=None, sa_column=Column(SPARSEVEC(3)))
+    embedding: Optional[Any] = Field(default=None, sa_type=VECTOR(3))
+    half_embedding: Optional[Any] = Field(default=None, sa_type=HALFVEC(3))
+    binary_embedding: Optional[Any] = Field(default=None, sa_type=BIT(3))
+    sparse_embedding: Optional[Any] = Field(default=None, sa_type=SPARSEVEC(3))
 
 
 SQLModel.metadata.drop_all(engine)
