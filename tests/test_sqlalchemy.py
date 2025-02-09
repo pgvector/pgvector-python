@@ -19,10 +19,17 @@ except ImportError:
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
 engines = [psycopg2_engine, pg8000_engine]
+async_engines = []
 
 if sqlalchemy_version > 1:
     psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
     engines.append(psycopg_engine)
+
+    psycopg_async_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    async_engines.append(psycopg_async_engine)
+
+    asyncpg_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+    async_engines.append(asyncpg_engine)
 
 setup_engine = engines[0]
 with Session(setup_engine) as session:
@@ -531,14 +538,13 @@ class TestSqlalchemyArray:
             assert item.half_embeddings[1].to_list() == [4, 5, 6]
 
 
+@pytest.mark.parametrize('engine', async_engines)
 class TestSqlalchemyAsync:
     def setup_method(self):
         delete_items()
 
     @pytest.mark.asyncio
-    @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_psycopg_async_avg(self):
-        engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    async def test_psycopg_async_avg(self, engine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -549,6 +555,11 @@ class TestSqlalchemyAsync:
                 assert avg.first() == '[2.5,3.5,4.5]'
 
         await engine.dispose()
+
+
+class TestSqlalchemyAsync2:
+    def setup_method(self):
+        delete_items()
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
