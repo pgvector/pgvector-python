@@ -376,7 +376,7 @@ Also supports `sum`
 Add an approximate index
 
 ```python
-from sqlalchemy import Index
+from sqlmodel import Index
 
 index = Index(
     'my_index',
