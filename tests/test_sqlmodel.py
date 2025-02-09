@@ -1,9 +1,8 @@
 import numpy as np
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
 import pytest
-from sqlalchemy import Column, Index
 from sqlalchemy.exc import StatementError
-from sqlmodel import Field, Session, SQLModel, create_engine, delete, select, text
+from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text
 from typing import Any, Optional
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
