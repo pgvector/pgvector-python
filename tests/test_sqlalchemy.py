@@ -492,7 +492,7 @@ class TestSqlalchemy:
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_async(self):
+    async def test_async_avg(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -622,8 +622,6 @@ class TestSqlalchemy:
         async with async_session() as session:
             async with session.begin():
                 session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-
-                # this fails if the driver does not cast arrays
                 item = await session.get(Item, 1)
                 assert item.embeddings[0].tolist() == [1, 2, 3]
                 assert item.embeddings[1].tolist() == [4, 5, 6]
