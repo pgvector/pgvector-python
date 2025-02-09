@@ -18,7 +18,6 @@ except ImportError:
     sqlalchemy_version = 1
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
-pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 
 
@@ -28,15 +27,10 @@ def psycopg2_connect(dbapi_connection, connection_record):
     register_vector(dbapi_connection, globally=False, arrays=True)
 
 
-engines = [psycopg2_engine, pg8000_engine, psycopg2_type_engine]
-array_engines = [psycopg2_type_engine]
-async_engines = []
-async_array_engines = []
+pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
 
 if sqlalchemy_version > 1:
     psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
-    engines.append(psycopg_engine)
-
     psycopg_type_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
 
     @event.listens_for(psycopg_type_engine, "connect")
@@ -44,9 +38,7 @@ if sqlalchemy_version > 1:
         from pgvector.psycopg import register_vector
         register_vector(dbapi_connection)
 
-    engines.append(psycopg_type_engine)
-    array_engines.append(psycopg_type_engine)
-
+    psycopg_async_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
     psycopg_async_type_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
 
     @event.listens_for(psycopg_async_type_engine.sync_engine, "connect")
@@ -54,16 +46,7 @@ if sqlalchemy_version > 1:
         from pgvector.psycopg import register_vector_async
         dbapi_connection.run_async(register_vector_async)
 
-    async_engines.append(psycopg_async_type_engine)
-    async_array_engines.append(psycopg_async_type_engine)
-
-    psycopg_async_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
-    async_engines.append(psycopg_async_engine)
-
     asyncpg_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
-    async_engines.append(asyncpg_engine)
-    async_array_engines.append(asyncpg_engine)
-
     asyncpg_type_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
 
     @event.listens_for(asyncpg_type_engine.sync_engine, "connect")
@@ -71,8 +54,17 @@ if sqlalchemy_version > 1:
         from pgvector.asyncpg import register_vector
         dbapi_connection.run_async(register_vector)
 
-    # TODO do not throw error when types are registered
-    # async_array_engines.append(asyncpg_type_engine)
+engines = [psycopg2_engine, psycopg2_type_engine, pg8000_engine]
+array_engines = [psycopg2_type_engine]
+async_engines = []
+async_array_engines = []
+
+if sqlalchemy_version > 1:
+    engines += [psycopg_engine, psycopg_type_engine]
+    array_engines += [psycopg_type_engine]
+    async_engines += [psycopg_async_engine, psycopg_async_type_engine, asyncpg_engine]
+    # TODO add asyncpg_type_engine
+    async_array_engines += [psycopg_async_type_engine, asyncpg_engine]
 
 setup_engine = engines[0]
 with Session(setup_engine) as session:
