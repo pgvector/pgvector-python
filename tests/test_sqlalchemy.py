@@ -492,7 +492,7 @@ class TestSqlalchemy:
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_async_avg(self):
+    async def test_psycopg_async_avg(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -507,7 +507,7 @@ class TestSqlalchemy:
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(sqlalchemy_version == 1, reason='Requires SQLAlchemy 2+')
-    async def test_async_vector_array(self):
+    async def test_psycopg_async_vector_array(self):
         engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
