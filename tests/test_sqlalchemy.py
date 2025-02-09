@@ -613,10 +613,6 @@ class TestSqlalchemyAsync:
 
     @pytest.mark.asyncio
     async def test_avg(self, engine):
-        # TODO do not throw error when types are registered
-        if engine == psycopg_async_type_engine:
-            return
-
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -624,7 +620,10 @@ class TestSqlalchemyAsync:
                 session.add(Item(embedding=[1, 2, 3]))
                 session.add(Item(embedding=[4, 5, 6]))
                 avg = await session.scalars(select(func.avg(Item.embedding)))
-                assert avg.first() == '[2.5,3.5,4.5]'
+                if engine == psycopg_async_type_engine:
+                    assert avg.first().tolist() == [2.5, 3.5, 4.5]
+                else:
+                    assert avg.first() == '[2.5,3.5,4.5]'
 
         await engine.dispose()
 
