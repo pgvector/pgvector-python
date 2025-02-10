@@ -1,7 +1,7 @@
 import asyncpg
 import numpy as np
 import os
-from pgvector import SparseVector
+from pgvector import Vector, HalfVector, SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
@@ -190,10 +190,8 @@ class TestSqlalchemy:
             assert items[0].id % 3 == 1
             assert items[1].id % 3 == 2
             assert items[2].id % 3 == 0
-            assert np.array_equal(items[0].embedding, np.array([1.5, 2, 3]))
-            assert items[0].embedding.dtype == np.float32
-            assert np.array_equal(items[1].embedding, np.array([4, 5, 6]))
-            assert items[1].embedding.dtype == np.float32
+            assert items[0].embedding == Vector([1.5, 2, 3])
+            assert items[1].embedding == Vector([4, 5, 6])
             assert items[2].embedding is None
 
     def test_vector(self, engine):
@@ -201,7 +199,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.embedding.tolist() == [1, 2, 3]
+            assert item.embedding == Vector([1, 2, 3])
 
     def test_vector_l2_distance(self, engine):
         create_items()
@@ -256,7 +254,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.half_embedding.to_list() == [1, 2, 3]
+            assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self, engine):
         create_items()
@@ -348,7 +346,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.sparse_embedding.to_list() == [1, 2, 3]
+            assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self, engine):
         create_items()
@@ -429,7 +427,7 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.query(avg(Item.embedding)).first()[0]
-            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
+            assert res == Vector([2.5, 3.5, 4.5])
 
     def test_avg_orm(self, engine):
         with Session(engine) as session:
@@ -438,7 +436,7 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.scalars(select(avg(Item.embedding))).first()
-            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
+            assert res == Vector([2.5, 3.5, 4.5])
 
     def test_sum(self, engine):
         with Session(engine) as session:
@@ -447,7 +445,7 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.query(sum(Item.embedding)).first()[0]
-            assert np.array_equal(res, np.array([5, 7, 9]))
+            assert res == Vector([5, 7, 9])
 
     def test_sum_orm(self, engine):
         with Session(engine) as session:
@@ -456,7 +454,7 @@ class TestSqlalchemy:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.scalars(select(sum(Item.embedding))).first()
-            assert np.array_equal(res, np.array([5, 7, 9]))
+            assert res == Vector([5, 7, 9])
 
     def test_bad_dimensions(self, engine):
         item = Item(embedding=[1, 2])
@@ -509,7 +507,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.execute(insert(AutoItem), [{'embedding': np.array([1, 2, 3])}])
             item = session.query(AutoItem).first()
-            assert item.embedding.tolist() == [1, 2, 3]
+            assert item.embedding == Vector([1, 2, 3])
 
     def test_half_precision(self, engine):
         create_items()
@@ -541,8 +539,8 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.embeddings[0].tolist() == [1, 2, 3]
-            assert item.embeddings[1].tolist() == [4, 5, 6]
+            assert item.embeddings[0] == Vector([1, 2, 3])
+            assert item.embeddings[1] == Vector([4, 5, 6])
 
     def test_halfvec_array(self, engine):
         with Session(engine) as session:
@@ -551,8 +549,8 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.half_embeddings[0].to_list() == [1, 2, 3]
-            assert item.half_embeddings[1].to_list() == [4, 5, 6]
+            assert item.half_embeddings[0] == HalfVector([1, 2, 3])
+            assert item.half_embeddings[1] == HalfVector([4, 5, 6])
 
 
 @pytest.mark.parametrize('engine', async_engines)
@@ -566,10 +564,10 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                embedding = np.array([1, 2, 3])
+                embedding = Vector([1, 2, 3])
                 session.add(Item(id=1, embedding=embedding))
                 item = await session.get(Item, 1)
-                assert np.array_equal(item.embedding, embedding)
+                assert item.embedding == embedding
 
         await engine.dispose()
 
@@ -579,10 +577,10 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                embedding = [1, 2, 3]
+                embedding = HalfVector([1, 2, 3])
                 session.add(Item(id=1, half_embedding=embedding))
                 item = await session.get(Item, 1)
-                assert item.half_embedding.to_list() == embedding
+                assert item.half_embedding == embedding
 
         await engine.dispose()
 
@@ -605,10 +603,10 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                embedding = [1, 2, 3]
+                embedding = SparseVector([1, 2, 3])
                 session.add(Item(id=1, sparse_embedding=embedding))
                 item = await session.get(Item, 1)
-                assert item.sparse_embedding.to_list() == embedding
+                assert item.sparse_embedding == embedding
 
         await engine.dispose()
 
@@ -621,7 +619,7 @@ class TestSqlalchemyAsync:
                 session.add(Item(embedding=[1, 2, 3]))
                 session.add(Item(embedding=[4, 5, 6]))
                 res = await session.scalars(select(avg(Item.embedding)))
-                assert res.first().tolist() == [2.5, 3.5, 4.5]
+                assert res.first() == Vector([2.5, 3.5, 4.5])
 
         await engine.dispose()
 
@@ -637,9 +635,9 @@ class TestSqlalchemyAsyncArray:
 
         async with async_session() as session:
             async with session.begin():
-                session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+                session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
                 item = await session.get(Item, 1)
-                assert item.embeddings[0].tolist() == [1, 2, 3]
-                assert item.embeddings[1].tolist() == [4, 5, 6]
+                assert item.embeddings[0] == Vector([1, 2, 3])
+                assert item.embeddings[1] == Vector([4, 5, 6])
 
         await engine.dispose()

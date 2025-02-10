@@ -23,19 +23,18 @@ class TestPsycopg:
         conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
         res = conn.execute('SELECT embedding FROM psycopg_items ORDER BY id').fetchall()
-        assert np.array_equal(res[0][0], embedding)
-        assert res[0][0].dtype == np.float32
+        assert res[0][0] == Vector(embedding)
         assert res[1][0] is None
 
     def test_vector_binary_format(self):
         embedding = np.array([1.5, 2, 3])
         res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
-        assert np.array_equal(res, embedding)
+        assert res == Vector(embedding)
 
     def test_vector_text_format(self):
         embedding = np.array([1.5, 2, 3])
         res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
-        assert np.array_equal(res, embedding)
+        assert res == Vector(embedding)
 
     def test_vector_binary_format_correct(self):
         embedding = np.array([1.5, 2, 3])
@@ -46,23 +45,23 @@ class TestPsycopg:
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
-        assert np.array_equal(res, np.array([3, 2, 1.5]))
+        assert res == Vector([3, 2, 1.5])
 
     def test_vector_binary_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
-        assert np.array_equal(res, np.array([3, 2, 1.5]))
+        assert res == Vector([3, 2, 1.5])
 
     def test_vector_class_binary_format(self):
         embedding = Vector([1.5, 2, 3])
         res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
-        assert np.array_equal(res, np.array([1.5, 2, 3]))
+        assert res == embedding
 
     def test_vector_class_text_format(self):
         embedding = Vector([1.5, 2, 3])
         res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
-        assert np.array_equal(res, np.array([1.5, 2, 3]))
+        assert res == embedding
 
     def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])
@@ -156,7 +155,7 @@ class TestPsycopg:
                 assert row[1] == "[1.5,2,3]"
 
     def test_binary_copy_to(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = Vector([1.5, 2, 3])
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
@@ -166,23 +165,23 @@ class TestPsycopg:
                 assert HalfVector.from_binary(row[1]).to_list() == [1.5, 2, 3]
 
     def test_binary_copy_to_set_types(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = Vector([1.5, 2, 3])
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
             copy.set_types(['vector', 'halfvec'])
             for row in copy.rows():
-                assert np.array_equal(row[0], embedding)
-                assert row[1].to_list() == [1.5, 2, 3]
+                assert row[0] == embedding
+                assert row[1] == half_embedding
 
     def test_vector_array(self):
-        embeddings = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
         conn.execute('INSERT INTO psycopg_items (embeddings) VALUES (%s)', (embeddings,))
 
         res = conn.execute('SELECT embeddings FROM psycopg_items ORDER BY id').fetchone()
-        assert np.array_equal(res[0][0], embeddings[0])
-        assert np.array_equal(res[0][1], embeddings[1])
+        assert res[0][0] == embeddings[0]
+        assert res[0][1] == embeddings[1]
 
     def test_pool(self):
         def configure(conn):
@@ -192,7 +191,7 @@ class TestPsycopg:
 
         with pool.connection() as conn:
             res = conn.execute("SELECT '[1,2,3]'::vector").fetchone()
-            assert np.array_equal(res[0], np.array([1, 2, 3]))
+            assert res[0] == Vector([1, 2, 3])
 
         pool.close()
 
@@ -206,14 +205,13 @@ class TestPsycopg:
 
         await register_vector_async(conn)
 
-        embedding = np.array([1.5, 2, 3])
+        embedding = Vector([1.5, 2, 3])
         await conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
         async with conn.cursor() as cur:
             await cur.execute('SELECT * FROM psycopg_items ORDER BY id')
             res = await cur.fetchall()
-            assert np.array_equal(res[0][1], embedding)
-            assert res[0][1].dtype == np.float32
+            assert res[0][1] == embedding
             assert res[1][1] is None
 
     @pytest.mark.asyncio
@@ -228,6 +226,6 @@ class TestPsycopg:
             async with conn.cursor() as cur:
                 await cur.execute("SELECT '[1,2,3]'::vector")
                 res = await cur.fetchone()
-                assert np.array_equal(res[0], np.array([1, 2, 3]))
+                assert res[0] == Vector([1, 2, 3])
 
         await pool.close()

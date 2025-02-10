@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models import Field
-import numpy as np
 from .. import Vector
 
 
@@ -28,9 +27,12 @@ class VectorField(Field):
         return Vector._from_db(value)
 
     def to_python(self, value):
-        if isinstance(value, list):
-            return np.array(value, dtype=np.float32)
-        return Vector._from_db(value)
+        if value is None or isinstance(value, Vector):
+            return value
+        elif isinstance(value, str):
+            return Vector._from_db(value)
+        else:
+            return Vector(value)
 
     def get_prep_value(self, value):
         return Vector._to_db(value)
@@ -38,34 +40,19 @@ class VectorField(Field):
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
 
-    def validate(self, value, model_instance):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
-        super().validate(value, model_instance)
-
-    def run_validators(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
-        super().run_validators(value)
-
     def formfield(self, **kwargs):
         return super().formfield(form_class=VectorFormField, **kwargs)
 
 
 class VectorWidget(forms.TextInput):
     def format_value(self, value):
-        if isinstance(value, np.ndarray):
-            value = value.tolist()
+        if isinstance(value, Vector):
+            value = value.to_list()
         return super().format_value(value)
 
 
 class VectorFormField(forms.CharField):
     widget = VectorWidget
-
-    def has_changed(self, initial, data):
-        if isinstance(initial, np.ndarray):
-            initial = initial.tolist()
-        return super().has_changed(initial, data)
 
     def to_python(self, value):
         if isinstance(value, str) and value == '':
