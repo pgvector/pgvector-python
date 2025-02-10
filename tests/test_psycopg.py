@@ -111,9 +111,8 @@ class TestPsycopg:
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
         assert res.dimensions() == 6
-        # TODO convert indices and values to lists in 0.4.0
-        assert res.indices() == (0, 2, 4)
-        assert res.values() == (1.5, 2, 3)
+        assert res.indices() == [0, 2, 4]
+        assert res.values() == [1.5, 2, 3]
         assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
         assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
