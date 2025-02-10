@@ -1,5 +1,6 @@
 ## 0.4.0 (unreleased)
 
+- Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes
 - Dropped support for Python < 3.9
 
 ## 0.3.6 (2024-10-26)
