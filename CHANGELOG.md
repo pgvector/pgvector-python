@@ -1,3 +1,7 @@
+## 0.4.0 (unreleased)
+
+- Dropped support for Python < 3.9
+
 ## 0.3.6 (2024-10-26)
 
 - Added `arrays` option for Psycopg 2
