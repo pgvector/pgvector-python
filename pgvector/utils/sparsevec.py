@@ -26,6 +26,11 @@ class SparseVector:
         elements = dict(zip(self._indices, self._values))
         return f'SparseVector({elements}, {self._dim})'
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.dimensions() == other.dimensions() and self.indices() == other.indices() and self.values() == other.values()
+        return False
+
     def dimensions(self):
         return self._dim
 

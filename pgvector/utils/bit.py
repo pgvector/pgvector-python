@@ -24,6 +24,11 @@ class Bit:
     def __repr__(self):
         return f'Bit({self.to_text()})'
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return np.array_equal(self.to_numpy(), other.to_numpy())
+        return False
+
     def to_list(self):
         return self._value.tolist()
 

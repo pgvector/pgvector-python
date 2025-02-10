@@ -38,5 +38,9 @@ class TestHalfVector:
         assert repr(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'
         assert str(HalfVector([1, 2, 3])) == 'HalfVector([1.0, 2.0, 3.0])'
 
+    def test_equality(self):
+        assert HalfVector([1, 2, 3]) == HalfVector([1, 2, 3])
+        assert HalfVector([1, 2, 3]) != HalfVector([1, 2, 4])
+
     def test_dimensions(self):
         assert HalfVector([1, 2, 3]).dimensions() == 3

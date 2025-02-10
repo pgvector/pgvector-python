@@ -16,6 +16,11 @@ class Vector:
     def __repr__(self):
         return f'Vector({self.to_list()})'
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return np.array_equal(self.to_numpy(), other.to_numpy())
+        return False
+
     def dimensions(self):
         return len(self._value)
 

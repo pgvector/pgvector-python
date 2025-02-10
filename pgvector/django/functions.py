@@ -13,6 +13,10 @@ class DistanceBase(Func):
                 vector = Value(SparseVector._to_db(vector))
             else:
                 vector = Value(Vector._to_db(vector))
+
+            # prevent error with unhashable types
+            self._constructor_args = ((expression, vector), extra)
+
         super().__init__(expression, vector, **extra)
 
 

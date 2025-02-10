@@ -38,5 +38,9 @@ class TestVector:
         assert repr(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
         assert str(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
 
+    def test_equality(self):
+        assert Vector([1, 2, 3]) == Vector([1, 2, 3])
+        assert Vector([1, 2, 3]) != Vector([1, 2, 4])
+
     def test_dimensions(self):
         assert Vector([1, 2, 3]).dimensions() == 3

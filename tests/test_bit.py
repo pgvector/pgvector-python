@@ -37,3 +37,7 @@ class TestBit:
     def test_repr(self):
         assert repr(Bit([True, False, True])) == 'Bit(101)'
         assert str(Bit([True, False, True])) == 'Bit(101)'
+
+    def test_equality(self):
+        assert Bit([True, False, True]) == Bit([True, False, True])
+        assert Bit([True, False, True]) != Bit([True, False, False])
