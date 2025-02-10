@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.utils import SparseVector
+from pgvector import SparseVector
 import pytest
 from scipy.sparse import coo_array
 

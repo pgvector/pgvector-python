@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.utils import Bit
+from pgvector import Bit
 import pytest
 
 

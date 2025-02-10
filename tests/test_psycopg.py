@@ -1,5 +1,6 @@
 import numpy as np
-from pgvector.psycopg import register_vector, register_vector_async, Bit, HalfVector, SparseVector, Vector
+from pgvector import Bit, HalfVector, SparseVector, Vector
+from pgvector.psycopg import register_vector, register_vector_async
 import psycopg
 from psycopg_pool import ConnectionPool, AsyncConnectionPool
 import pytest

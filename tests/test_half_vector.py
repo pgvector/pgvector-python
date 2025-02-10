@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.utils import HalfVector
+from pgvector import HalfVector
 import pytest
 
 

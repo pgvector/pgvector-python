@@ -1,6 +1,7 @@
 import asyncpg
 import numpy as np
-from pgvector.asyncpg import register_vector, SparseVector
+from pgvector import SparseVector
+from pgvector.asyncpg import register_vector
 import pytest
 
 

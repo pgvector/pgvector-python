@@ -1,5 +1,6 @@
 import numpy as np
-from pgvector.psycopg2 import register_vector, Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
+from pgvector.psycopg2 import register_vector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
 from psycopg2.pool import ThreadedConnectionPool

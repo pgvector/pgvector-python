@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.utils import Vector
+from pgvector import Vector
 import pytest
 
 

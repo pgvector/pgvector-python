@@ -1,7 +1,8 @@
 import asyncpg
 import numpy as np
 import os
-from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
+from pgvector import SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
 from sqlalchemy.exc import StatementError

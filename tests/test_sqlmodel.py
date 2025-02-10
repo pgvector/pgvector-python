@@ -1,5 +1,6 @@
 import numpy as np
-from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, SparseVector, avg, sum
+from pgvector import SparseVector
+from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy.exc import StatementError
 from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text

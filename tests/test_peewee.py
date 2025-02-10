@@ -1,7 +1,8 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField, SparseVector
+from pgvector import SparseVector
+from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
 
 db = PostgresqlDatabase('pgvector_python_test')
 
