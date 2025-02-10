@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector.psycopg2 import register_vector, HalfVector, SparseVector
+from pgvector.psycopg2 import register_vector, Vector, HalfVector, SparseVector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
 from psycopg2.pool import ThreadedConnectionPool
@@ -26,6 +26,16 @@ class TestPsycopg2:
         cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
         assert np.array_equal(res[0][0], embedding)
+        assert res[0][0].dtype == np.float32
+        assert res[1][0] is None
+
+    def test_vector_class(self):
+        embedding = Vector([1.5, 2, 3])
+        cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
+
+        cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
+        res = cur.fetchall()
+        assert np.array_equal(res[0][0], embedding.to_numpy())
         assert res[0][0].dtype == np.float32
         assert res[1][0] is None
 

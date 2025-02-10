@@ -24,3 +24,4 @@ def register_vector_info(oid, array_oid, scope):
         register_type(vectorarray, scope)
 
     register_adapter(np.ndarray, VectorAdapter)
+    register_adapter(Vector, VectorAdapter)
