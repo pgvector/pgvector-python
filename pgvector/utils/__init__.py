@@ -1,7 +1,4 @@
-from .bit import Bit
-from .halfvec import HalfVector
-from .sparsevec import SparseVector
-from .vector import Vector
+from .. import Bit, HalfVector, SparseVector, Vector
 
 __all__ = [
     'Vector',
