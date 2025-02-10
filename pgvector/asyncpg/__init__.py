@@ -1,5 +1,7 @@
 from .register import register_vector
-from ..utils import Vector, HalfVector, SparseVector
+
+# TODO remove
+from .. import Vector, HalfVector, SparseVector
 
 __all__ = [
     'register_vector',

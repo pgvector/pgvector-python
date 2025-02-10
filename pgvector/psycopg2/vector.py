@@ -1,6 +1,6 @@
 import numpy as np
 from psycopg2.extensions import adapt, new_array_type, new_type, register_adapter, register_type
-from ..utils import Vector
+from .. import Vector
 
 
 class VectorAdapter:

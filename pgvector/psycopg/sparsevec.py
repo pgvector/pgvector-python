@@ -1,6 +1,6 @@
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
-from ..utils import SparseVector
+from .. import SparseVector
 
 
 class SparseVectorDumper(Dumper):

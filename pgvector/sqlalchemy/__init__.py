@@ -4,7 +4,9 @@ from .halfvec import HALFVEC
 from .sparsevec import SPARSEVEC
 from .vector import VECTOR
 from .vector import VECTOR as Vector
-from ..utils import HalfVector, SparseVector
+
+# TODO remove
+from .. import HalfVector, SparseVector
 
 __all__ = [
     'Vector',

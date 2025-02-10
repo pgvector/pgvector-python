@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
-from ..utils import Vector
+from .. import Vector
 
 
 class VECTOR(UserDefinedType):

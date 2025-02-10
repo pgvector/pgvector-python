@@ -1,6 +1,6 @@
 from psycopg.adapt import Dumper
 from psycopg.pq import Format
-from ..utils import Bit
+from .. import Bit
 
 
 class BitDumper(Dumper):

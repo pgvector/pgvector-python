@@ -1,5 +1,5 @@
 from psycopg2.extensions import adapt, new_array_type, new_type, register_adapter, register_type
-from ..utils import SparseVector
+from .. import SparseVector
 
 
 class SparsevecAdapter:

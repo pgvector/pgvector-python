@@ -1,4 +1,4 @@
-from ..utils import Vector, HalfVector, SparseVector
+from .. import Vector, HalfVector, SparseVector
 
 
 async def register_vector(conn, schema='public'):

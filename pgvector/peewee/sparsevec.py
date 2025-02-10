@@ -1,5 +1,5 @@
 from peewee import Expression, Field
-from ..utils import SparseVector
+from .. import SparseVector
 
 
 class SparseVectorField(Field):

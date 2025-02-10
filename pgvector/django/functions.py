@@ -1,5 +1,5 @@
 from django.db.models import FloatField, Func, Value
-from ..utils import Vector, HalfVector, SparseVector
+from .. import Vector, HalfVector, SparseVector
 
 
 class DistanceBase(Func):

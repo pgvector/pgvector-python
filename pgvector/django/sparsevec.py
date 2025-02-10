@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models import Field
-from ..utils import SparseVector
+from .. import SparseVector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/

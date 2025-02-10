@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import Field
 import numpy as np
-from ..utils import Vector
+from .. import Vector
 
 
 # https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/

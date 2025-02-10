@@ -5,7 +5,9 @@ from .halfvec import HalfVectorField
 from .indexes import IvfflatIndex, HnswIndex
 from .sparsevec import SparseVectorField
 from .vector import VectorField
-from ..utils import HalfVector, SparseVector
+
+# TODO remove
+from .. import HalfVector, SparseVector
 
 __all__ = [
     'VectorExtension',

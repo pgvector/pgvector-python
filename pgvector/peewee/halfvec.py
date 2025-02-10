@@ -1,5 +1,5 @@
 from peewee import Expression, Field
-from ..utils import HalfVector
+from .. import HalfVector
 
 
 class HalfVectorField(Field):

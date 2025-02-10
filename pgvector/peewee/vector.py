@@ -1,5 +1,5 @@
 from peewee import Expression, Field
-from ..utils import Vector
+from .. import Vector
 
 
 class VectorField(Field):
