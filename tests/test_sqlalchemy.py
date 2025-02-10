@@ -24,7 +24,7 @@ psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_p
 @event.listens_for(psycopg2_type_engine, "connect")
 def psycopg2_connect(dbapi_connection, connection_record):
     from pgvector.psycopg2 import register_vector
-    register_vector(dbapi_connection, globally=False, arrays=True)
+    register_vector(dbapi_connection)
 
 
 pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')

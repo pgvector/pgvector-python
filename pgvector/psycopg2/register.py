@@ -5,10 +5,8 @@ from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
 
 
-# TODO make globally False by default in 0.4.0
 # note: register_adapter is always global
-# TODO make arrays True by defalt in 0.4.0
-def register_vector(conn_or_curs, globally=True, arrays=False):
+def register_vector(conn_or_curs, globally=False, arrays=True):
     conn = conn_or_curs if hasattr(conn_or_curs, 'cursor') else conn_or_curs.connection
     cur = conn.cursor(cursor_factory=cursor)
     scope = None if globally else conn_or_curs

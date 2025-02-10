@@ -12,7 +12,7 @@ cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 cur.execute('DROP TABLE IF EXISTS psycopg2_items')
 cur.execute('CREATE TABLE psycopg2_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), embeddings vector[], half_embeddings halfvec[], sparse_embeddings sparsevec[])')
 
-register_vector(cur, globally=False, arrays=True)
+register_vector(cur)
 
 
 class TestPsycopg2:
@@ -87,13 +87,13 @@ class TestPsycopg2:
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
             conn = psycopg2.connect(dbname='pgvector_python_test')
             cur = conn.cursor(cursor_factory=cursor_factory)
-            register_vector(cur, globally=False)
+            register_vector(cur)
             conn.close()
 
     def test_cursor_factory_connection(self):
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
             conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)
-            register_vector(conn, globally=False)
+            register_vector(conn)
             conn.close()
 
     def test_pool(self):
@@ -102,7 +102,7 @@ class TestPsycopg2:
         conn = pool.getconn()
         try:
             # use globally=True for apps to ensure registered with all connections
-            register_vector(conn, globally=False)
+            register_vector(conn)
         finally:
             pool.putconn(conn)
 
