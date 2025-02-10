@@ -1,6 +1,7 @@
 ## 0.4.0 (unreleased)
 
 - Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes
+- Fixed `indices` and `values` methods of `SparseVector` returning tuple instead of list in some cases
 - Dropped support for Python < 3.9
 
 ## 0.3.6 (2024-10-26)
