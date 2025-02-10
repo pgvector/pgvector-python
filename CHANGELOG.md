@@ -1,5 +1,6 @@
 ## 0.4.0 (unreleased)
 
+- Added top-level `pgvector` package
 - Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes
 - Fixed `indices` and `values` methods of `SparseVector` returning tuple instead of list in some cases
 - Dropped support for Python < 3.9
