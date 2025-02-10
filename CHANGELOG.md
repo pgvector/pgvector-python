@@ -1,6 +1,8 @@
 ## 0.4.0 (unreleased)
 
 - Added top-level `pgvector` package
+- Changed `globally` option to default to `False` for Psycopg 2
+- Changed `arrays` option to default to `True` for Psycopg 2
 - Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes
 - Fixed `indices` and `values` methods of `SparseVector` returning tuple instead of list in some cases
 - Dropped support for Python < 3.9
