@@ -1,7 +1,7 @@
 import asyncpg
 import numpy as np
 import os
-from pgvector import SparseVector
+from pgvector import HalfVector, SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
@@ -256,7 +256,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.half_embedding.to_list() == [1, 2, 3]
+            assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self, engine):
         create_items()
@@ -348,7 +348,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.sparse_embedding.to_list() == [1, 2, 3]
+            assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self, engine):
         create_items()
@@ -551,8 +551,8 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.half_embeddings[0].to_list() == [1, 2, 3]
-            assert item.half_embeddings[1].to_list() == [4, 5, 6]
+            assert item.half_embeddings[0] == HalfVector([1, 2, 3])
+            assert item.half_embeddings[1] == HalfVector([4, 5, 6])
 
 
 @pytest.mark.parametrize('engine', async_engines)
@@ -582,7 +582,7 @@ class TestSqlalchemyAsync:
                 embedding = [1, 2, 3]
                 session.add(Item(id=1, half_embedding=embedding))
                 item = await session.get(Item, 1)
-                assert item.half_embedding.to_list() == embedding
+                assert item.half_embedding == HalfVector(embedding)
 
         await engine.dispose()
 
@@ -608,7 +608,7 @@ class TestSqlalchemyAsync:
                 embedding = [1, 2, 3]
                 session.add(Item(id=1, sparse_embedding=embedding))
                 item = await session.get(Item, 1)
-                assert item.sparse_embedding.to_list() == embedding
+                assert item.sparse_embedding == SparseVector(embedding)
 
         await engine.dispose()
 
