@@ -24,3 +24,6 @@ jobs:
           make
           sudo make install
       - run: pytest
+
+      - run: pip install "SQLAlchemy<2" -U
+      - run: pytest tests/test_sqlalchemy.py
