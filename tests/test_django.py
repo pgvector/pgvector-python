@@ -199,7 +199,7 @@ class TestDjango:
     def test_halfvec(self):
         Item(id=1, half_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        assert item.half_embedding.to_list() == [1, 2, 3]
+        assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self):
         create_items()
@@ -251,7 +251,7 @@ class TestDjango:
     def test_sparsevec(self):
         Item(id=1, sparse_embedding=SparseVector([1, 2, 3])).save()
         item = Item.objects.get(pk=1)
-        assert item.sparse_embedding.to_list() == [1, 2, 3]
+        assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -309,7 +309,7 @@ class TestDjango:
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
         avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
-        assert avg.to_list() == [2.5, 3.5, 4.5]
+        assert avg == HalfVector([2.5, 3.5, 4.5])
 
     def test_halfvec_sum(self):
         sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
@@ -317,7 +317,7 @@ class TestDjango:
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
-        assert sum.to_list() == [5, 7, 9]
+        assert sum == HalfVector([5, 7, 9])
 
     def test_serialization(self):
         create_items()
@@ -375,7 +375,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).half_embedding.to_list()
+        assert Item.objects.get(pk=1).half_embedding == HalfVector([4, 5, 6])
 
     def test_halfvec_form_save_missing(self):
         Item(id=1).save()
@@ -432,7 +432,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).sparse_embedding.to_list()
+        assert Item.objects.get(pk=1).sparse_embedding == SparseVector([4, 5, 6])
 
     def test_sparesevec_form_save_missing(self):
         Item(id=1).save()
