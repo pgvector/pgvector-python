@@ -122,7 +122,7 @@ class TestPsycopg2:
             cur = conn.cursor()
             cur.execute("SELECT '[1,2,3]'::vector")
             res = cur.fetchone()
-            assert np.array_equal(res[0], np.array([1, 2, 3]))
+            assert np.array_equal(res[0], [1, 2, 3])
         finally:
             pool.putconn(conn)
 

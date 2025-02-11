@@ -43,7 +43,7 @@ class TestPeewee:
     def test_vector(self):
         Item.create(id=1, embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert np.array_equal(item.embedding, np.array([1, 2, 3]))
+        assert np.array_equal(item.embedding, [1, 2, 3])
         assert item.embedding.dtype == np.float32
 
     def test_vector_l2_distance(self):
@@ -170,7 +170,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
-        assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+        assert np.array_equal(avg, [2.5, 3.5, 4.5])
 
     def test_vector_sum(self):
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
@@ -178,7 +178,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
-        assert np.array_equal(sum, np.array([5, 7, 9]))
+        assert np.array_equal(sum, [5, 7, 9])
 
     def test_halfvec_avg(self):
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()
@@ -220,5 +220,5 @@ class TestPeewee:
         # fails with column "embeddings" is of type vector[] but expression is of type text[]
         # ExtItem.create(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])])
         # item = ExtItem.get_by_id(1)
-        # assert np.array_equal(item.embeddings[0], np.array([1, 2, 3]))
-        # assert np.array_equal(item.embeddings[1], np.array([4, 5, 6]))
+        # assert np.array_equal(item.embeddings[0], [1, 2, 3])
+        # assert np.array_equal(item.embeddings[1], [4, 5, 6])

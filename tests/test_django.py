@@ -165,7 +165,7 @@ class TestDjango:
     def test_vector(self):
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        assert np.array_equal(item.embedding, np.array([1, 2, 3]))
+        assert np.array_equal(item.embedding, [1, 2, 3])
         assert item.embedding.dtype == np.float32
 
     def test_vector_l2_distance(self):
@@ -293,7 +293,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
-        assert np.array_equal(avg, np.array([2.5, 3.5, 4.5]))
+        assert np.array_equal(avg, [2.5, 3.5, 4.5])
 
     def test_vector_sum(self):
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
@@ -301,7 +301,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
-        assert np.array_equal(sum, np.array([5, 7, 9]))
+        assert np.array_equal(sum, [5, 7, 9])
 
     def test_halfvec_avg(self):
         avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
@@ -347,7 +347,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).embedding.tolist()
+        assert np.array_equal(Item.objects.get(pk=1).embedding, [4, 5, 6])
 
     def test_vector_form_save_missing(self):
         Item(id=1).save()
@@ -465,8 +465,8 @@ class TestDjango:
 
             # this fails if the driver does not cast arrays
             item = Item.objects.get(pk=1)
-            assert item.embeddings[0].tolist() == [1, 2, 3]
-            assert item.embeddings[1].tolist() == [4, 5, 6]
+            assert np.array_equal(item.embeddings[0], [1, 2, 3])
+            assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
     def test_double_array(self):
         Item(id=1, double_embedding=[1, 1, 1]).save()

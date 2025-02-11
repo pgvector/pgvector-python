@@ -201,7 +201,7 @@ class TestSqlalchemy:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.embedding.tolist() == [1, 2, 3]
+            assert np.array_equal(item.embedding, [1, 2, 3])
 
     def test_vector_l2_distance(self, engine):
         create_items()
@@ -509,7 +509,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.execute(insert(AutoItem), [{'embedding': np.array([1, 2, 3])}])
             item = session.query(AutoItem).first()
-            assert item.embedding.tolist() == [1, 2, 3]
+            assert np.array_equal(item.embedding, [1, 2, 3])
 
     def test_half_precision(self, engine):
         create_items()
@@ -541,8 +541,8 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.embeddings[0].tolist() == [1, 2, 3]
-            assert item.embeddings[1].tolist() == [4, 5, 6]
+            assert np.array_equal(item.embeddings[0], [1, 2, 3])
+            assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
     def test_halfvec_array(self, engine):
         with Session(engine) as session:
@@ -621,7 +621,7 @@ class TestSqlalchemyAsync:
                 session.add(Item(embedding=[1, 2, 3]))
                 session.add(Item(embedding=[4, 5, 6]))
                 res = await session.scalars(select(avg(Item.embedding)))
-                assert res.first().tolist() == [2.5, 3.5, 4.5]
+                assert np.array_equal(res.first(), [2.5, 3.5, 4.5])
 
         await engine.dispose()
 
@@ -639,12 +639,12 @@ class TestSqlalchemyAsyncArray:
             async with session.begin():
                 session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
                 item = await session.get(Item, 1)
-                assert item.embeddings[0].tolist() == [1, 2, 3]
-                assert item.embeddings[1].tolist() == [4, 5, 6]
+                assert np.array_equal(item.embeddings[0], [1, 2, 3])
+                assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
                 session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
                 item = await session.get(Item, 2)
-                assert item.embeddings[0].tolist() == [1, 2, 3]
-                assert item.embeddings[1].tolist() == [4, 5, 6]
+                assert np.array_equal(item.embeddings[0], [1, 2, 3])
+                assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
         await engine.dispose()

@@ -76,7 +76,7 @@ class TestSqlmodel:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.embedding.tolist() == [1, 2, 3]
+            assert np.array_equal(item.embedding, np.array([1, 2, 3]))
 
     def test_vector_l2_distance(self):
         create_items()
