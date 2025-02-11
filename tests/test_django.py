@@ -12,7 +12,7 @@ from math import sqrt
 import numpy as np
 import os
 import pgvector.django
-from pgvector import Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
 from unittest import mock
 
