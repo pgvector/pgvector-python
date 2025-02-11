@@ -56,6 +56,7 @@ class TestSparseVector:
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector([1, 0, 2, 0, 3, 0])
         assert SparseVector([1, 0, 2, 0, 3, 0]) != SparseVector([1, 0, 2, 0, 3, 1])
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
+        assert SparseVector({}, 1) != SparseVector({}, 2)
 
     def test_dimensions(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).dimensions() == 6
