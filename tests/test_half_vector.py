@@ -1,6 +1,7 @@
 import numpy as np
 from pgvector import HalfVector
 import pytest
+from struct import pack
 
 
 class TestHalfVector:
@@ -44,3 +45,15 @@ class TestHalfVector:
 
     def test_dimensions(self):
         assert HalfVector([1, 2, 3]).dimensions() == 3
+
+    def test_from_text(self):
+        vec = HalfVector.from_text('[1.5,2,3]')
+        assert vec.to_list() == [1.5, 2, 3]
+        assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
+
+    def test_from_binary(self):
+        data = pack('>HH3e', 3, 0, 1.5, 2, 3)
+        vec = HalfVector.from_binary(data)
+        assert vec.to_list() == [1.5, 2, 3]
+        assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
+        assert vec.to_binary() == data

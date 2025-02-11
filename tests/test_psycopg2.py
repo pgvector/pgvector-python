@@ -80,8 +80,8 @@ class TestPsycopg2:
 
         cur.execute('SELECT half_embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert res[0][0].to_list() == [1.5, 2, 3]
-        assert res[0][1].to_list() == [4.5, 5, 6]
+        assert res[0][0] == HalfVector([1.5, 2, 3])
+        assert res[0][1] == HalfVector([4.5, 5, 6])
 
     def test_sparsevec_array(self):
         embeddings = [SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])]
@@ -89,8 +89,8 @@ class TestPsycopg2:
 
         cur.execute('SELECT sparse_embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert res[0][0].to_list() == [1.5, 2, 3]
-        assert res[0][1].to_list() == [4.5, 5, 6]
+        assert res[0][0] == SparseVector([1.5, 2, 3])
+        assert res[0][1] == SparseVector([4.5, 5, 6])
 
     def test_cursor_factory(self):
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:

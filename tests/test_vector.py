@@ -1,6 +1,7 @@
 import numpy as np
 from pgvector import Vector
 import pytest
+from struct import pack
 
 
 class TestVector:
@@ -44,3 +45,15 @@ class TestVector:
 
     def test_dimensions(self):
         assert Vector([1, 2, 3]).dimensions() == 3
+
+    def test_from_text(self):
+        vec = Vector.from_text('[1.5,2,3]')
+        assert vec.to_list() == [1.5, 2, 3]
+        assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
+
+    def test_from_binary(self):
+        data = pack('>HH3f', 3, 0, 1.5, 2, 3)
+        vec = Vector.from_binary(data)
+        assert vec.to_list() == [1.5, 2, 3]
+        assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
+        assert vec.to_binary() == data

@@ -198,7 +198,7 @@ class TestDjango:
     def test_halfvec(self):
         Item(id=1, half_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        assert item.half_embedding.to_list() == [1, 2, 3]
+        assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self):
         create_items()
@@ -250,7 +250,7 @@ class TestDjango:
     def test_sparsevec(self):
         Item(id=1, sparse_embedding=SparseVector([1, 2, 3])).save()
         item = Item.objects.get(pk=1)
-        assert item.sparse_embedding.to_list() == [1, 2, 3]
+        assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -346,7 +346,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).embedding.to_list()
+        assert Item.objects.get(pk=1).embedding == Vector([4, 5, 6])
 
     def test_vector_form_save_missing(self):
         Item(id=1).save()
@@ -374,7 +374,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).half_embedding.to_list()
+        assert Item.objects.get(pk=1).half_embedding == HalfVector([4, 5, 6])
 
     def test_halfvec_form_save_missing(self):
         Item(id=1).save()
@@ -431,7 +431,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert [4, 5, 6] == Item.objects.get(pk=1).sparse_embedding.to_list()
+        assert Item.objects.get(pk=1).sparse_embedding == SparseVector([4, 5, 6])
 
     def test_sparesevec_form_save_missing(self):
         Item(id=1).save()
@@ -464,8 +464,7 @@ class TestDjango:
 
             # this fails if the driver does not cast arrays
             item = Item.objects.get(pk=1)
-            assert item.embeddings[0].to_list() == [1, 2, 3]
-            assert item.embeddings[1].to_list() == [4, 5, 6]
+            assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
     def test_double_array(self):
         Item(id=1, double_embedding=[1, 1, 1]).save()

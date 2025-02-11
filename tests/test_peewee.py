@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector import Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
 
 db = PostgresqlDatabase('pgvector_python_test')
@@ -76,7 +76,7 @@ class TestPeewee:
     def test_halfvec(self):
         Item.create(id=1, half_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert item.half_embedding.to_list() == [1, 2, 3]
+        assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self):
         create_items()
@@ -128,7 +128,7 @@ class TestPeewee:
     def test_sparsevec(self):
         Item.create(id=1, sparse_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert item.sparse_embedding.to_list() == [1, 2, 3]
+        assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -219,5 +219,5 @@ class TestPeewee:
         # fails with column "embeddings" is of type vector[] but expression is of type text[]
         # ExtItem.create(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])])
         # item = ExtItem.get_by_id(1)
-        # assert np.array_equal(item.embeddings[0], np.array([1, 2, 3]))
-        # assert np.array_equal(item.embeddings[1], np.array([4, 5, 6]))
+        # assert np.array_equal(item.embeddings[0], [1, 2, 3])
+        # assert np.array_equal(item.embeddings[1], [4, 5, 6])

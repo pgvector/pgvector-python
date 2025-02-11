@@ -1,7 +1,7 @@
 import asyncpg
 import numpy as np
 import os
-from pgvector import Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
@@ -539,8 +539,7 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.embeddings[0] == Vector([1, 2, 3])
-            assert item.embeddings[1] == Vector([4, 5, 6])
+            assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
     def test_halfvec_array(self, engine):
         with Session(engine) as session:
@@ -637,7 +636,10 @@ class TestSqlalchemyAsyncArray:
             async with session.begin():
                 session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
                 item = await session.get(Item, 1)
-                assert item.embeddings[0] == Vector([1, 2, 3])
-                assert item.embeddings[1] == Vector([4, 5, 6])
+                assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
+
+                session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+                item = await session.get(Item, 2)
+                assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
         await engine.dispose()

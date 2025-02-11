@@ -68,19 +68,17 @@ class TestPsycopg:
         conn.execute('INSERT INTO psycopg_items (half_embedding) VALUES (%s)', (embedding,))
 
         res = conn.execute('SELECT half_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
-        assert res.to_list() == [1.5, 2, 3]
+        assert res == HalfVector([1.5, 2, 3])
 
     def test_halfvec_binary_format(self):
         embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %b::halfvec', (embedding,), binary=True).fetchone()[0]
-        assert res.to_list() == [1.5, 2, 3]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 2, 3]))
+        assert res == HalfVector([1.5, 2, 3])
 
     def test_halfvec_text_format(self):
         embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
-        assert res.to_list() == [1.5, 2, 3]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 2, 3]))
+        assert res == HalfVector([1.5, 2, 3])
 
     def test_bit(self):
         embedding = Bit([True, False, True])
@@ -105,25 +103,17 @@ class TestPsycopg:
         conn.execute('INSERT INTO psycopg_items (sparse_embedding) VALUES (%s)', (embedding,))
 
         res = conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
-        assert res.to_list() == [1.5, 2, 3]
+        assert res == SparseVector([1.5, 2, 3])
 
     def test_sparsevec_binary_format(self):
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
-        assert res.dimensions() == 6
-        assert res.indices() == [0, 2, 4]
-        assert res.values() == [1.5, 2, 3]
-        assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
+        assert res == embedding
 
     def test_sparsevec_text_format(self):
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
-        assert res.dimensions() == 6
-        assert res.indices() == [0, 2, 4]
-        assert res.values() == [1.5, 2, 3]
-        assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
+        assert res == embedding
 
     def test_text_copy_from(self):
         embedding = np.array([1.5, 2, 3])
@@ -161,8 +151,8 @@ class TestPsycopg:
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
             for row in copy.rows():
-                assert Vector.from_binary(row[0]).to_list() == [1.5, 2, 3]
-                assert HalfVector.from_binary(row[1]).to_list() == [1.5, 2, 3]
+                assert Vector.from_binary(row[0]) == embedding
+                assert HalfVector.from_binary(row[1]) == half_embedding
 
     def test_binary_copy_to_set_types(self):
         embedding = Vector([1.5, 2, 3])

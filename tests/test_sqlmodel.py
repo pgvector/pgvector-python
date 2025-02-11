@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector import Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy.exc import StatementError
@@ -155,7 +155,7 @@ class TestSqlmodel:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
             item = session.get(Item, 1)
-            assert item.sparse_embedding.to_list() == [1, 2, 3]
+            assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self):
         create_items()
@@ -218,7 +218,7 @@ class TestSqlmodel:
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
             res = session.exec(select(avg(Item.half_embedding))).first()
-            assert res.to_list() == [2.5, 3.5, 4.5]
+            assert res == HalfVector([2.5, 3.5, 4.5])
 
     def test_halfvec_sum(self):
         with Session(engine) as session:
@@ -227,7 +227,7 @@ class TestSqlmodel:
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
             res = session.exec(select(sum(Item.half_embedding))).first()
-            assert res.to_list() == [5, 7, 9]
+            assert res == HalfVector([5, 7, 9])
 
     def test_bad_dimensions(self):
         item = Item(embedding=[1, 2])

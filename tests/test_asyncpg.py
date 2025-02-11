@@ -1,6 +1,6 @@
 import asyncpg
 import numpy as np
-from pgvector import Vector, HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.asyncpg import register_vector
 import pytest
 
@@ -16,11 +16,13 @@ class TestAsyncpg:
         await register_vector(conn)
 
         embedding = Vector([1.5, 2, 3])
-        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
+        embedding2 = np.array([4.5, 5, 6])
+        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
         assert res[0]['embedding'] == embedding
-        assert res[1]['embedding'] is None
+        assert res[1]['embedding'] == Vector(embedding2)
+        assert res[2]['embedding'] is None
 
         # ensures binary format is correct
         text_res = await conn.fetch("SELECT embedding::text FROM asyncpg_items ORDER BY id LIMIT 1")
@@ -38,11 +40,13 @@ class TestAsyncpg:
         await register_vector(conn)
 
         embedding = HalfVector([1.5, 2, 3])
-        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
+        embedding2 = [4.5, 5, 6]
+        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
         assert res[0]['embedding'] == embedding
-        assert res[1]['embedding'] is None
+        assert res[1]['embedding'] == HalfVector(embedding2)
+        assert res[2]['embedding'] is None
 
         # ensures binary format is correct
         text_res = await conn.fetch("SELECT embedding::text FROM asyncpg_items ORDER BY id LIMIT 1")
@@ -105,11 +109,14 @@ class TestAsyncpg:
         await register_vector(conn)
 
         embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
-        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])", embeddings[0], embeddings[1])
+        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES ($1)", embeddings)
+
+        embeddings2 = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])", embeddings2[0], embeddings2[1])
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert res[0]['embeddings'][0] == embeddings[0]
-        assert res[0]['embeddings'][1] == embeddings[1]
+        assert res[0]['embeddings'] == embeddings
+        assert res[1]['embeddings'] == [Vector(e) for e in embeddings2]
 
         await conn.close()
 
@@ -126,8 +133,10 @@ class TestAsyncpg:
             await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding vector(3))')
 
             embedding = Vector([1.5, 2, 3])
-            await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
+            embedding2 = np.array([1.5, 2, 3])
+            await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
             res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
             assert res[0]['embedding'] == embedding
-            assert res[1]['embedding'] is None
+            assert res[1]['embedding'] == Vector(embedding2)
+            assert res[2]['embedding'] is None
