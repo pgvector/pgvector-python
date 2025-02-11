@@ -17,6 +17,12 @@ class TestBit:
         arr = np.array([254, 7, 0], dtype=np.uint8)
         assert Bit(arr).to_text() == '111111100000011100000000'
 
+    def test_ndarray_uint16(self):
+        arr = np.array([254, 7, 0], dtype=np.uint16)
+        with pytest.raises(ValueError) as error:
+            Bit(arr)
+        assert str(error.value) == 'expected dtype to be bool or uint8'
+
     def test_ndarray_same_object(self):
         arr = np.array([True, False, True])
         assert Bit(arr).to_list() == [True, False, True]

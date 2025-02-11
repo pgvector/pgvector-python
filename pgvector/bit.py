@@ -7,9 +7,11 @@ class Bit:
         if isinstance(value, str):
             self._value = self.from_text(value)._value
         else:
-            # TODO raise if dtype not bool or uint8
-            if isinstance(value, np.ndarray) and value.dtype == np.uint8:
-                value = np.unpackbits(value)
+            if isinstance(value, np.ndarray):
+                if value.dtype == np.uint8:
+                    value = np.unpackbits(value).astype(bool)
+                elif value.dtype != np.bool:
+                    raise ValueError('expected dtype to be bool or uint8')
             else:
                 value = np.asarray(value, dtype=bool)
 
