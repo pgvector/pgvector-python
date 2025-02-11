@@ -551,8 +551,7 @@ class TestSqlalchemyArray:
 
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
-            assert item.half_embeddings[0] == HalfVector([1, 2, 3])
-            assert item.half_embeddings[1] == HalfVector([4, 5, 6])
+            assert item.half_embeddings == [HalfVector([1, 2, 3]), HalfVector([4, 5, 6])]
 
 
 @pytest.mark.parametrize('engine', async_engines)
