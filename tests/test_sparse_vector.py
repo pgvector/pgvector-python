@@ -2,6 +2,7 @@ import numpy as np
 from pgvector import SparseVector
 import pytest
 from scipy.sparse import coo_array
+from struct import pack
 
 
 class TestSparseVector:
@@ -81,3 +82,13 @@ class TestSparseVector:
         assert vec.values() == [1.5, 2, 3]
         assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
         assert np.array_equal(vec.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
+
+    def test_from_binary(self):
+        data = pack('>iii3i3f', 6, 3, 0, *[0, 2, 4], *[1.5, 2, 3])
+        vec = SparseVector.from_binary(data)
+        assert vec.dimensions() == 6
+        assert vec.indices() == [0, 2, 4]
+        assert vec.values() == [1.5, 2, 3]
+        assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
+        assert np.array_equal(vec.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
+        assert vec.to_binary() == data
