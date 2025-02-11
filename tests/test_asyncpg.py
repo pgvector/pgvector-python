@@ -110,8 +110,10 @@ class TestAsyncpg:
         await register_vector(conn)
 
         embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
+        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES ($1)", embeddings)
+
         embeddings2 = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
-        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[]), (ARRAY[$3, $4]::vector[])", embeddings[0], embeddings[1], embeddings2[0], embeddings2[1])
+        await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])", embeddings2[0], embeddings2[1])
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
         assert np.array_equal(res[0]['embeddings'][0], embeddings[0].to_numpy())
