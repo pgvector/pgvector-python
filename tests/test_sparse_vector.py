@@ -73,3 +73,11 @@ class TestSparseVector:
     def test_zero_vector_text(self):
         vec = SparseVector({}, 3)
         assert vec.to_list() == SparseVector.from_text(vec.to_text()).to_list()
+
+    def test_from_text(self):
+        vec = SparseVector.from_text('{1:1.5,3:2,5:3}/6')
+        assert vec.dimensions() == 6
+        assert vec.indices() == [0, 2, 4]
+        assert vec.values() == [1.5, 2, 3]
+        assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
+        assert np.array_equal(vec.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))

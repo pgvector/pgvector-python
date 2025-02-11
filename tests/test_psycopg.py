@@ -83,9 +83,6 @@ class TestPsycopg:
         embedding = HalfVector([1.5, 2, 3])
         res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
         assert res == HalfVector([1.5, 2, 3])
-        # TODO move
-        assert res.to_list() == [1.5, 2, 3]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 2, 3]))
 
     def test_bit(self):
         embedding = Bit([True, False, True])
@@ -127,12 +124,6 @@ class TestPsycopg:
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
         res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
         assert res == embedding
-        # TODO move
-        assert res.dimensions() == 6
-        assert res.indices() == [0, 2, 4]
-        assert res.values() == [1.5, 2, 3]
-        assert res.to_list() == [1.5, 0, 2, 0, 3, 0]
-        assert np.array_equal(res.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
     def test_text_copy_from(self):
         embedding = np.array([1.5, 2, 3])

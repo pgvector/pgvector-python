@@ -44,3 +44,8 @@ class TestHalfVector:
 
     def test_dimensions(self):
         assert HalfVector([1, 2, 3]).dimensions() == 3
+
+    def test_from_text(self):
+        vec = HalfVector.from_text('[1.5,2,3]')
+        assert vec.to_list() == [1.5, 2, 3]
+        assert np.array_equal(vec.to_numpy(), np.array([1.5, 2, 3]))
