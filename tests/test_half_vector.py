@@ -52,7 +52,7 @@ class TestHalfVector:
         assert np.array_equal(vec.to_numpy(), np.array([1.5, 2, 3]))
 
     def test_from_binary(self):
-        data = pack('>HH3e', 3, 0, *[1.5, 2, 3])
+        data = pack('>HH3e', 3, 0, 1.5, 2, 3)
         vec = HalfVector.from_binary(data)
         assert vec.to_list() == [1.5, 2, 3]
         assert np.array_equal(vec.to_numpy(), np.array([1.5, 2, 3]))

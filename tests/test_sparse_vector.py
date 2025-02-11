@@ -84,7 +84,7 @@ class TestSparseVector:
         assert np.array_equal(vec.to_numpy(), np.array([1.5, 0, 2, 0, 3, 0]))
 
     def test_from_binary(self):
-        data = pack('>iii3i3f', 6, 3, 0, *[0, 2, 4], *[1.5, 2, 3])
+        data = pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
         vec = SparseVector.from_binary(data)
         assert vec.dimensions() == 6
         assert vec.indices() == [0, 2, 4]
