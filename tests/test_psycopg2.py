@@ -49,6 +49,15 @@ class TestPsycopg2:
         assert res[0][0] == HalfVector([1.5, 2, 3])
         assert res[1][0] is None
 
+    def test_halfvec_class(self):
+        embedding = HalfVector([1.5, 2, 3])
+        cur.execute('INSERT INTO psycopg2_items (half_embedding) VALUES (%s), (NULL)', (embedding,))
+
+        cur.execute('SELECT half_embedding FROM psycopg2_items ORDER BY id')
+        res = cur.fetchall()
+        assert res[0][0] == embedding
+        assert res[1][0] is None
+
     def test_bit(self):
         embedding = '101'
         cur.execute('INSERT INTO psycopg2_items (binary_embedding) VALUES (%s), (NULL)', (embedding,))
