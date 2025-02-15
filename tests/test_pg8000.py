@@ -8,7 +8,7 @@ conn = Connection(os.environ["USER"], database='pgvector_python_test')
 
 conn.run('CREATE EXTENSION IF NOT EXISTS vector')
 conn.run('DROP TABLE IF EXISTS pg8000_items')
-conn.run('CREATE TABLE pg8000_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3), embeddings vector[], half_embeddings halfvec[], sparse_embeddings sparsevec[])')
+conn.run('CREATE TABLE pg8000_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))')
 
 register_vector(conn)
 
