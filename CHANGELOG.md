@@ -1,6 +1,7 @@
 ## 0.4.0 (unreleased)
 
 - Added top-level `pgvector` package
+- Added support for pg8000
 - Changed `globally` option to default to `False` for Psycopg 2
 - Changed `arrays` option to default to `True` for Psycopg 2
 - Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes

@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Python
 
-Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [asyncpg](https://github.com/MagicStack/asyncpg), and [Peewee](https://github.com/coleifer/peewee)
+Supports [Django](https://github.com/django/django), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), [SQLModel](https://github.com/tiangolo/sqlmodel), [Psycopg 3](https://github.com/psycopg/psycopg), [Psycopg 2](https://github.com/psycopg/psycopg2), [asyncpg](https://github.com/MagicStack/asyncpg), [pg8000](https://github.com/tlocke/pg8000), and [Peewee](https://github.com/coleifer/peewee)
 
 [![Build Status](https://github.com/pgvector/pgvector-python/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-python/actions)
 
@@ -22,6 +22,7 @@ And follow the instructions for your database library:
 - [Psycopg 3](#psycopg-3)
 - [Psycopg 2](#psycopg-2)
 - [asyncpg](#asyncpg)
+- [pg8000](#pg8000) [unreleased]
 - [Peewee](#peewee)
 
 Or check out some examples:
@@ -558,6 +559,51 @@ Add an approximate index
 await conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
 # or
 await conn.execute('CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)')
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+## pg8000
+
+Enable the extension
+
+```python
+conn.run('CREATE EXTENSION IF NOT EXISTS vector')
+```
+
+Register the vector type with your connection
+
+```python
+from pgvector.pg8000 import register_vector
+
+register_vector(conn)
+```
+
+Create a table
+
+```python
+conn.run('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
+```
+
+Insert a vector
+
+```python
+embedding = np.array([1, 2, 3])
+conn.run('INSERT INTO items (embedding) VALUES (:embedding)', embedding=embedding)
+```
+
+Get the nearest neighbors to a vector
+
+```python
+conn.run('SELECT * FROM items ORDER BY embedding <-> :embedding LIMIT 5', embedding=embedding)
+```
+
+Add an approximate index
+
+```python
+conn.run('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
+# or
+conn.run('CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)')
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
