@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_id)
 special_token_ids = [tokenizer.vocab[token] for token in tokenizer.special_tokens_map.values()]
 
 
-def fetch_embeddings(input):
+def embed(input):
     feature = tokenizer(
         input,
         padding=True,
@@ -42,12 +42,12 @@ input = [
     'The cat is purring',
     'The bear is growling'
 ]
-embeddings = fetch_embeddings(input)
+embeddings = embed(input)
 for content, embedding in zip(input, embeddings):
     conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, SparseVector(embedding)))
 
 query = 'forest'
-query_embedding = fetch_embeddings([query])[0]
+query_embedding = embed([query])[0]
 result = conn.execute('SELECT content FROM documents ORDER BY embedding <#> %s LIMIT 5', (SparseVector(query_embedding),)).fetchall()
 for row in result:
     print(row[0])

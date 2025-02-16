@@ -1,3 +1,4 @@
+import numpy as np
 from openai import OpenAI
 from pgvector.psycopg import register_vector
 import psycopg
@@ -10,20 +11,24 @@ register_vector(conn)
 conn.execute('DROP TABLE IF EXISTS documents')
 conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))')
 
+
+def embed(input):
+    client = OpenAI()
+    response = client.embeddings.create(input=input, model='text-embedding-3-small')
+    return [v.embedding for v in response.data]
+
+
 input = [
     'The dog is barking',
     'The cat is purring',
     'The bear is growling'
 ]
-
-client = OpenAI()
-response = client.embeddings.create(input=input, model='text-embedding-3-small')
-embeddings = [v.embedding for v in response.data]
-
+embeddings = embed(input)
 for content, embedding in zip(input, embeddings):
-    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
+    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, np.array(embedding)))
 
-document_id = 1
-neighbors = conn.execute('SELECT content FROM documents WHERE id != %(id)s ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = %(id)s) LIMIT 5', {'id': document_id}).fetchall()
-for neighbor in neighbors:
-    print(neighbor[0])
+query = 'forest'
+query_embedding = embed([query])[0]
+result = conn.execute('SELECT content FROM documents ORDER BY embedding <=> %s LIMIT 5', (np.array(query_embedding),)).fetchall()
+for row in result:
+    print(row[0])
