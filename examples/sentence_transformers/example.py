@@ -10,7 +10,7 @@ register_vector(conn)
 conn.execute('DROP TABLE IF EXISTS documents')
 conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))')
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
 
 input = [
     'The dog is barking',
