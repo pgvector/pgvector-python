@@ -665,6 +665,99 @@ Item.add_index('embedding vector_l2_ops', using='hnsw')
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+## Reference
+
+### Half Vectors
+
+Create a half vector from a list
+
+```python
+vec = HalfVector([1, 2, 3])
+```
+
+Or a NumPy array
+
+```python
+vec = HalfVector(np.array([1, 2, 3]))
+```
+
+Get a list
+
+```python
+lst = vec.to_list()
+```
+
+Get a NumPy array
+
+```python
+arr = vec.to_numpy()
+```
+
+### Sparse Vectors
+
+Create a sparse vector from a list
+
+```python
+vec = SparseVector([1, 0, 2, 0, 3, 0])
+```
+
+Or a NumPy array
+
+```python
+vec = SparseVector(np.array([1, 0, 2, 0, 3, 0]))
+```
+
+Or a SciPy sparse array
+
+```python
+arr = coo_array(([1, 2, 3], ([0, 2, 4],)), shape=(6,))
+vec = SparseVector(arr)
+```
+
+Or a dictionary of non-zero elements
+
+```python
+vec = SparseVector({0: 1, 2: 2, 4: 3}, 6)
+```
+
+Note: Indices start at 0
+
+Get the number of dimensions
+
+```python
+dim = vec.dimensions()
+```
+
+Get the indices of non-zero elements
+
+```python
+indices = vec.indices()
+```
+
+Get the values of non-zero elements
+
+```python
+values = vec.values()
+```
+
+Get a list
+
+```python
+lst = vec.to_list()
+```
+
+Get a NumPy array
+
+```python
+arr = vec.to_numpy()
+```
+
+Get a SciPy sparse array
+
+```python
+arr = vec.to_coo()
+```
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-python/blob/master/CHANGELOG.md)
