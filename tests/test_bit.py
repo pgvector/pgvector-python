@@ -30,6 +30,10 @@ class TestBit:
         assert Bit(arr).to_list() == [True, False, True]
         assert np.array_equal(Bit(arr).to_numpy(), arr)
 
+    def test_ndarray_unpackbits(self):
+        arr = np.unpackbits(np.array([254, 7, 0], dtype=np.uint8))
+        assert Bit(arr).to_text() == '111111100000011100000000'
+
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
