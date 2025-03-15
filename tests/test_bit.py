@@ -23,6 +23,10 @@ class TestBit:
     def test_str(self):
         assert Bit('101').to_list() == [True, False, True]
 
+    def test_bytes(self):
+        assert Bit(b'\xff\x00').to_list() == [True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False]
+        assert Bit(b'\xfe\x07').to_list() == [True, True, True, True, True, True, True, False, False, False, False, False, False, True, True, True]
+
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
         assert Bit(arr).to_text() == '111111100000011100000000'

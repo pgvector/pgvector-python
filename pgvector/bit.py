@@ -6,6 +6,8 @@ class Bit:
     def __init__(self, value):
         if isinstance(value, str):
             self._value = self.from_text(value)._value
+        elif isinstance(value, bytes):
+            self._value = np.unpackbits(np.frombuffer(value, dtype=np.uint8)).astype(bool)
         else:
             if isinstance(value, np.ndarray):
                 if value.dtype == np.uint8:
