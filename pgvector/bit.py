@@ -5,51 +5,58 @@ from warnings import warn
 
 class Bit:
     def __init__(self, value):
-        if isinstance(value, str):
-            self._value = self.from_text(value)._value
-        elif isinstance(value, bytes):
-            self._value = np.unpackbits(np.frombuffer(value, dtype=np.uint8)).astype(bool)
+        if isinstance(value, bytes):
+            self._len = 8 * len(value)
+            self._data = value
         else:
-            value = np.asarray(value)
+            if isinstance(value, str):
+                value = [v != '0' for v in value]
+            else:
+                value = np.asarray(value)
 
-            if value.dtype != np.bool:
-                warn('expected elements to be boolean', stacklevel=2)
-                value = value.astype(bool)
+                if value.dtype != np.bool:
+                    warn('expected elements to be boolean', stacklevel=2)
+                    value = value.astype(bool)
 
-            if value.ndim != 1:
-                raise ValueError('expected ndim to be 1')
+                if value.ndim != 1:
+                    raise ValueError('expected ndim to be 1')
 
-            self._value = value
+            self._len = len(value)
+            self._data = np.packbits(value).tobytes()
 
     def __repr__(self):
         return f'Bit({self.to_text()})'
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return np.array_equal(self.to_numpy(), other.to_numpy())
+            return self._len == other._len and self._data == other._data
         return False
 
     def to_list(self):
-        return self._value.tolist()
+        return self.to_numpy().tolist()
 
     def to_numpy(self):
-        return self._value
+        return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._len).astype(bool)
 
     def to_text(self):
-        return ''.join(self._value.astype(np.uint8).astype(str))
+        return ''.join(format(v, '08b') for v in self._data)[:self._len]
 
     def to_binary(self):
-        return pack('>i', len(self._value)) + np.packbits(self._value).tobytes()
+        return pack('>i', self._len) + self._data
 
     @classmethod
     def from_text(cls, value):
-        return cls(np.asarray([v != '0' for v in value], dtype=bool))
+        return cls(str(value))
 
     @classmethod
     def from_binary(cls, value):
-        count = unpack_from('>i', value)[0]
-        buf = np.frombuffer(value, dtype=np.uint8, offset=4)
-        return cls(np.unpackbits(buf, count=count).astype(bool))
+        if not isinstance(value, bytes):
+            raise ValueError('expected bytes')
+
+        bit = cls.__new__(cls)
+        bit._len = unpack_from('>i', value)[0]
+        bit._data = value[4:]
+        return bit
 
     @classmethod
     def _to_db(cls, value):

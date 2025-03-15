@@ -25,6 +25,11 @@ class TestBit:
         assert Bit(b'\xff\x00').to_list() == [True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False]
         assert Bit(b'\xfe\x07').to_list() == [True, True, True, True, True, True, True, False, False, False, False, False, False, True, True, True]
 
+    def test_ndarray(self):
+        arr = np.array([True, False, True])
+        assert Bit(arr).to_list() == [True, False, True]
+        assert np.array_equal(Bit(arr).to_numpy(), arr)
+
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
@@ -34,11 +39,6 @@ class TestBit:
         arr = np.array([254, 7, 0], dtype=np.uint16)
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
             assert Bit(arr).to_text() == '110'
-
-    def test_ndarray_same_object(self):
-        arr = np.array([True, False, True])
-        assert Bit(arr).to_list() == [True, False, True]
-        assert Bit(arr).to_numpy() is arr
 
     def test_ndim_two(self):
         with pytest.raises(ValueError) as error:
