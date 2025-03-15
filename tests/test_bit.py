@@ -8,11 +8,11 @@ class TestBit:
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
     def test_list_none(self):
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+        with pytest.warns(UserWarning, match='elements should be boolean'):
             assert Bit([True, None, True]).to_text() == '101'
 
     def test_list_int(self):
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+        with pytest.warns(UserWarning, match='elements should be boolean'):
             assert Bit([254, 7, 0]).to_text() == '110'
 
     def test_tuple(self):
@@ -36,12 +36,12 @@ class TestBit:
 
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+        with pytest.warns(UserWarning, match='elements should be boolean'):
             assert Bit(arr).to_text() == '110'
 
     def test_ndarray_uint16(self):
         arr = np.array([254, 7, 0], dtype=np.uint16)
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+        with pytest.warns(UserWarning, match='elements should be boolean'):
             assert Bit(arr).to_text() == '110'
 
     def test_ndim_two(self):
