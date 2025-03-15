@@ -13,7 +13,9 @@ class Bit:
                 elif value.dtype != np.bool:
                     raise ValueError('expected dtype to be bool or uint8')
             else:
-                value = np.asarray(value, dtype=bool)
+                value = np.asarray(value)
+                if value.dtype != np.bool:
+                    raise ValueError('expected dtype to be bool')
 
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
