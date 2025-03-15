@@ -22,8 +22,8 @@ class TestBit:
         assert Bit('101').to_list() == [True, False, True]
 
     def test_bytes(self):
-        assert Bit(b'\xff\x00').to_list() == [True, True, True, True, True, True, True, True, False, False, False, False, False, False, False, False]
-        assert Bit(b'\xfe\x07').to_list() == [True, True, True, True, True, True, True, False, False, False, False, False, False, True, True, True]
+        assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
+        assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
 
     def test_ndarray(self):
         arr = np.array([True, False, True])
