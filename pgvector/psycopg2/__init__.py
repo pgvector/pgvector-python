@@ -1,11 +1,10 @@
 from .register import register_vector
 
 # TODO remove
-from .. import HalfVector, SparseVector, Vector
+from .. import HalfVector, SparseVector
 
 __all__ = [
     'register_vector',
-    'Vector',
     'HalfVector',
     'SparseVector'
 ]
