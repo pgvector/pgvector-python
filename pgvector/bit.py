@@ -1,5 +1,6 @@
 import numpy as np
 from struct import pack, unpack_from
+from warnings import warn
 
 
 class Bit:
@@ -9,15 +10,11 @@ class Bit:
         elif isinstance(value, bytes):
             self._value = np.unpackbits(np.frombuffer(value, dtype=np.uint8)).astype(bool)
         else:
-            if isinstance(value, np.ndarray):
-                if value.dtype == np.uint8:
-                    value = np.unpackbits(value).astype(bool)
-                elif value.dtype != np.bool:
-                    raise ValueError('expected dtype to be bool or uint8')
-            else:
-                value = np.asarray(value)
-                if value.dtype != np.bool:
-                    raise ValueError('expected all elements to be boolean')
+            value = np.asarray(value)
+
+            if value.dtype != np.bool:
+                warn('expected elements to be boolean', stacklevel=2)
+                value = value.astype(bool)
 
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')

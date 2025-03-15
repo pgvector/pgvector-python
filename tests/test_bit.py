@@ -8,14 +8,12 @@ class TestBit:
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
     def test_list_none(self):
-        with pytest.raises(ValueError) as error:
-            Bit([True, None, True])
-        assert str(error.value) == 'expected all elements to be boolean'
+        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+            assert Bit([True, None, True]).to_text() == '101'
 
     def test_list_int(self):
-        with pytest.raises(ValueError) as error:
-            Bit([254, 7, 0])
-        assert str(error.value) == 'expected all elements to be boolean'
+        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+            assert Bit([254, 7, 0]).to_text() == '110'
 
     def test_tuple(self):
         assert Bit((True, False, True)).to_list() == [True, False, True]
@@ -29,13 +27,13 @@ class TestBit:
 
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
-        assert Bit(arr).to_text() == '111111100000011100000000'
+        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+            assert Bit(arr).to_text() == '110'
 
     def test_ndarray_uint16(self):
         arr = np.array([254, 7, 0], dtype=np.uint16)
-        with pytest.raises(ValueError) as error:
-            Bit(arr)
-        assert str(error.value) == 'expected dtype to be bool or uint8'
+        with pytest.warns(UserWarning, match='expected elements to be boolean'):
+            assert Bit(arr).to_text() == '110'
 
     def test_ndarray_same_object(self):
         arr = np.array([True, False, True])
