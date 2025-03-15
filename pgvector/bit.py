@@ -15,7 +15,7 @@ class Bit:
             else:
                 value = np.asarray(value)
                 if value.dtype != np.bool:
-                    raise ValueError('expected dtype to be bool')
+                    raise ValueError('expected all elements to be boolean')
 
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')

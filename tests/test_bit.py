@@ -7,10 +7,15 @@ class TestBit:
     def test_list(self):
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
+    def test_list_none(self):
+        with pytest.raises(ValueError) as error:
+            Bit([True, None, True])
+        assert str(error.value) == 'expected all elements to be boolean'
+
     def test_list_int(self):
         with pytest.raises(ValueError) as error:
             Bit([254, 7, 0])
-        assert str(error.value) == 'expected dtype to be bool'
+        assert str(error.value) == 'expected all elements to be boolean'
 
     def test_tuple(self):
         assert Bit((True, False, True)).to_list() == [True, False, True]
