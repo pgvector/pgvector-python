@@ -1,4 +1,4 @@
-## 0.4.0 (unreleased)
+## 0.4.0 (2025-03-15)
 
 - Added top-level `pgvector` package
 - Added support for pg8000
