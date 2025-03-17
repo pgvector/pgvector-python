@@ -27,6 +27,7 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
+- [Retrieval-augmented generation](https://github.com/pgvector/pgvector-python/blob/master/examples/rag/example.py) with Ollama
 - [Embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/openai/example.py) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/cohere/example.py) with Cohere
 - [Sentence embeddings](https://github.com/pgvector/pgvector-python/blob/master/examples/sentence_transformers/example.py) with SentenceTransformers
