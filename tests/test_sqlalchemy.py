@@ -43,7 +43,7 @@ if sqlalchemy_version > 1:
     psycopg_async_type_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
 
     @event.listens_for(psycopg_async_type_engine.sync_engine, "connect")
-    def connect(dbapi_connection, connection_record):
+    def psycopg_async_connect(dbapi_connection, connection_record):
         from pgvector.psycopg import register_vector_async
         dbapi_connection.run_async(register_vector_async)
 
@@ -51,7 +51,7 @@ if sqlalchemy_version > 1:
     asyncpg_type_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
 
     @event.listens_for(asyncpg_type_engine.sync_engine, "connect")
-    def connect(dbapi_connection, connection_record):
+    def asyncpg_connect(dbapi_connection, connection_record):
         from pgvector.asyncpg import register_vector
         dbapi_connection.run_async(register_vector)
 
