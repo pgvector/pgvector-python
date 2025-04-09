@@ -12,8 +12,10 @@ register_vector(conn)
 
 conn.execute('DROP TABLE IF EXISTS documents')
 conn.execute('DROP TABLE IF EXISTS document_embeddings')
+
 conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text)')
 conn.execute('CREATE TABLE document_embeddings (id bigserial PRIMARY KEY, document_id bigint, embedding vector(128))')
+
 conn.execute("""
 CREATE OR REPLACE FUNCTION max_sim(document vector[], query vector[]) RETURNS double precision AS $$
     WITH queries AS (
@@ -69,7 +71,7 @@ SELECT content, max_sim(embeddings, %s) AS max_sim FROM documents
 INNER JOIN embeddings ON embeddings.document_id = documents.id
 ORDER BY max_sim DESC LIMIT 10
 """
-params = [v for v in query_embeddings] + [query_embeddings]
+params = query_embeddings + [query_embeddings]
 result = conn.execute(sql, params).fetchall()
 for row in result:
     print(row)
