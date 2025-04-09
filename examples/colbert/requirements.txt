@@ -1,3 +1,4 @@
 colbert-ai
 pgvector
 psycopg[binary]
+transformers==4.49.0

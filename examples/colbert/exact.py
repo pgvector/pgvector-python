@@ -2,6 +2,10 @@ from colbert.infra import ColBERTConfig
 from colbert.modeling.checkpoint import Checkpoint
 from pgvector.psycopg import register_vector
 import psycopg
+import warnings
+
+# ignore warnings from colbert
+warnings.filterwarnings('ignore')
 
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 
