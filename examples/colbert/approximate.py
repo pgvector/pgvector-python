@@ -6,9 +6,6 @@ from pgvector.psycopg import register_vector
 import psycopg
 import warnings
 
-# ignore warnings from colbert
-warnings.filterwarnings('ignore')
-
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
 
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
@@ -37,6 +34,9 @@ CREATE OR REPLACE FUNCTION max_sim(document vector[], query vector[]) RETURNS do
     SELECT SUM(max_similarity) FROM max_similarities
 $$ LANGUAGE SQL
 """)
+
+# ignore warnings from colbert
+warnings.filterwarnings('ignore')
 
 config = ColBERTConfig(doc_maxlen=220, query_maxlen=32)
 checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=config, verbose=0)
