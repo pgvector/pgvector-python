@@ -29,8 +29,7 @@ CREATE OR REPLACE FUNCTION max_sim(document vector[], query vector[]) RETURNS do
 $$ LANGUAGE SQL
 """)
 
-# ignore warnings from colbert
-warnings.filterwarnings('ignore')
+warnings.filterwarnings('ignore')  # ignore warnings from colbert
 
 config = ColBERTConfig(doc_maxlen=220, query_maxlen=32)
 checkpoint = Checkpoint('colbert-ir/colbertv2.0', colbert_config=config, verbose=0)
