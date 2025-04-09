@@ -1,4 +1,4 @@
-# approach from section 3.6 in https://arxiv.org/abs/2004.12832
+# based on section 3.6 of https://arxiv.org/abs/2004.12832
 
 from colbert.infra import ColBERTConfig
 from colbert.modeling.checkpoint import Checkpoint
