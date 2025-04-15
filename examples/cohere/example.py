@@ -9,12 +9,12 @@ conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 register_vector(conn)
 
 conn.execute('DROP TABLE IF EXISTS documents')
-conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))')
+conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))')
 
 
 def embed(input, input_type):
-    co = cohere.Client()
-    response = co.embed(texts=input, model='embed-english-v3.0', input_type=input_type, embedding_types=['ubinary'])
+    co = cohere.ClientV2()
+    response = co.embed(texts=input, model='embed-v4.0', input_type=input_type, embedding_types=['ubinary'])
     return [np.unpackbits(np.array(embedding, dtype=np.uint8)) for embedding in response.embeddings.ubinary]
 
 
