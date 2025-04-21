@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector import SparseVector
 import pytest
-from scipy.sparse import coo_array, csr_array, csr_matrix
+from scipy.sparse import coo_array, coo_matrix, csr_array, csr_matrix
 from struct import pack
 
 
@@ -42,6 +42,12 @@ class TestSparseVector:
         with pytest.raises(ValueError) as error:
             SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)
         assert str(error.value) == 'extra argument'
+
+    def test_coo_matrix(self):
+        mat = coo_matrix(np.array([1, 0, 2, 0, 3, 0]))
+        vec = SparseVector(mat)
+        assert vec.to_list() == [1, 0, 2, 0, 3, 0]
+        assert vec.indices() == [0, 2, 4]
 
     def test_dok_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
