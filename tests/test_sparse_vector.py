@@ -56,7 +56,7 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
 
     def test_csr_array(self):
-        arr = csr_array(np.array([1, 0, 2, 0, 3, 0]))
+        arr = csr_array(np.array([[1, 0, 2, 0, 3, 0]]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
