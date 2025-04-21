@@ -1,7 +1,7 @@
 import numpy as np
 from pgvector import SparseVector
 import pytest
-from scipy.sparse import coo_array
+from scipy.sparse import coo_array, csr_array, csr_matrix
 from struct import pack
 
 
@@ -46,6 +46,18 @@ class TestSparseVector:
     def test_dok_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
         vec = SparseVector(arr)
+        assert vec.to_list() == [1, 0, 2, 0, 3, 0]
+        assert vec.indices() == [0, 2, 4]
+
+    def test_csr_array(self):
+        arr = csr_array(np.array([1, 0, 2, 0, 3, 0]))
+        vec = SparseVector(arr)
+        assert vec.to_list() == [1, 0, 2, 0, 3, 0]
+        assert vec.indices() == [0, 2, 4]
+
+    def test_csr_matrix(self):
+        mat = csr_matrix(np.array([1, 0, 2, 0, 3, 0]))
+        vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 

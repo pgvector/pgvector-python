@@ -1,3 +1,7 @@
+## 0.4.1 (unreleased)
+
+- Fixed `SparseVector` constructor for SciPy sparse matrices
+
 ## 0.4.0 (2025-03-15)
 
 - Added top-level `pgvector` package

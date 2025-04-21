@@ -85,7 +85,7 @@ class SparseVector:
 
         if hasattr(value, 'coords'):
             # scipy 1.13+
-            self._indices = value.coords[0].tolist()
+            self._indices = value.coords[-1].tolist()
         else:
             self._indices = value.col.tolist()
         self._values = value.data.tolist()
