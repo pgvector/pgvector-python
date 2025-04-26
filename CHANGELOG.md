@@ -1,4 +1,4 @@
-## 0.4.1 (unreleased)
+## 0.4.1 (2025-04-26)
 
 - Fixed `SparseVector` constructor for SciPy sparse matrices
 
