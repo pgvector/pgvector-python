@@ -25,11 +25,11 @@ with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
     copy.set_types(['vector'])
 
     for i, embedding in enumerate(embeddings):
+        copy.write_row([embedding])
+
         # show progress
         if i % 10000 == 0:
             print('.', end='', flush=True)
-
-        copy.write_row([embedding])
 
 print('\nSuccess!')
 
