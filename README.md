@@ -409,7 +409,7 @@ Enable the extension
 conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 ```
 
-Register the vector type with your connection
+Register the types with your connection
 
 ```python
 from pgvector.psycopg import register_vector
@@ -472,7 +472,7 @@ cur = conn.cursor()
 cur.execute('CREATE EXTENSION IF NOT EXISTS vector')
 ```
 
-Register the vector type with your connection or cursor
+Register the types with your connection or cursor
 
 ```python
 from pgvector.psycopg2 import register_vector
@@ -518,7 +518,7 @@ Enable the extension
 await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
 ```
 
-Register the vector type with your connection
+Register the types with your connection
 
 ```python
 from pgvector.asyncpg import register_vector
@@ -572,7 +572,7 @@ Enable the extension
 conn.run('CREATE EXTENSION IF NOT EXISTS vector')
 ```
 
-Register the vector type with your connection
+Register the types with your connection
 
 ```python
 from pgvector.pg8000 import register_vector
