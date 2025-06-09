@@ -70,14 +70,14 @@ class Vector:
 
     @classmethod
     def _from_db(cls, value):
-        if value is None or isinstance(value, np.ndarray):
+        if value is None or isinstance(value, float) or isinstance(value, np.ndarray):
             return value
 
         return cls.from_text(value).to_numpy().astype(np.float32)
 
     @classmethod
     def _from_db_binary(cls, value):
-        if value is None or isinstance(value, np.ndarray):
+        if value is None or isinstance(value, float) or isinstance(value, np.ndarray):
             return value
 
         return cls.from_binary(value).to_numpy().astype(np.float32)

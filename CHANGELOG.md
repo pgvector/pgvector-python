@@ -1,3 +1,7 @@
+## 0.4.2 (2025-06-09)
+
+- Add support for `list[float]` returned from db query when using sqlalchemy core
+
 ## 0.4.1 (2025-04-26)
 
 - Fixed `SparseVector` constructor for SciPy sparse matrices
