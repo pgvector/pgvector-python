@@ -26,8 +26,10 @@ class BIT(UserDefinedType):
     
     def result_processor(self, dialect, coltype):
         def process(value): 
-            if value and isinstance(dialect, PGDialect_asyncpg):
-                return value.as_string()
+            if value is None: return None
+            else: 
+                if isinstance(dialect, PGDialect_asyncpg): 
+                    return value.as_string()
             return Bit._from_db(value).to_text() 
         return process
 
