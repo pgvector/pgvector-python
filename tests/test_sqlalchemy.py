@@ -591,7 +591,7 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'
+                embedding = '101'
                 session.add(Item(id=1, binary_embedding=embedding))
                 item = await session.get(Item, 1)
                 assert item.binary_embedding == embedding

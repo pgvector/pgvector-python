@@ -62,9 +62,12 @@ class Bit:
 
     @classmethod
     def _to_db(cls, value):
+        if value is None:
+            return value 
+        
         if not isinstance(value, cls):
-            raise ValueError('expected bit')
-
+            value = cls(value)
+        
         return value.to_text()
 
     @classmethod
@@ -73,3 +76,9 @@ class Bit:
             raise ValueError('expected bit')
 
         return value.to_binary()
+
+    @classmethod
+    def _from_db(cls, value):
+        if value is None or isinstance(value, cls): 
+            return value
+        return cls.from_text(value)
