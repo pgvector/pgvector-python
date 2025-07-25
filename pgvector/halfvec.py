@@ -70,14 +70,14 @@ class HalfVector:
 
     @classmethod
     def _from_db(cls, value):
-        if value is None or isinstance(value, cls):
+        if value is None or isinstance(value, np.ndarray):
             return value
 
-        return cls.from_text(value)
+        return cls.from_text(value).to_numpy().astype(np.float16)
 
     @classmethod
     def _from_db_binary(cls, value):
-        if value is None or isinstance(value, cls):
+        if value is None or isinstance(value, np.ndarray):
             return value
 
-        return cls.from_binary(value)
+        return cls.from_binary(value).to_numpy().astype(np.float16)
