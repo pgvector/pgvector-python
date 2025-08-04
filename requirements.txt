@@ -10,3 +10,4 @@ pytest-asyncio
 scipy
 SQLAlchemy[asyncio]>=2
 sqlmodel>=0.0.12
+tortoise-orm
