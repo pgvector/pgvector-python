@@ -1,12 +1,12 @@
 from .bit import BIT
 from .functions import avg, sum
 from .halfvec import HALFVEC
+from .halfvec import HALFVEC as HalfVector
 from .sparsevec import SPARSEVEC
+from .sparsevec import SPARSEVEC as SparseVector
 from .vector import VECTOR
 from .vector import VECTOR as Vector
 
-# TODO remove
-from .. import HalfVector, SparseVector
 
 __all__ = [
     'Vector',
