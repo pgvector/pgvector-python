@@ -183,7 +183,7 @@ class Item(Base):
     embedding = mapped_column(Vector(3))
 ```
 
-Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
+Also supports `HalfVector`, `Bit`, and `SparseVector`
 
 Insert a vector
 
@@ -252,12 +252,12 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 Index vectors at half-precision
 
 ```python
-from pgvector.sqlalchemy import HALFVEC
+from pgvector.sqlalchemy import HalfVector
 from sqlalchemy.sql import func
 
 index = Index(
     'my_index',
-    func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
+    func.cast(Item.embedding, HalfVector(3)).label('embedding'),
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'halfvec_l2_ops'}
@@ -267,7 +267,7 @@ index = Index(
 Get the nearest neighbors
 
 ```python
-order = func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])
+order = func.cast(Item.embedding, HalfVector(3)).l2_distance([3, 1, 2])
 session.scalars(select(Item).order_by(order).limit(5))
 ```
 
@@ -335,7 +335,7 @@ class Item(SQLModel, table=True):
     embedding: Any = Field(sa_type=Vector(3))
 ```
 
-Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
+Also supports `HalfVector`, `Bit`, and `SparseVector`
 
 Insert a vector
 
