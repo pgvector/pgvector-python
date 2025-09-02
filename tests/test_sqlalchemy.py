@@ -596,6 +596,11 @@ class TestSqlalchemyAsync:
                 item = await session.get(Item, 1)
                 assert item.binary_embedding == embedding
 
+                if engine == asyncpg_engine:
+                    session.add(Item(id=2, binary_embedding='101'))
+                    item = await session.get(Item, 2)
+                    assert item.binary_embedding == embedding
+
         await engine.dispose()
 
     @pytest.mark.asyncio

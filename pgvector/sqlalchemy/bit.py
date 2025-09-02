@@ -14,6 +14,18 @@ class BIT(UserDefinedType):
             return 'BIT'
         return 'BIT(%d)' % self.length
 
+    def bind_processor(self, dialect):
+        if dialect.__class__.__name__ == 'PGDialect_asyncpg':
+            import asyncpg
+
+            def process(value):
+                if isinstance(value, str):
+                    return asyncpg.BitString(value)
+                return value
+            return process
+        else:
+            return super().bind_processor(dialect)
+
     class comparator_factory(UserDefinedType.Comparator):
         def hamming_distance(self, other):
             return self.op('<~>', return_type=Float)(other)
