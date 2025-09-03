@@ -259,7 +259,6 @@ index = Index(
     'my_index',
     func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'halfvec_l2_ops'}
 )
 ```
@@ -283,7 +282,6 @@ index = Index(
     'my_index',
     func.cast(func.binary_quantize(Item.embedding), BIT(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'bit_hamming_ops'}
 )
 ```

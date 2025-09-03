@@ -103,7 +103,6 @@ half_precision_index = Index(
     'sqlalchemy_orm_half_precision_index',
     func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'halfvec_l2_ops'}
 )
 half_precision_index.create(setup_engine)
@@ -112,7 +111,6 @@ binary_quantize_index = Index(
     'sqlalchemy_orm_binary_quantize_index',
     func.cast(func.binary_quantize(Item.embedding), BIT(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'bit_hamming_ops'}
 )
 binary_quantize_index.create(setup_engine)
