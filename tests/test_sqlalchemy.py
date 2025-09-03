@@ -528,6 +528,22 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
 
+    def test_binary_quantize_reranking(self, engine):
+        # recreate index (could also vacuum table)
+        binary_quantize_index.drop(setup_engine)
+        binary_quantize_index.create(setup_engine)
+
+        with Session(engine) as session:
+            session.add(Item(id=1, embedding=[-1, -2, -3]))
+            session.add(Item(id=2, embedding=[1, -2, 3]))
+            session.add(Item(id=3, embedding=[1, 2, 3]))
+            session.commit()
+
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+            subquery = session.query(Item).order_by(distance).limit(20).subquery()
+            items = session.query(subquery).order_by(subquery.c.embedding.cosine_distance([3, -1, 2])).limit(5).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
 
 @pytest.mark.parametrize('engine', array_engines)
 class TestSqlalchemyArray:
