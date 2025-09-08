@@ -259,7 +259,6 @@ index = Index(
     'my_index',
     func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'halfvec_l2_ops'}
 )
 ```
@@ -269,6 +268,37 @@ Get the nearest neighbors
 ```python
 order = func.cast(Item.embedding, HALFVEC(3)).l2_distance([3, 1, 2])
 session.scalars(select(Item).order_by(order).limit(5))
+```
+
+#### Binary Quantization
+
+Use expression indexing for binary quantization
+
+```python
+from pgvector.sqlalchemy import BIT
+from sqlalchemy.sql import func
+
+index = Index(
+    'my_index',
+    func.cast(func.binary_quantize(Item.embedding), BIT(3)).label('embedding'),
+    postgresql_using='hnsw',
+    postgresql_ops={'embedding': 'bit_hamming_ops'}
+)
+```
+
+Get the nearest neighbors by Hamming distance
+
+```python
+order = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+session.scalars(select(Item).order_by(order).limit(5))
+```
+
+Re-rank by the original vectors for better recall
+
+```python
+order = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+subquery = session.query(Item).order_by(order).limit(20).subquery()
+session.scalars(select(subquery).order_by(subquery.c.embedding.cosine_distance([3, -1, 2])).limit(5))
 ```
 
 #### Arrays

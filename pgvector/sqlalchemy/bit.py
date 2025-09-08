@@ -17,21 +17,16 @@ class BIT(UserDefinedType):
         return 'BIT(%d)' % self.length
 
     def bind_processor(self, dialect):
-        def process(value):
-            value = Bit._to_db(value)
-            if value and isinstance(dialect, PGDialect_asyncpg): 
-                return asyncpg.BitString(value)
-            return value
-        return process
-    
-    def result_processor(self, dialect, coltype):
-        def process(value): 
-            if value is None: return None
-            else: 
-                if isinstance(dialect, PGDialect_asyncpg): 
-                    return value.as_string()
-            return Bit._from_db(value).to_text() 
-        return process
+        if dialect.__class__.__name__ == 'PGDialect_asyncpg':
+            import asyncpg
+
+            def process(value):
+                if isinstance(value, str):
+                    return asyncpg.BitString(value)
+                return value
+            return process
+        else:
+            return super().bind_processor(dialect)
 
     class comparator_factory(UserDefinedType.Comparator):
         def hamming_distance(self, other):

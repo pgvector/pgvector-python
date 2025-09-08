@@ -1,3 +1,7 @@
+## 0.4.2 (unreleased)
+
+- Added support for `str` objects for `bit` type with SQLAlchemy
+
 ## 0.4.1 (2025-04-26)
 
 - Fixed `SparseVector` constructor for SciPy sparse matrices

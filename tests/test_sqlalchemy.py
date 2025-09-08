@@ -103,7 +103,6 @@ half_precision_index = Index(
     'sqlalchemy_orm_half_precision_index',
     func.cast(Item.embedding, HALFVEC(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'halfvec_l2_ops'}
 )
 half_precision_index.create(setup_engine)
@@ -112,7 +111,6 @@ binary_quantize_index = Index(
     'sqlalchemy_orm_binary_quantize_index',
     func.cast(func.binary_quantize(Item.embedding), BIT(3)).label('embedding'),
     postgresql_using='hnsw',
-    postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'bit_hamming_ops'}
 )
 binary_quantize_index.create(setup_engine)
@@ -528,6 +526,22 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
 
+    def test_binary_quantize_reranking(self, engine):
+        # recreate index (could also vacuum table)
+        binary_quantize_index.drop(setup_engine)
+        binary_quantize_index.create(setup_engine)
+
+        with Session(engine) as session:
+            session.add(Item(id=1, embedding=[-1, -2, -3]))
+            session.add(Item(id=2, embedding=[1, -2, 3]))
+            session.add(Item(id=3, embedding=[1, 2, 3]))
+            session.commit()
+
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+            subquery = session.query(Item).order_by(distance).limit(20).subquery()
+            items = session.query(subquery).order_by(subquery.c.embedding.cosine_distance([3, -1, 2])).limit(5).all()
+            assert [v.id for v in items] == [2, 3, 1]
+
 
 @pytest.mark.parametrize('engine', array_engines)
 class TestSqlalchemyArray:
@@ -595,6 +609,11 @@ class TestSqlalchemyAsync:
                 session.add(Item(id=1, binary_embedding=embedding))
                 item = await session.get(Item, 1)
                 assert item.binary_embedding == embedding
+
+                if engine == asyncpg_engine:
+                    session.add(Item(id=2, binary_embedding='101'))
+                    item = await session.get(Item, 2)
+                    assert item.binary_embedding == embedding
 
         await engine.dispose()
 
