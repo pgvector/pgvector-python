@@ -18,8 +18,8 @@ except ImportError:
     mapped_column = Column
     sqlalchemy_version = 1
 
-psycopg2_engine = create_engine('postgresql+psycopg2://postgres:mypassword@localhost/pgvector_python_test')
-psycopg2_type_engine = create_engine('postgresql+psycopg2://postgres:mypassword@localhost/pgvector_python_test')
+psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
+psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 
 
 @event.listens_for(psycopg2_type_engine, "connect")
@@ -28,27 +28,27 @@ def psycopg2_connect(dbapi_connection, connection_record):
     register_vector(dbapi_connection)
 
 
-pg8000_engine = create_engine(f'postgresql+pg8000://postgres:mypassword@localhost/pgvector_python_test')
+pg8000_engine = create_engine(f'postgresql+pg8000://localhost/pgvector_python_test')
 
 if sqlalchemy_version > 1:
-    psycopg_engine = create_engine('postgresql+psycopg://postgres:mypassword@localhost/pgvector_python_test')
-    psycopg_type_engine = create_engine('postgresql+psycopg://postgres:mypassword@localhost/pgvector_python_test')
+    psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    psycopg_type_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
 
     @event.listens_for(psycopg_type_engine, "connect")
     def psycopg_connect(dbapi_connection, connection_record):
         from pgvector.psycopg import register_vector
         register_vector(dbapi_connection)
 
-    psycopg_async_engine = create_async_engine('postgresql+psycopg://postgres:mypassword@localhost/pgvector_python_test')
-    psycopg_async_type_engine = create_async_engine('postgresql+psycopg://postgres:mypassword@localhost/pgvector_python_test')
+    psycopg_async_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
+    psycopg_async_type_engine = create_async_engine('postgresql+psycopg://localhost/pgvector_python_test')
 
     @event.listens_for(psycopg_async_type_engine.sync_engine, "connect")
     def psycopg_async_connect(dbapi_connection, connection_record):
         from pgvector.psycopg import register_vector_async
         dbapi_connection.run_async(register_vector_async)
 
-    asyncpg_engine = create_async_engine('postgresql+asyncpg://postgres:mypassword@localhost/pgvector_python_test')
-    asyncpg_type_engine = create_async_engine('postgresql+asyncpg://postgres:mypassword@localhost/pgvector_python_test')
+    asyncpg_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
+    asyncpg_type_engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_python_test')
 
     @event.listens_for(asyncpg_type_engine.sync_engine, "connect")
     def asyncpg_connect(dbapi_connection, connection_record):
