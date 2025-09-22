@@ -26,7 +26,7 @@ class BIT(UserDefinedType):
                 return value
             return process
         else:
-            return super().bind_processor(dialect)
+            return lambda value: Bit._to_db(value)
 
     class comparator_factory(UserDefinedType.Comparator):
         def hamming_distance(self, other):
