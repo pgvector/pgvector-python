@@ -28,7 +28,7 @@ def psycopg2_connect(dbapi_connection, connection_record):
     register_vector(dbapi_connection)
 
 
-pg8000_engine = create_engine(f'postgresql+pg8000://localhost/pgvector_python_test')
+pg8000_engine = create_engine(f'postgresql+pg8000://{os.environ["USER"]}@localhost/pgvector_python_test')
 
 if sqlalchemy_version > 1:
     psycopg_engine = create_engine('postgresql+psycopg://localhost/pgvector_python_test')
