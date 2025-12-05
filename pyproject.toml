@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pgvector"
-version = "0.4.1"
+version = "0.4.2"
 description = "pgvector support for Python"
 readme = "README.md"
 authors = [
