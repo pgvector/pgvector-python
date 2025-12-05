@@ -1,5 +1,6 @@
 ## 0.4.2 (unreleased)
 
+- Added support for Django 6
 - Added support for `str` objects for `bit` type with SQLAlchemy
 
 ## 0.4.1 (2025-04-26)
