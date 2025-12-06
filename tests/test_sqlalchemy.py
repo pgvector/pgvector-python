@@ -311,6 +311,13 @@ class TestSqlalchemy:
             item = session.get(Item, 1)
             assert item.binary_embedding == '101'
 
+    def test_boolean_list_bit(self, engine):
+        with Session(engine) as session:
+            session.add(Item(id=1, binary_embedding=[True, False, True]))
+            session.commit()
+            item = session.get(Item, 1)
+            assert item.binary_embedding == '101'
+
     def test_bit_hamming_distance(self, engine):
         create_items()
         with Session(engine) as session:
@@ -566,7 +573,6 @@ class TestSqlalchemyArray:
             # this fails if the driver does not cast arrays
             item = session.get(Item, 1)
             assert item.half_embeddings == [HalfVector([1, 2, 3]), HalfVector([4, 5, 6])]
-
 
 @pytest.mark.parametrize('engine', async_engines)
 class TestSqlalchemyAsync:

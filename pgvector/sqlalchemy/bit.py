@@ -1,6 +1,8 @@
+import asyncpg
+from sqlalchemy.dialects.postgresql.asyncpg import PGDialect_asyncpg
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float
-
+from .. import Bit
 
 class BIT(UserDefinedType):
     cache_ok = True
@@ -24,7 +26,7 @@ class BIT(UserDefinedType):
                 return value
             return process
         else:
-            return super().bind_processor(dialect)
+            return lambda value: Bit._to_db(value)
 
     class comparator_factory(UserDefinedType.Comparator):
         def hamming_distance(self, other):
