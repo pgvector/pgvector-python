@@ -345,7 +345,7 @@ from sqlalchemy import event
 
 @event.listens_for(engine, "connect")
 def connect(dbapi_connection, connection_record):
-    register_vector(dbapi_connection, arrays=True)
+    register_vector(dbapi_connection)
 ```
 
 ## SQLModel
