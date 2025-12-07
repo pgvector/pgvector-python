@@ -1,4 +1,4 @@
-from pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import create_engine, insert, select, text, Integer
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 from surprise import Dataset, SVD
@@ -15,14 +15,14 @@ class User(Base):
     __tablename__ = 'user'
 
     id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(Vector(20))
+    factors = mapped_column(VECTOR(20))
 
 
 class Item(Base):
     __tablename__ = 'item'
 
     id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(Vector(20))
+    factors = mapped_column(VECTOR(20))
 
 
 Base.metadata.drop_all(engine)

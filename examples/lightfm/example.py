@@ -1,6 +1,6 @@
 from lightfm import LightFM
 from lightfm.datasets import fetch_movielens
-from pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import create_engine, insert, select, text, Float, Integer, String
 from sqlalchemy.orm import declarative_base, mapped_column, Session
 
@@ -16,7 +16,7 @@ class User(Base):
     __tablename__ = 'user'
 
     id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(Vector(20))
+    factors = mapped_column(VECTOR(20))
 
 
 class Item(Base):
@@ -24,7 +24,7 @@ class Item(Base):
 
     id = mapped_column(Integer, primary_key=True)
     title = mapped_column(String)
-    factors = mapped_column(Vector(20))
+    factors = mapped_column(VECTOR(20))
     bias = mapped_column(Float)
 
 
