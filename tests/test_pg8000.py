@@ -1,10 +1,10 @@
+from getpass import getuser
 import numpy as np
-import os
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.pg8000 import register_vector
 from pg8000.native import Connection
 
-conn = Connection(os.environ["USER"], database='pgvector_python_test')
+conn = Connection(getuser(), database='pgvector_python_test')
 
 conn.run('CREATE EXTENSION IF NOT EXISTS vector')
 conn.run('DROP TABLE IF EXISTS pg8000_items')
