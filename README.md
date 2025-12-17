@@ -807,7 +807,7 @@ To get started with development:
 ```sh
 git clone https://github.com/pgvector/pgvector-python.git
 cd pgvector-python
-pip install -r requirements.txt
+pip install --group dev
 createdb pgvector_python_test
 pytest
 ```

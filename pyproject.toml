@@ -19,6 +19,21 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/pgvector/pgvector-python"
 
+[dependency-groups]
+dev = [
+    "asyncpg",
+    "Django",
+    "peewee",
+    "pg8000",
+    "psycopg[binary,pool]",
+    "psycopg2-binary",
+    "pytest",
+    "pytest-asyncio",
+    "scipy",
+    "SQLAlchemy[asyncio]>=2",
+    "sqlmodel>=0.0.12"
+]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
