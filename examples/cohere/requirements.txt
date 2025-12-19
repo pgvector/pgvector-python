@@ -1,3 +1,0 @@
-cohere
-pgvector
-psycopg[binary]

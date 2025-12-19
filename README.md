@@ -816,7 +816,7 @@ To run an example:
 
 ```sh
 cd examples/loading
-pip install -r requirements.txt
+pip install --group dev
 createdb pgvector_example
 python3 example.py
 ```

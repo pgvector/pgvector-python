@@ -1,5 +1,0 @@
-h5py
-implicit
-pgvector
-psycopg[binary]
-SQLAlchemy

@@ -1,5 +1,0 @@
-numpy
-pgvector
-psycopg[binary]
-torch
-transformers

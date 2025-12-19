@@ -1,4 +1,0 @@
-lightfm
-pgvector
-psycopg[binary]
-SQLAlchemy

@@ -1,3 +1,0 @@
-pgvector
-psycopg[binary]
-sentence-transformers

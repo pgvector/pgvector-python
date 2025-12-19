@@ -1,3 +1,0 @@
-ollama
-pgvector
-psycopg[binary]
