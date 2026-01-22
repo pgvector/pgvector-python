@@ -396,6 +396,20 @@ class TestSqlalchemy:
             items = session.scalars(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
+    def test_subquery(self, engine):
+        create_items()
+        with Session(engine) as session:
+            subquery = select(Item.embedding).filter_by(id=1).scalar_subquery()
+            items = session.query(Item).order_by(Item.embedding.l2_distance(subquery)).all()
+            assert [v.id for v in items] == [1, 3, 2]
+
+    def test_subquery_orm(self, engine):
+        create_items()
+        with Session(engine) as session:
+            subquery = select(Item.embedding).filter_by(id=1).scalar_subquery()
+            items = session.scalars(select(Item).order_by(Item.embedding.l2_distance(subquery)))
+            assert [v.id for v in items] == [1, 3, 2]
+
     def test_filter(self, engine):
         create_items()
         with Session(engine) as session:
