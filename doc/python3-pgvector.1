@@ -1,0 +1,38 @@
+.\" Manpage for python3-pgvector
+.TH PYTHON3-PGVECTOR 1 "2026-02-09" "0.4.2" "User Commands"
+.SH NAME
+python3-pgvector \- pgvector support for Python
+.SH SYNOPSIS
+.B import pgvector
+.SH DESCRIPTION
+.B python3-pgvector
+provides support for the pgvector PostgreSQL extension in Python.
+It integrates with popular database libraries including Django,
+SQLAlchemy, SQLModel, Psycopg (2 and 3), asyncpg, pg8000, and Peewee.
+.SH USAGE
+Basic usage typically involves registering the vector type with your
+database driver and defining models with vector fields.
+.SS Psycopg 3
+.EX
+from pgvector.psycopg import register_vector
+register_vector(conn)
+.EE
+.SS SQLAlchemy
+.EX
+from pgvector.sqlalchemy import Vector
+class Item(Base):
+    embedding = mapped_column(Vector(3))
+.EE
+.SH EXAMPLES
+Detailed examples for all supported frameworks (Django, SQLAlchemy, etc.)
+are available in the Debian documentation directory:
+.IP
+.B /usr/share/doc/python3-pgvector/examples/
+.SH NOTES
+The SQLModel tests are currently disabled in the Debian build due to
+API incompatibilities with the current sqlmodel package.
+.SH SEE ALSO
+.BR postgres (1),
+.BR psycopg (3)
+.SH AUTHOR
+This manpage was written for the Debian project by Arian Ott <arian.ott@ieee.org>.
