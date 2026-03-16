@@ -6,6 +6,12 @@ import numpy as np
 import psycopg
 from pgvector.psycopg import register_vector
 
+try:
+    from tqdm import trange
+except ImportError:  # pragma: no cover - optional dependency fallback
+    def trange(n, **kwargs):
+        return range(n)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Benchmark nearest-neighbor search against pgvector table')
@@ -50,13 +56,12 @@ def main() -> None:
     sql = f'SELECT id FROM {args.table} ORDER BY embedding {operator(args.distance)} %s LIMIT {args.k}'
 
     latencies = []
-    for i in range(args.queries):
+    for _ in trange(args.queries, desc='Search queries', unit='query'):
         query = rng.random(dimensions, dtype=np.float32)
         started = time.perf_counter()
         conn.execute(sql, (query,)).fetchall()
         elapsed_ms = (time.perf_counter() - started) * 1000
         latencies.append(elapsed_ms)
-        print(f'Query {i + 1}/{args.queries}: {elapsed_ms:.2f} ms')
 
     print('\nLatency summary (ms)')
     print(f'avg:    {statistics.mean(latencies):.2f}')

@@ -2,21 +2,20 @@
 
 These scripts help benchmark loading and search for large datasets with `pgvector`.
 
-## About disk location / storage path
+## Pass disk path directly
 
-You do **not** pass a raw filesystem path directly to the Python scripts.
-In PostgreSQL, storage location is controlled with a **tablespace**.
+You can now pass filesystem paths directly to the loader script.
+The script auto-creates (or reuses) PostgreSQL tablespaces behind the scenes.
 
-1. Create a tablespace once (as a superuser):
+- `--table-path /mnt/nvme/pg_tblspc_fast_table` for table data
+- `--index-path /mnt/nvme/pg_tblspc_fast_index` for index data
 
-```sql
-CREATE TABLESPACE fast_nvme LOCATION '/mnt/nvme/pg_tblspc_fast';
-```
+> Note: creating tablespaces requires sufficient PostgreSQL privileges (typically superuser).
 
-2. Pass the tablespace name to the loader script:
+If you prefer, you can still pass existing tablespace names:
 
-- `--table-tablespace fast_nvme` for table data
-- `--index-tablespace fast_nvme` for index data
+- `--table-tablespace fast_nvme`
+- `--index-tablespace fast_nvme`
 
 ## 1) Load random embeddings
 
@@ -28,9 +27,9 @@ python examples/benchmark/load_embeddings.py \
   --dimensions 4096 \
   --batch-size 5000 \
   --drop-table \
-  --table-tablespace fast_nvme \
+  --table-path /mnt/nvme/pg_tblspc_fast_table \
   --index hnsw \
-  --index-tablespace fast_nvme \
+  --index-path /mnt/nvme/pg_tblspc_fast_index \
   --distance cosine
 ```
 
@@ -45,6 +44,18 @@ python examples/benchmark/search_embeddings.py \
   --distance cosine \
   --hnsw-ef-search 100
 ```
+
+## Progress bars
+
+Both scripts support tqdm progress bars.
+
+Install:
+
+```sh
+pip install tqdm
+```
+
+If `tqdm` is not installed, scripts still run with a minimal fallback.
 
 Notes:
 
