@@ -27,10 +27,11 @@ python examples/benchmark/load_embeddings.py \
   --dimensions 4096 \
   --batch-size 5000 \
   --drop-table \
-  --table-path /mnt/nvme/pg_tblspc_fast_table \
+  --table-path /mnt/projects/tool-control/results/pg_tblspc_fast_table \
   --index hnsw \
-  --index-path /mnt/nvme/pg_tblspc_fast_index \
-  --distance cosine
+  --index-path /mnt/projects/tool-control/results/pg_tblspc_fast_index \
+  --distance cosine \
+  --workers 8
 ```
 
 ## 2) Benchmark search latency

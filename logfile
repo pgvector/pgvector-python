@@ -1,0 +1,462 @@
+2026-03-16 01:22:21.756 PDT [1580242] LOG:  starting PostgreSQL 18.3 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 14.3.0-18) 14.3.0, 64-bit
+2026-03-16 01:22:21.757 PDT [1580242] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-03-16 01:22:21.907 PDT [1580242] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2026-03-16 01:22:22.527 PDT [1580256] LOG:  database system was shut down at 2026-03-16 01:21:32 PDT
+2026-03-16 01:22:22.948 PDT [1580242] LOG:  database system is ready to accept connections
+2026-03-16 01:22:35.079 PDT [1580479] FATAL:  database "pgvector_example" does not exist
+2026-03-16 01:23:36.242 PDT [1581105] FATAL:  database "pgvector_example" does not exist
+2026-03-16 01:25:04.404 PDT [1582036] ERROR:  extension "vector" is not available
+2026-03-16 01:25:04.404 PDT [1582036] HINT:  The extension must first be installed on the system where PostgreSQL is running.
+2026-03-16 01:25:04.404 PDT [1582036] STATEMENT:  CREATE EXTENSION IF NOT EXISTS vector;
+2026-03-16 01:27:22.626 PDT [1580254] LOG:  checkpoint starting: time
+2026-03-16 01:29:00.830 PDT [1580254] LOG:  checkpoint complete: wrote 969 buffers (5.9%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=97.086 s, sync=0.162 s, total=98.204 s; sync files=311, longest=0.079 s, average=0.001 s; distance=4537 kB, estimate=4537 kB; lsn=0/1BD2730, redo lsn=0/1BD26A0
+2026-03-16 13:09:56.456 PDT [1618100] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:09:56.456 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:10:16.984 PDT [1618105] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:10:37.525 PDT [1618110] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:10:56.471 PDT [1618118] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:10:56.471 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:11:17.004 PDT [1618124] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:11:37.545 PDT [1618127] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:11:56.489 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:11:56.489 PDT [1618133] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:12:17.024 PDT [1618137] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:12:37.565 PDT [1618140] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:12:56.507 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:12:56.507 PDT [1618145] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:13:17.045 PDT [1618149] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:13:37.585 PDT [1618152] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:13:56.526 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:13:56.526 PDT [1618157] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:14:17.064 PDT [1618161] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:14:37.604 PDT [1618165] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:14:56.545 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:14:56.545 PDT [1618170] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:15:17.084 PDT [1618176] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:15:37.624 PDT [1618179] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:15:56.563 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:15:56.563 PDT [1618183] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:16:17.104 PDT [1618188] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:16:37.644 PDT [1618192] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:16:56.582 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:16:56.582 PDT [1618199] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:17:17.124 PDT [1618206] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:17:37.665 PDT [1618211] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:17:56.600 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:17:56.600 PDT [1618217] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:18:17.144 PDT [1618220] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:18:37.685 PDT [1618224] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:18:56.618 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:18:56.618 PDT [1618229] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:19:17.165 PDT [1618232] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:19:37.704 PDT [1618238] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:19:56.637 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:19:56.637 PDT [1618243] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:20:17.185 PDT [1618246] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:20:37.725 PDT [1618250] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:20:56.655 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:20:56.655 PDT [1618255] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:21:17.205 PDT [1618258] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:21:37.745 PDT [1618262] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:21:56.674 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:21:56.674 PDT [1618268] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:22:17.225 PDT [1618271] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:22:37.765 PDT [1618276] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:22:56.693 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:22:56.693 PDT [1618280] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:23:17.245 PDT [1618283] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:23:37.785 PDT [1618288] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:23:56.710 PDT [1618293] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:23:56.710 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:24:17.264 PDT [1618296] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:24:37.804 PDT [1618302] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:24:56.730 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:24:56.730 PDT [1618378] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:25:17.284 PDT [1618384] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:25:37.825 PDT [1618389] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:25:56.749 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:25:56.749 PDT [1618464] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:26:17.305 PDT [1618469] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:26:37.845 PDT [1618473] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:26:56.766 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:26:56.766 PDT [1618477] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:27:17.325 PDT [1618483] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:27:37.865 PDT [1618488] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:27:56.785 PDT [1618491] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:27:56.785 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:28:17.345 PDT [1618496] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:28:37.885 PDT [1618500] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:28:56.803 PDT [1618503] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:28:56.803 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:29:17.364 PDT [1618507] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:29:37.905 PDT [1618511] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:29:56.821 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:29:56.821 PDT [1618516] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:30:17.385 PDT [1618523] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:30:37.925 PDT [1618529] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:30:56.840 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:30:56.840 PDT [1618533] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:31:17.406 PDT [1618540] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:31:37.946 PDT [1618544] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:31:56.858 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:31:56.858 PDT [1618549] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:32:17.425 PDT [1618553] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:32:37.966 PDT [1618557] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:32:56.876 PDT [1618561] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:32:56.876 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:33:17.446 PDT [1618566] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:33:37.986 PDT [1618570] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:33:56.895 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:33:56.895 PDT [1618573] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:34:17.465 PDT [1618579] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:34:38.007 PDT [1618584] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:34:56.913 PDT [1618588] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:34:56.913 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:35:17.485 PDT [1618593] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:35:38.026 PDT [1618597] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:35:56.932 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:35:56.932 PDT [1618600] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:36:17.505 PDT [1618605] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:36:38.047 PDT [1618609] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:36:56.950 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:36:56.950 PDT [1618614] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:37:17.525 PDT [1618619] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:37:38.066 PDT [1618622] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:37:56.966 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:37:56.966 PDT [1618627] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:38:17.545 PDT [1618633] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:38:38.086 PDT [1618636] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:38:56.984 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:38:56.984 PDT [1618641] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:39:17.566 PDT [1618644] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:39:38.106 PDT [1618650] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:39:57.002 PDT [1618656] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:39:57.002 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:40:17.586 PDT [1618659] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:40:38.126 PDT [1618664] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:40:57.021 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:40:57.021 PDT [1618668] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:41:17.606 PDT [1618671] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:41:38.147 PDT [1618676] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:41:57.040 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:41:57.040 PDT [1618682] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:42:17.623 PDT [1618685] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:42:38.167 PDT [1618690] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:42:57.057 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:42:57.057 PDT [1618695] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:43:17.643 PDT [1618698] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:43:38.187 PDT [1618704] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:43:57.076 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:43:57.076 PDT [1618709] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:44:17.663 PDT [1618713] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:44:38.207 PDT [1618718] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:44:57.095 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:44:57.095 PDT [1618724] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:45:17.683 PDT [1618730] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:45:38.228 PDT [1618736] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:45:57.113 PDT [1618740] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:45:57.113 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:46:17.703 PDT [1618743] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:46:38.248 PDT [1618748] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:46:57.132 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:46:57.132 PDT [1618754] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:47:17.724 PDT [1618757] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:47:38.269 PDT [1618761] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:47:57.150 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:47:57.150 PDT [1618765] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:48:17.743 PDT [1618769] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:48:38.289 PDT [1618775] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:48:57.169 PDT [1618780] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:48:57.169 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:49:17.764 PDT [1618783] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:49:38.309 PDT [1618790] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:49:57.187 PDT [1618795] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:49:57.187 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:50:17.785 PDT [1618799] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:50:38.329 PDT [1618803] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:50:57.205 PDT [1618807] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:50:57.205 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:51:17.805 PDT [1618811] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:51:38.349 PDT [1618816] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:51:57.223 PDT [1618821] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:51:57.223 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:52:17.825 PDT [1618824] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:52:38.370 PDT [1618829] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:52:57.242 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:52:57.242 PDT [1618833] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:53:17.842 PDT [1618836] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:53:38.389 PDT [1618839] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:53:57.260 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:53:57.260 PDT [1618846] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:54:17.862 PDT [1618850] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:54:38.409 PDT [1618855] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:54:57.278 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:54:57.278 PDT [1618862] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:55:17.882 PDT [1618866] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:55:38.430 PDT [1618869] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:55:57.297 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:55:57.297 PDT [1618873] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:56:17.903 PDT [1618951] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:56:38.450 PDT [1618954] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:56:57.315 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:56:57.315 PDT [1618960] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:57:17.921 PDT [1618965] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:57:38.471 PDT [1618968] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:57:57.334 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:57:57.334 PDT [1618974] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:58:17.938 PDT [1618979] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:58:38.490 PDT [1618983] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:58:57.352 PDT [1618988] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:58:57.352 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 13:59:18.039 PDT [1618993] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:59:38.507 PDT [1618997] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:59:57.370 PDT [1619002] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 13:59:57.370 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:00:18.059 PDT [1619008] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:00:38.528 PDT [1619012] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:00:57.388 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:00:57.388 PDT [1619018] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:01:18.079 PDT [1619022] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:01:38.548 PDT [1619026] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:01:57.407 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:01:57.407 PDT [1619032] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:02:18.100 PDT [1619036] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:02:38.567 PDT [1619040] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:02:57.426 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:02:57.426 PDT [1619045] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:03:18.121 PDT [1619049] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:03:38.588 PDT [1619052] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:03:57.443 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:03:57.443 PDT [1619058] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:04:18.141 PDT [1619062] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:04:38.607 PDT [1619066] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:04:57.462 PDT [1619072] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:04:57.462 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:05:18.161 PDT [1619077] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:05:38.627 PDT [1619080] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:05:57.481 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:05:57.481 PDT [1619086] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:06:18.181 PDT [1619090] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:06:38.631 PDT [1619094] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:06:57.500 PDT [1619100] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:06:57.500 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:07:18.202 PDT [1619105] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:07:38.651 PDT [1619109] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:07:57.517 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:07:57.517 PDT [1619113] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:08:18.222 PDT [1619121] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:08:38.672 PDT [1619125] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:08:57.536 PDT [1619128] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:08:57.536 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:09:18.242 PDT [1619134] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:09:38.691 PDT [1619137] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:09:57.555 PDT [1619164] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:09:57.555 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:10:18.262 PDT [1619169] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:10:38.711 PDT [1619172] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:10:57.572 PDT [1619176] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:10:57.572 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:11:18.283 PDT [1619183] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:11:38.732 PDT [1619187] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:11:57.591 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:11:57.591 PDT [1619191] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:12:18.303 PDT [1619197] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:12:38.752 PDT [1619201] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:12:57.609 PDT [1619204] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:12:57.609 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:13:18.324 PDT [1619209] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:13:38.772 PDT [1619212] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:13:57.628 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:13:57.628 PDT [1619216] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:14:18.344 PDT [1619221] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:14:38.792 PDT [1619225] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:14:57.646 PDT [1619229] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:14:57.646 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:15:18.364 PDT [1619236] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:15:38.813 PDT [1619241] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:15:57.664 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:15:57.664 PDT [1619244] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:16:18.384 PDT [1619248] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:16:38.833 PDT [1619254] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:16:57.683 PDT [1619258] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:16:57.683 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:17:18.404 PDT [1619265] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:17:38.853 PDT [1619270] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:17:57.701 PDT [1619273] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:17:57.701 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:18:18.424 PDT [1619278] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:18:38.873 PDT [1619283] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:18:57.720 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:18:57.720 PDT [1619287] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:19:18.445 PDT [1619292] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:19:38.893 PDT [1619297] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:19:57.738 PDT [1619301] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:19:57.738 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:20:18.465 PDT [1619306] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:20:38.913 PDT [1619311] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:20:57.756 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:20:57.756 PDT [1619315] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:21:18.486 PDT [1619319] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:21:38.932 PDT [1619323] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:21:57.775 PDT [1619349] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:21:57.775 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:22:18.506 PDT [1619354] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:22:38.952 PDT [1619360] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:22:57.793 PDT [1619363] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:22:57.793 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:23:18.527 PDT [1619367] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:23:38.972 PDT [1619373] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:23:57.811 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:23:57.811 PDT [1619377] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:24:18.547 PDT [1619388] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:24:38.993 PDT [1619395] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:24:57.830 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:24:57.830 PDT [1619399] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:25:18.568 PDT [1619403] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:25:39.013 PDT [1619410] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:25:57.841 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:25:57.841 PDT [1619414] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:26:18.588 PDT [1619419] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:26:39.034 PDT [1619497] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:26:57.858 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:26:57.858 PDT [1619501] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:27:18.609 PDT [1619504] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:27:39.053 PDT [1619510] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:27:57.877 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:27:57.877 PDT [1619513] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:28:18.630 PDT [1619516] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:28:39.073 PDT [1619522] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:28:57.895 PDT [1619525] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:28:57.895 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:29:18.649 PDT [1619529] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:29:39.094 PDT [1619535] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:29:57.908 PDT [1619539] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:29:57.908 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:30:18.670 PDT [1619544] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:30:39.112 PDT [1619550] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:30:57.913 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:30:57.913 PDT [1619553] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:31:18.691 PDT [1619557] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:31:39.132 PDT [1619563] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:31:57.931 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:31:57.931 PDT [1619567] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:32:18.711 PDT [1619571] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:32:39.153 PDT [1619577] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:32:57.949 PDT [1619581] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:32:57.949 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:33:18.732 PDT [1619586] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:33:39.167 PDT [1619592] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:33:57.968 PDT [1619595] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:33:57.968 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:34:18.753 PDT [1619598] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:34:39.187 PDT [1619603] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:34:57.987 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:34:57.987 PDT [1619608] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:35:18.773 PDT [1619613] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:35:39.207 PDT [1619620] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:35:58.005 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:35:58.005 PDT [1619624] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:36:18.794 PDT [1619628] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:36:39.227 PDT [1619634] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:36:58.023 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:36:58.023 PDT [1619639] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:37:18.814 PDT [1619643] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:37:39.247 PDT [1619647] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:37:58.041 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:37:58.041 PDT [1619654] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:38:18.835 PDT [1619657] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:38:39.268 PDT [1619660] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:38:58.060 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:38:58.060 PDT [1619666] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:39:18.856 PDT [1619670] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:39:39.287 PDT [1619674] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:39:58.079 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:39:58.079 PDT [1619681] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:40:18.876 PDT [1619685] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:40:39.307 PDT [1619688] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:40:58.097 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:40:58.097 PDT [1619694] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:41:18.896 PDT [1619698] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:41:39.328 PDT [1619701] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:41:58.116 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:41:58.116 PDT [1619708] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:42:18.917 PDT [1619712] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:42:39.428 PDT [1619716] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:42:58.135 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:42:58.135 PDT [1619722] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:43:18.938 PDT [1619725] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:43:39.448 PDT [1619728] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:43:58.153 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:43:58.153 PDT [1619735] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:44:18.958 PDT [1619738] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:44:39.469 PDT [1619741] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:44:58.172 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:44:58.172 PDT [1619749] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:45:18.980 PDT [1619754] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:45:39.488 PDT [1619758] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:45:58.190 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:45:58.190 PDT [1619765] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:46:18.999 PDT [1619768] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:46:39.509 PDT [1619771] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:46:58.209 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:46:58.209 PDT [1619777] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:47:19.019 PDT [1619781] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:47:39.528 PDT [1619784] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:47:58.226 PDT [1619790] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:47:58.226 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:48:19.040 PDT [1619793] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:48:39.549 PDT [1619796] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:48:58.245 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:48:58.245 PDT [1619802] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:49:19.061 PDT [1619805] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:49:39.569 PDT [1619810] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:49:58.264 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:49:58.264 PDT [1620075] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:50:19.082 PDT [1620283] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:50:39.589 PDT [1620367] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:50:58.282 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:50:58.282 PDT [1620371] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:51:19.100 PDT [1620572] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:51:39.132 PDT [1621108] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:51:39.608 PDT [1621115] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:51:58.300 PDT [1621189] FATAL:  could not open file "global/pg_filenode.map": Permission denied
+2026-03-16 14:51:58.300 PDT [1580242] LOG:  could not open file "postmaster.pid": Permission denied; continuing anyway
+2026-03-16 14:52:44.998 PDT [1621374] ERROR:  database "pgvector_example" already exists
+2026-03-16 14:52:44.998 PDT [1621374] STATEMENT:  CREATE DATABASE pgvector_example;
+2026-03-16 14:52:46.843 PDT [1621395] ERROR:  extension "vector" is not available
+2026-03-16 14:52:46.843 PDT [1621395] HINT:  The extension must first be installed on the system where PostgreSQL is running.
+2026-03-16 14:52:46.843 PDT [1621395] STATEMENT:  CREATE EXTENSION IF NOT EXISTS vector;
+2026-03-16 14:56:30.135 PDT [1621769] ERROR:  directory "/mnt/projects/tool-control/results/pg_tblspc_fast_table" does not exist
+2026-03-16 14:56:30.135 PDT [1621769] STATEMENT:  CREATE TABLESPACE "benchmark_ts_table_c5e178d2b7" LOCATION '/mnt/projects/tool-control/results/pg_tblspc_fast_table'
+2026-03-16 14:57:38.014 PDT [1580254] LOG:  checkpoint starting: time
+2026-03-16 14:57:51.290 PDT [1621996] ERROR:  canceling statement due to user request
+2026-03-16 14:57:51.290 PDT [1621996] CONTEXT:  COPY benchmark_items, line 21000
+2026-03-16 14:57:51.290 PDT [1621996] STATEMENT:  COPY benchmark_items (embedding) FROM STDIN WITH (FORMAT BINARY)
+2026-03-16 14:58:55.258 PDT [1622298] ERROR:  canceling autovacuum task
+2026-03-16 14:58:55.258 PDT [1622298] CONTEXT:  while scanning block 36814 of relation "pg_toast.pg_toast_16719"
+	automatic vacuum of table "pgvector_example.pg_toast.pg_toast_16719"
+2026-03-16 14:59:21.816 PDT [1580254] LOG:  checkpoint complete: wrote 57 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 15 removed, 0 recycled; write=96.052 s, sync=3.138 s, total=104.058 s; sync files=104, longest=1.978 s, average=0.031 s; distance=237753 kB, estimate=237753 kB; lsn=0/2F401028, redo lsn=0/10400C40
+2026-03-16 14:59:21.818 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:00:24.256 PDT [1580254] LOG:  checkpoint complete: wrote 1604 buffers (9.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 1 removed, 32 recycled; write=50.647 s, sync=2.213 s, total=62.439 s; sync files=25, longest=1.506 s, average=0.089 s; distance=542204 kB, estimate=542204 kB; lsn=0/4F982930, redo lsn=0/3157FEE8
+2026-03-16 15:00:26.310 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:01:13.462 PDT [1580254] LOG:  checkpoint complete: wrote 34 buffers (0.2%), wrote 0 SLRU buffers; 0 WAL file(s) added, 7 removed, 33 recycled; write=37.023 s, sync=0.837 s, total=47.288 s; sync files=8, longest=0.583 s, average=0.105 s; distance=653823 kB, estimate=653823 kB; lsn=0/77400700, redo lsn=0/593FFD98
+2026-03-16 15:01:13.779 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:02:03.184 PDT [1580254] LOG:  checkpoint complete: wrote 19 buffers (0.1%), wrote 0 SLRU buffers; 0 WAL file(s) added, 8 removed, 32 recycled; write=35.146 s, sync=2.867 s, total=49.405 s; sync files=7, longest=2.046 s, average=0.410 s; distance=651831 kB, estimate=653624 kB; lsn=0/9FD5DF10, redo lsn=0/8108D9C8
+2026-03-16 15:02:04.267 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:02:50.799 PDT [1580254] LOG:  checkpoint complete: wrote 58 buffers (0.4%), wrote 0 SLRU buffers; 0 WAL file(s) added, 6 removed, 33 recycled; write=37.836 s, sync=1.558 s, total=46.688 s; sync files=8, longest=0.820 s, average=0.195 s; distance=642504 kB, estimate=652512 kB; lsn=0/C6403F88, redo lsn=0/A83FFD08
+2026-03-16 15:02:51.509 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:03:34.323 PDT [1622795] ERROR:  canceling statement due to user request
+2026-03-16 15:03:34.323 PDT [1622795] CONTEXT:  COPY benchmark_items, line 193000
+2026-03-16 15:03:34.323 PDT [1622795] STATEMENT:  COPY benchmark_items (embedding) FROM STDIN WITH (FORMAT BINARY)
+2026-03-16 15:03:35.054 PDT [1622795] LOG:  incomplete message from client
+2026-03-16 15:03:37.263 PDT [1580254] LOG:  checkpoint complete: wrote 37 buffers (0.2%), wrote 0 SLRU buffers; 0 WAL file(s) added, 6 removed, 32 recycled; write=34.416 s, sync=5.121 s, total=45.755 s; sync files=7, longest=4.515 s, average=0.732 s; distance=624163 kB, estimate=649677 kB; lsn=0/ED401E90, redo lsn=0/CE588BE0
+2026-03-16 15:03:37.265 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:04:57.110 PDT [1624467] ERROR:  canceling autovacuum task
+2026-03-16 15:04:57.110 PDT [1624467] CONTEXT:  while scanning block 27410 of relation "pg_toast.pg_toast_36976"
+	automatic vacuum of table "pgvector_example.pg_toast.pg_toast_36976"
+2026-03-16 15:06:56.962 PDT [1580254] LOG:  checkpoint complete: wrote 4436 buffers (27.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 30 recycled; write=188.923 s, sync=5.150 s, total=199.697 s; sync files=45, longest=2.449 s, average=0.115 s; distance=566541 kB, estimate=641363 kB; lsn=1/1081C0A0, redo lsn=0/F0ECC2A0
+2026-03-16 15:06:56.978 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:07:58.342 PDT [1580254] LOG:  checkpoint complete: wrote 421 buffers (2.6%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 32 recycled; write=50.193 s, sync=4.287 s, total=61.378 s; sync files=13, longest=3.600 s, average=0.330 s; distance=566568 kB, estimate=633884 kB; lsn=1/3189C6A8, redo lsn=1/138164E8
+2026-03-16 15:08:00.175 PDT [1580254] LOG:  checkpoint starting: wal
+2026-03-16 15:09:00.871 PDT [1580254] LOG:  checkpoint complete: wrote 144 buffers (0.9%), wrote 0 SLRU buffers; 0 WAL file(s) added, 3 removed, 32 recycled; write=48.504 s, sync=5.319 s, total=60.697 s; sync files=8, longest=2.507 s, average=0.665 s; distance=569287 kB, estimate=627424 kB; lsn=1/551C13E8, redo lsn=1/364080E8
+2026-03-16 15:09:01.233 PDT [1580254] LOG:  checkpoint starting: wal
