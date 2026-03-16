@@ -2,6 +2,22 @@
 
 These scripts help benchmark loading and search for large datasets with `pgvector`.
 
+## About disk location / storage path
+
+You do **not** pass a raw filesystem path directly to the Python scripts.
+In PostgreSQL, storage location is controlled with a **tablespace**.
+
+1. Create a tablespace once (as a superuser):
+
+```sql
+CREATE TABLESPACE fast_nvme LOCATION '/mnt/nvme/pg_tblspc_fast';
+```
+
+2. Pass the tablespace name to the loader script:
+
+- `--table-tablespace fast_nvme` for table data
+- `--index-tablespace fast_nvme` for index data
+
 ## 1) Load random embeddings
 
 ```sh
@@ -12,7 +28,9 @@ python examples/benchmark/load_embeddings.py \
   --dimensions 4096 \
   --batch-size 5000 \
   --drop-table \
+  --table-tablespace fast_nvme \
   --index hnsw \
+  --index-tablespace fast_nvme \
   --distance cosine
 ```
 

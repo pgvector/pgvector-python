@@ -18,6 +18,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--seed', type=int, default=42, help='Random seed')
     parser.add_argument('--drop-table', action='store_true', help='Drop table before creating it')
     parser.add_argument(
+        '--table-tablespace',
+        default=None,
+        help='Optional PostgreSQL tablespace for table storage (not a filesystem path)',
+    )
+    parser.add_argument(
+        '--index-tablespace',
+        default=None,
+        help='Optional PostgreSQL tablespace for index storage (not a filesystem path)',
+    )
+    parser.add_argument(
         '--index',
         choices=['none', 'hnsw', 'ivfflat'],
         default='none',
@@ -66,7 +76,14 @@ def copy_embeddings(conn: psycopg.Connection, table: str, rows: int, dimensions:
                 )
 
 
-def create_index(conn: psycopg.Connection, table: str, index: str, distance: str, ivfflat_lists: int) -> None:
+def create_index(
+    conn: psycopg.Connection,
+    table: str,
+    index: str,
+    distance: str,
+    ivfflat_lists: int,
+    index_tablespace: str | None,
+) -> None:
     if index == 'none':
         return
 
@@ -76,6 +93,9 @@ def create_index(conn: psycopg.Connection, table: str, index: str, distance: str
         sql = f'CREATE INDEX ON {table} USING hnsw (embedding {opclass})'
     else:
         sql = f'CREATE INDEX ON {table} USING ivfflat (embedding {opclass}) WITH (lists = {ivfflat_lists})'
+
+    if index_tablespace:
+        sql += f' TABLESPACE {index_tablespace}'
 
     started = time.perf_counter()
     conn.execute(sql)
@@ -94,10 +114,13 @@ def main() -> None:
     if args.drop_table:
         conn.execute(f'DROP TABLE IF EXISTS {args.table}')
 
-    conn.execute(
+    create_table_sql = (
         f'CREATE TABLE IF NOT EXISTS {args.table} '
         f'(id bigserial PRIMARY KEY, embedding vector({args.dimensions}))'
     )
+    if args.table_tablespace:
+        create_table_sql += f' TABLESPACE {args.table_tablespace}'
+    conn.execute(create_table_sql)
 
     print(
         f'Loading {args.rows:,} rows with {args.dimensions} dimensions into {args.table} '
@@ -109,7 +132,7 @@ def main() -> None:
     load_elapsed = time.perf_counter() - load_started
     print(f'Load finished in {load_elapsed:.2f}s')
 
-    create_index(conn, args.table, args.index, args.distance, args.ivfflat_lists)
+    create_index(conn, args.table, args.index, args.distance, args.ivfflat_lists, args.index_tablespace)
 
     conn.execute(f'ANALYZE {args.table}')
     print('Done')
