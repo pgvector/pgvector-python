@@ -348,6 +348,62 @@ def connect(dbapi_connection, connection_record):
     register_vector(dbapi_connection)
 ```
 
+#### Async Full Example
+
+Here's a complete example using async SQLAlchemy with an HNSW index and cosine distance queries:
+
+```python
+import asyncio
+
+from pgvector.sqlalchemy import Vector
+from sqlalchemy import select, text
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+engine = create_async_engine('postgresql+asyncpg://localhost/pgvector_example')
+async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+class Base(DeclarativeBase):
+    pass
+
+class Item(Base):
+    __tablename__ = 'items'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    embedding = mapped_column(Vector(3))
+
+async def main():
+    # Create tables and HNSW index
+    async with engine.begin() as conn:
+        await conn.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
+        await conn.run_sync(Base.metadata.create_all)
+        await conn.execute(text(
+            'CREATE INDEX IF NOT EXISTS items_embedding_idx '
+            'ON items USING hnsw (embedding vector_cosine_ops) '
+            'WITH (m = 16, ef_construction = 64)'
+        ))
+
+    # Insert
+    async with async_session() as session:
+        session.add_all([
+            Item(embedding=[1, 2, 3]),
+            Item(embedding=[4, 5, 6]),
+        ])
+        await session.commit()
+
+    # Query nearest neighbors by cosine distance
+    async with async_session() as session:
+        result = await session.execute(
+            select(Item)
+            .order_by(Item.embedding.cosine_distance([1, 2, 3]))
+            .limit(5)
+        )
+        items = result.scalars().all()
+
+asyncio.run(main())
+```
+
+Use `vector_l2_ops` for L2 distance and `vector_ip_ops` for inner product
+
 ## SQLModel
 
 Enable the extension
