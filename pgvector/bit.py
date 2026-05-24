@@ -62,9 +62,12 @@ class Bit:
 
     @classmethod
     def _to_db(cls, value):
+        if value is None:
+            return value 
+        
         if not isinstance(value, cls):
-            raise ValueError('expected bit')
-
+            value = cls(value)
+        
         return value.to_text()
 
     @classmethod
