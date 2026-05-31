@@ -428,11 +428,11 @@ class TestSqlalchemy:
 
     def test_avg(self, engine):
         with Session(engine) as session:
-            res = session.query(avg(Item.embedding)).first()[0]
+            res = session.query(avg(Item.embedding)).one()[0]
             assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            res = session.query(avg(Item.embedding)).first()[0]
+            res = session.query(avg(Item.embedding)).one()[0]
             assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
 
     def test_avg_orm(self, engine):
@@ -441,16 +441,16 @@ class TestSqlalchemy:
             assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            res = session.scalars(select(avg(Item.embedding))).first()
+            res = session.scalars(select(avg(Item.embedding))).one()
             assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
 
     def test_sum(self, engine):
         with Session(engine) as session:
-            res = session.query(sum(Item.embedding)).first()[0]
+            res = session.query(sum(Item.embedding)).one()[0]
             assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            res = session.query(sum(Item.embedding)).first()[0]
+            res = session.query(sum(Item.embedding)).one()[0]
             assert np.array_equal(res, np.array([5, 7, 9]))
 
     def test_sum_orm(self, engine):
@@ -459,7 +459,7 @@ class TestSqlalchemy:
             assert res is None
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
-            res = session.scalars(select(sum(Item.embedding))).first()
+            res = session.scalars(select(sum(Item.embedding))).one()
             assert np.array_equal(res, np.array([5, 7, 9]))
 
     def test_bad_dimensions(self, engine):
@@ -611,7 +611,7 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'
+                embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'  # type: ignore
                 session.add(Item(id=1, binary_embedding=embedding))
                 item = await session.get_one(Item, 1)
                 assert item.binary_embedding == embedding
@@ -645,7 +645,7 @@ class TestSqlalchemyAsync:
                 session.add(Item(embedding=[1, 2, 3]))
                 session.add(Item(embedding=[4, 5, 6]))
                 res = await session.scalars(select(avg(Item.embedding)))
-                assert np.array_equal(res.first(), [2.5, 3.5, 4.5])
+                assert np.array_equal(res.one(), [2.5, 3.5, 4.5])
 
         await engine.dispose()
 
