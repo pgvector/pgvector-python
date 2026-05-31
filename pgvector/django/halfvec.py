@@ -40,7 +40,7 @@ class HalfVectorField(Field):
     def value_to_string(self, obj):
         return self.get_prep_value(self.value_from_object(obj))
 
-    def formfield(self, **kwargs):
+    def formfield(self, **kwargs):  # type: ignore
         return super().formfield(form_class=HalfVectorFormField, **kwargs)
 
 

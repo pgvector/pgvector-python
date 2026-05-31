@@ -48,7 +48,7 @@ class VectorField(Field):
             value = value.tolist()
         super().run_validators(value)
 
-    def formfield(self, **kwargs):
+    def formfield(self, **kwargs):  # type: ignore
         return super().formfield(form_class=VectorFormField, **kwargs)
 
 

@@ -35,4 +35,4 @@ class BIT(UserDefinedType):
 
 
 # for reflection
-ischema_names['bit'] = BIT
+ischema_names['bit'] = BIT  # type: ignore

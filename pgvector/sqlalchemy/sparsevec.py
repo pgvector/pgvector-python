@@ -25,7 +25,7 @@ class SPARSEVEC(UserDefinedType):
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value):
-            return string_literal_processor(SparseVector._to_db(value, self.dim))
+            return string_literal_processor(SparseVector._to_db(value, self.dim))  # type: ignore
         return process
 
     def result_processor(self, dialect, coltype):
@@ -48,4 +48,4 @@ class SPARSEVEC(UserDefinedType):
 
 
 # for reflection
-ischema_names['sparsevec'] = SPARSEVEC
+ischema_names['sparsevec'] = SPARSEVEC  # type: ignore
