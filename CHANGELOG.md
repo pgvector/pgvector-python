@@ -1,6 +1,7 @@
 ## 0.5.0 (unreleased)
 
 - Dropped support for Python < 3.10
+- Dropped support for SQLAlchemy < 2
 
 ## 0.4.2 (2025-12-04)
 
