@@ -1,3 +1,7 @@
+## 0.5.0 (unreleased)
+
+- Dropped support for Python < 3.10
+
 ## 0.4.2 (2025-12-04)
 
 - Added support for Django 6
