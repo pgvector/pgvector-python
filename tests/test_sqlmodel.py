@@ -75,7 +75,7 @@ class TestSqlmodel:
         with Session(engine) as session:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert np.array_equal(item.embedding, np.array([1, 2, 3]))
 
     def test_vector_l2_distance(self):
@@ -106,7 +106,7 @@ class TestSqlmodel:
         with Session(engine) as session:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self):
@@ -137,7 +137,7 @@ class TestSqlmodel:
         with Session(engine) as session:
             session.add(Item(id=1, binary_embedding='101'))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self):
@@ -156,7 +156,7 @@ class TestSqlmodel:
         with Session(engine) as session:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self):

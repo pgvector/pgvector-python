@@ -64,7 +64,7 @@ class TestAsyncpg:
 
         await register_vector(conn)
 
-        embedding = asyncpg.BitString('101')
+        embedding = asyncpg.BitString('101')  # type: ignore
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), (NULL)", embedding)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")

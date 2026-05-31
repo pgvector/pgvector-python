@@ -190,7 +190,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert np.array_equal(item.embedding, [1, 2, 3])
 
     def test_vector_l2_distance(self, engine):
@@ -245,7 +245,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.half_embedding == HalfVector([1, 2, 3])
 
     def test_halfvec_l2_distance(self, engine):
@@ -300,7 +300,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.add(Item(id=1, binary_embedding='101'))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self, engine):
@@ -337,7 +337,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self, engine):
@@ -560,7 +560,7 @@ class TestSqlalchemyArray:
             session.commit()
 
             # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert np.array_equal(item.embeddings[0], [1, 2, 3])
             assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
@@ -570,7 +570,7 @@ class TestSqlalchemyArray:
             session.commit()
 
             # this fails if the driver does not cast arrays
-            item = session.get(Item, 1)
+            item = session.get_one(Item, 1)
             assert item.half_embeddings == [HalfVector([1, 2, 3]), HalfVector([4, 5, 6])]
 
 
@@ -587,7 +587,7 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 embedding = np.array([1, 2, 3])
                 session.add(Item(id=1, embedding=embedding))
-                item = await session.get(Item, 1)
+                item = await session.get_one(Item, 1)
                 assert np.array_equal(item.embedding, embedding)
 
         await engine.dispose()
@@ -600,7 +600,7 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 embedding = [1, 2, 3]
                 session.add(Item(id=1, half_embedding=embedding))
-                item = await session.get(Item, 1)
+                item = await session.get_one(Item, 1)
                 assert item.half_embedding == HalfVector(embedding)
 
         await engine.dispose()
@@ -613,12 +613,12 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'
                 session.add(Item(id=1, binary_embedding=embedding))
-                item = await session.get(Item, 1)
+                item = await session.get_one(Item, 1)
                 assert item.binary_embedding == embedding
 
                 if engine == asyncpg_engine:
                     session.add(Item(id=2, binary_embedding='101'))
-                    item = await session.get(Item, 2)
+                    item = await session.get_one(Item, 2)
                     assert item.binary_embedding == embedding
 
         await engine.dispose()
@@ -631,7 +631,7 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 embedding = [1, 2, 3]
                 session.add(Item(id=1, sparse_embedding=embedding))
-                item = await session.get(Item, 1)
+                item = await session.get_one(Item, 1)
                 assert item.sparse_embedding == SparseVector(embedding)
 
         await engine.dispose()
@@ -662,12 +662,12 @@ class TestSqlalchemyAsyncArray:
         async with async_session() as session:
             async with session.begin():
                 session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
-                item = await session.get(Item, 1)
+                item = await session.get_one(Item, 1)
                 assert np.array_equal(item.embeddings[0], [1, 2, 3])
                 assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
                 session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-                item = await session.get(Item, 2)
+                item = await session.get_one(Item, 2)
                 assert np.array_equal(item.embeddings[0], [1, 2, 3])
                 assert np.array_equal(item.embeddings[1], [4, 5, 6])
 
