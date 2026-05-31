@@ -29,73 +29,73 @@ class TestPsycopg:
 
     def test_vector_binary_format(self):
         embedding = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
+        res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
         assert np.array_equal(res, embedding)
 
     def test_vector_text_format(self):
         embedding = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert np.array_equal(res, embedding)
 
     def test_vector_binary_format_correct(self):
         embedding = np.array([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector::text', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %b::vector::text', (embedding,)))[0]
         assert res == '[1.5,2,3]'
 
     def test_vector_text_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
-        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert np.array_equal(res, [3, 2, 1.5])
 
     def test_vector_binary_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
-        res = conn.execute('SELECT %b::vector', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %b::vector', (embedding,)))[0]
         assert np.array_equal(res, [3, 2, 1.5])
 
     def test_vector_class_binary_format(self):
         embedding = Vector([1.5, 2, 3])
-        res = conn.execute('SELECT %b::vector', (embedding,), binary=True).fetchone()[0]
+        res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
         assert np.array_equal(res, [1.5, 2, 3])
 
     def test_vector_class_text_format(self):
         embedding = Vector([1.5, 2, 3])
-        res = conn.execute('SELECT %t::vector', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert np.array_equal(res, [1.5, 2, 3])
 
     def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (half_embedding) VALUES (%s)', (embedding,))
 
-        res = conn.execute('SELECT half_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        res = next(conn.execute('SELECT half_embedding FROM psycopg_items ORDER BY id'))[0]
         assert res == HalfVector([1.5, 2, 3])
 
     def test_halfvec_binary_format(self):
         embedding = HalfVector([1.5, 2, 3])
-        res = conn.execute('SELECT %b::halfvec', (embedding,), binary=True).fetchone()[0]
+        res = next(conn.execute('SELECT %b::halfvec', (embedding,), binary=True))[0]
         assert res == HalfVector([1.5, 2, 3])
 
     def test_halfvec_text_format(self):
         embedding = HalfVector([1.5, 2, 3])
-        res = conn.execute('SELECT %t::halfvec', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::halfvec', (embedding,)))[0]
         assert res == HalfVector([1.5, 2, 3])
 
     def test_bit(self):
         embedding = Bit([True, False, True])
         conn.execute('INSERT INTO psycopg_items (binary_embedding) VALUES (%s)', (embedding,))
 
-        res = conn.execute('SELECT binary_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        res = next(conn.execute('SELECT binary_embedding FROM psycopg_items ORDER BY id'))[0]
         assert res == '101'
 
     def test_bit_binary_format(self):
         embedding = Bit([False, True, False, True, False, False, False, False, True])
-        res = conn.execute('SELECT %b::bit(9)', (embedding,), binary=True).fetchone()[0]
+        res = next(conn.execute('SELECT %b::bit(9)', (embedding,), binary=True))[0]
         assert repr(Bit.from_binary(res)) == 'Bit(010100001)'
 
     def test_bit_text_format(self):
         embedding = Bit([False, True, False, True, False, False, False, False, True])
-        res = conn.execute('SELECT %t::bit(9)', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::bit(9)', (embedding,)))[0]
         assert res == '010100001'
         assert repr(Bit(res)) == 'Bit(010100001)'
 
@@ -103,17 +103,17 @@ class TestPsycopg:
         embedding = SparseVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (sparse_embedding) VALUES (%s)', (embedding,))
 
-        res = conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id').fetchone()[0]
+        res = next(conn.execute('SELECT sparse_embedding FROM psycopg_items ORDER BY id'))[0]
         assert res == SparseVector([1.5, 2, 3])
 
     def test_sparsevec_binary_format(self):
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
-        res = conn.execute('SELECT %b::sparsevec', (embedding,), binary=True).fetchone()[0]
+        res = next(conn.execute('SELECT %b::sparsevec', (embedding,), binary=True))[0]
         assert res == embedding
 
     def test_sparsevec_text_format(self):
         embedding = SparseVector([1.5, 0, 2, 0, 3, 0])
-        res = conn.execute('SELECT %t::sparsevec', (embedding,)).fetchone()[0]
+        res = next(conn.execute('SELECT %t::sparsevec', (embedding,)))[0]
         assert res == embedding
 
     def test_text_copy_from(self):
@@ -170,7 +170,7 @@ class TestPsycopg:
         embeddings = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
         conn.execute('INSERT INTO psycopg_items (embeddings) VALUES (%s)', (embeddings,))
 
-        res = conn.execute('SELECT embeddings FROM psycopg_items ORDER BY id').fetchone()
+        res = next(conn.execute('SELECT embeddings FROM psycopg_items ORDER BY id'))
         assert np.array_equal(res[0][0], embeddings[0])
         assert np.array_equal(res[0][1], embeddings[1])
 
