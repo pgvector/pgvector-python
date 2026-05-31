@@ -8,17 +8,17 @@ from typing import Any, Optional
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
-    session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))
+    session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))  # type: ignore
 
 
 class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    embedding: Optional[Any] = Field(default=None, sa_type=VECTOR(3))
-    half_embedding: Optional[Any] = Field(default=None, sa_type=HALFVEC(3))
-    binary_embedding: Optional[Any] = Field(default=None, sa_type=BIT(3))
-    sparse_embedding: Optional[Any] = Field(default=None, sa_type=SPARSEVEC(3))
+    embedding: Optional[Any] = Field(default=None, sa_type=VECTOR(3))  # type: ignore
+    half_embedding: Optional[Any] = Field(default=None, sa_type=HALFVEC(3))  # type: ignore
+    binary_embedding: Optional[Any] = Field(default=None, sa_type=BIT(3))  # type: ignore
+    sparse_embedding: Optional[Any] = Field(default=None, sa_type=SPARSEVEC(3))  # type: ignore
 
 
 SQLModel.metadata.drop_all(engine)
@@ -202,7 +202,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(avg(Item.embedding))).first()
-            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))
+            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))  # type: ignore
 
     def test_vector_sum(self):
         with Session(engine) as session:
@@ -211,7 +211,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(sum(Item.embedding))).first()
-            assert np.array_equal(res, np.array([5, 7, 9]))
+            assert np.array_equal(res, np.array([5, 7, 9]))  # type: ignore
 
     def test_halfvec_avg(self):
         with Session(engine) as session:
