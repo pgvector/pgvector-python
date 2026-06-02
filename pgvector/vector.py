@@ -32,7 +32,8 @@ class Vector:
     def to_list(self) -> list[float]:
         return self._value.tolist()
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float32]]:
+        # TODO return native endian
         return self._value
 
     def to_text(self) -> str:

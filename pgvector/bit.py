@@ -44,7 +44,7 @@ class Bit:
     def to_list(self) -> list[bool]:
         return self.to_numpy().tolist()
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.bool]]:
         return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._len).astype(bool)
 
     def to_text(self) -> str:
