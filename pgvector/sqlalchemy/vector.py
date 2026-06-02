@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
-from sqlalchemy import Dialect
+from sqlalchemy import Dialect, Operators
 from typing import Any
 from .. import Vector
 
@@ -36,16 +36,16 @@ class VECTOR(UserDefinedType):
         return process
 
     class comparator_factory(UserDefinedType.Comparator):
-        def l2_distance(self, other: Any) -> Any:
+        def l2_distance(self, other: Any) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
-        def max_inner_product(self, other: Any) -> Any:
+        def max_inner_product(self, other: Any) -> Operators:
             return self.op('<#>', return_type=Float)(other)
 
-        def cosine_distance(self, other: Any) -> Any:
+        def cosine_distance(self, other: Any) -> Operators:
             return self.op('<=>', return_type=Float)(other)
 
-        def l1_distance(self, other: Any) -> Any:
+        def l1_distance(self, other: Any) -> Operators:
             return self.op('<+>', return_type=Float)(other)
 
 
