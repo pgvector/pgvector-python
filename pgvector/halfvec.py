@@ -15,6 +15,7 @@ class HalfVector:
         if value.ndim != 1:
             raise ValueError('expected ndim to be 1')
 
+        # atleast_1d for ty
         self._value = np.atleast_1d(value)
 
     def __repr__(self) -> str:
