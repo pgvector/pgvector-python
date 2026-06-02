@@ -14,7 +14,7 @@ class VectorField(Field):
     def get_modifiers(self) -> list[int] | None:
         return [self.dimensions] if self.dimensions else None
 
-    def db_value(self, value: Any) -> str | None:
+    def db_value(self, value: object) -> str | None:
         return Vector._to_db(value)
 
     def python_value(self, value: Any) -> np.ndarray | None:
