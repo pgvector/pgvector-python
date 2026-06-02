@@ -9,7 +9,7 @@ class Vector:
             dim = len(value)
             try:
                 self._value = struct.pack(f'>HH{dim}f', dim, 0, *value)
-            except struct.error as e:
+            except struct.error:
                 raise ValueError('expected list[float]')
         elif isinstance(value, np.ndarray):
             if value.ndim != 1:
