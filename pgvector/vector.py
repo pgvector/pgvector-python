@@ -4,7 +4,7 @@ from struct import pack, unpack_from
 
 
 class Vector:
-    def __init__(self, value: list[float] | tuple[float, ...] | np.ndarray) -> None:
+    def __init__(self, value: list[float] | np.ndarray) -> None:
         # asarray still copies if same dtype
         if not isinstance(value, np.ndarray) or value.dtype != '>f4':
             value = np.asarray(value, dtype='>f4')

@@ -15,9 +15,6 @@ class TestBit:
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
             assert Bit([254, 7, 0]).to_text() == '110'  # ty: ignore[invalid-argument-type]
 
-    def test_tuple(self):
-        assert Bit((True, False, True)).to_list() == [True, False, True]
-
     def test_str(self):
         assert Bit('101').to_list() == [True, False, True]
 

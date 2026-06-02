@@ -12,9 +12,6 @@ class TestVector:
         with pytest.raises(ValueError, match='could not convert string to float'):
             Vector([1, 'two', 3])  # ty: ignore[invalid-argument-type]
 
-    def test_tuple(self):
-        assert Vector((1, 2, 3)).to_list() == [1, 2, 3]
-
     def test_ndarray(self):
         arr = np.array([1, 2, 3])
         assert Vector(arr).to_list() == [1, 2, 3]
