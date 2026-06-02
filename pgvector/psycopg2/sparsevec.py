@@ -1,13 +1,12 @@
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
-from typing import Any
 from .. import SparseVector
 
 
 class SparsevecAdapter:
-    def __init__(self, value: Any) -> None:
+    def __init__(self, value: object) -> None:
         self._value = value
 
-    def getquoted(self) -> Any:
+    def getquoted(self) -> bytes:
         return adapt(SparseVector._to_db(self._value)).getquoted()
 
 
