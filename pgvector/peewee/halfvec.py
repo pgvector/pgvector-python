@@ -6,7 +6,7 @@ from .. import HalfVector
 class HalfVectorField(Field):
     field_type = 'halfvec'
 
-    def __init__(self, dimensions: int | None = None, *args, **kwargs) -> None:
+    def __init__(self, dimensions: int | None = None, *args: Any, **kwargs: Any) -> None:
         self.dimensions = dimensions
         super(HalfVectorField, self).__init__(*args, **kwargs)
 

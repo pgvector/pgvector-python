@@ -13,7 +13,7 @@ class VECTOR(UserDefinedType):
         super(UserDefinedType, self).__init__()
         self.dim = dim
 
-    def get_col_spec(self, **kw) -> str:
+    def get_col_spec(self, **kw: Any) -> str:
         if self.dim is None:
             return 'VECTOR'
         return 'VECTOR(%d)' % self.dim

@@ -41,7 +41,7 @@ class HalfVectorField(Field):
     def value_to_string(self, obj: Any) -> str | None:
         return self.get_prep_value(self.value_from_object(obj))
 
-    def formfield(self, **kwargs):  # type: ignore
+    def formfield(self, **kwargs) -> forms.Field:  # type: ignore
         return super().formfield(form_class=HalfVectorFormField, **kwargs)
 
 

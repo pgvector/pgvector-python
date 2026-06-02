@@ -36,7 +36,7 @@ class SparseVectorField(Field):
     def value_to_string(self, obj: Any) -> str | None:
         return self.get_prep_value(self.value_from_object(obj))
 
-    def formfield(self, **kwargs: Any):  # type: ignore
+    def formfield(self, **kwargs: Any) -> forms.Field:  # type: ignore
         return super().formfield(form_class=SparseVectorFormField, **kwargs)
 
 

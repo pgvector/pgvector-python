@@ -22,7 +22,7 @@ class BitField(Field):
             return 'bit'
         return 'bit(%d)' % self.length
 
-    def formfield(self, **kwargs: Any):  # type: ignore
+    def formfield(self, **kwargs: Any) -> forms.Field:  # type: ignore
         return super().formfield(form_class=BitFormField, **kwargs)
 
 

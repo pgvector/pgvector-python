@@ -6,7 +6,7 @@ from .. import SparseVector
 class SparseVectorField(Field):
     field_type = 'sparsevec'
 
-    def __init__(self, dimensions: int | None = None, *args, **kwargs) -> None:
+    def __init__(self, dimensions: int | None = None, *args: Any, **kwargs: Any) -> None:
         self.dimensions = dimensions
         super(SparseVectorField, self).__init__(*args, **kwargs)
 

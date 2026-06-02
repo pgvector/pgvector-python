@@ -5,7 +5,7 @@ from typing import Any
 class FixedBitField(Field):
     field_type = 'bit'
 
-    def __init__(self, max_length: int | None = None, *args, **kwargs) -> None:
+    def __init__(self, max_length: int | None = None, *args: Any, **kwargs: Any) -> None:
         self.max_length = max_length
         super(FixedBitField, self).__init__(*args, **kwargs)
 

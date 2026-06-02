@@ -11,7 +11,7 @@ class BIT(UserDefinedType):
         super(UserDefinedType, self).__init__()
         self.length = length
 
-    def get_col_spec(self, **kw) -> str:
+    def get_col_spec(self, **kw: Any) -> str:
         if self.length is None:
             return 'BIT'
         return 'BIT(%d)' % self.length
