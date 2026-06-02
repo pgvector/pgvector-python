@@ -7,8 +7,8 @@ from warnings import warn
 class Bit:
     def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int], np.dtype[np.bool | np.uint8]]) -> None:
         if isinstance(value, bytes):
-            _len = 8 * len(value)
-            _data = value
+            length = 8 * len(value)
+            data = value
         else:
             if isinstance(value, str):
                 value = [v != '0' for v in value]
@@ -30,10 +30,10 @@ class Bit:
                 if value.ndim != 1:
                     raise ValueError('expected ndim to be 1')
 
-            _len = len(value)
-            _data = np.packbits(value).tobytes()
+            length = len(value)
+            data = np.packbits(value).tobytes()
 
-        self._value = pack('>i', _len) + _data
+        self._value = pack('>i', length) + data
 
     def __repr__(self) -> str:
         return f'Bit({self.to_text()})'
@@ -43,18 +43,18 @@ class Bit:
             return self.to_binary() == other.to_binary()
         return False
 
-    def _len(self):
-        _len, = unpack_from('>i', self._value)
-        return _len
+    def _length(self):
+        length, = unpack_from('>i', self._value)
+        return length
 
     def to_list(self) -> list[bool]:
         return self.to_numpy().tolist()
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.bool]]:
-        return np.unpackbits(np.frombuffer(self._value[4:], dtype=np.uint8), count=self._len()).astype(bool)
+        return np.unpackbits(np.frombuffer(self._value[4:], dtype=np.uint8), count=self._length()).astype(bool)
 
     def to_text(self) -> str:
-        return ''.join(format(v, '08b') for v in self._value[4:])[:self._len()]
+        return ''.join(format(v, '08b') for v in self._value[4:])[:self._length()]
 
     def to_binary(self) -> bytes:
         return self._value
