@@ -39,7 +39,6 @@ class Vector:
         return list(struct.unpack_from(f'>{self.dimensions()}f', self._value[4:]))
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float32]]:
-        # TODO return native endian
         return np.frombuffer(self._value, dtype='>f4', count=self.dimensions(), offset=4)
 
     def to_text(self) -> str:
