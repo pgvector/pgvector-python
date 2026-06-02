@@ -6,9 +6,6 @@ from .indexes import IvfflatIndex, HnswIndex
 from .sparsevec import SparseVectorField
 from .vector import VectorField
 
-# TODO remove
-from .. import HalfVector, SparseVector
-
 __all__ = [
     'VectorExtension',
     'VectorField',
@@ -22,7 +19,5 @@ __all__ = [
     'CosineDistance',
     'L1Distance',
     'HammingDistance',
-    'JaccardDistance',
-    'HalfVector',
-    'SparseVector'
+    'JaccardDistance'
 ]
