@@ -1,46 +1,52 @@
 from __future__ import annotations
 import numpy as np
-from struct import pack, unpack_from
+import struct
 
 
 class HalfVector:
     def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
-        # asarray still copies if same dtype
-        if not isinstance(value, np.ndarray) or value.dtype != '>f2':
-            value = np.asarray(value, dtype='>f2')
+        if isinstance(value, list):
+            dim = len(value)
+            try:
+                self._value = struct.pack(f'>HH{dim}e', dim, 0, *value)
+            except struct.error as e:
+                raise ValueError('expected list[float]')
+        elif isinstance(value, np.ndarray):
+            if value.ndim != 1:
+                raise ValueError('expected ndim to be 1')
 
-        # for mypy
-        assert isinstance(value, np.ndarray)
+            # asarray still copies if same dtype
+            if value.dtype != '>f2':
+                value = np.asarray(value, dtype='>f2')
 
-        if value.ndim != 1:
-            raise ValueError('expected ndim to be 1')
-
-        # atleast_1d for ty
-        self._value = np.atleast_1d(value)
+            self._value = struct.pack('>HH', value.shape[0], 0) + value.tobytes()
+        else:
+            raise ValueError('expected list or ndarray')
 
     def __repr__(self) -> str:
         return f'HalfVector({self.to_list()})'
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
-            return np.array_equal(self.to_numpy(), other.to_numpy())
+            return self.to_binary() == other.to_binary()
         return False
 
     def dimensions(self) -> int:
-        return len(self._value)
+        dim, = struct.unpack_from('>H', self._value)
+        return dim
 
     def to_list(self) -> list[float]:
-        return self._value.tolist()
+        return list(struct.unpack_from(f'>{self.dimensions()}e', self._value[4:]))
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float16]]:
         # TODO return native endian
-        return self._value
+        return np.frombuffer(self._value, dtype='>f2', count=self.dimensions(), offset=4)
 
     def to_text(self) -> str:
-        return '[' + ','.join([str(float(v)) for v in self._value]) + ']'
+        return '[' + ','.join([str(v) for v in self.to_list()]) + ']'
 
     def to_binary(self) -> bytes:
-        return pack('>HH', self.dimensions(), 0) + self._value.tobytes()
+        return self._value
 
     @classmethod
     def from_text(cls, value: str) -> HalfVector:
@@ -48,8 +54,10 @@ class HalfVector:
 
     @classmethod
     def from_binary(cls, value: bytes) -> HalfVector:
-        dim, unused = unpack_from('>HH', value)
-        return cls(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
+        # TODO check dimensions/length and unused
+        vec = cls.__new__(cls)
+        vec._value = value
+        return vec
 
     @classmethod
     def _to_db(cls, value: object, dim: int | None = None) -> str | None:
