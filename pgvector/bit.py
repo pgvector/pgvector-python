@@ -31,7 +31,7 @@ class Bit:
     def __repr__(self) -> str:
         return f'Bit({self.to_text()})'
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self._len == other._len and self._data == other._data
         return False

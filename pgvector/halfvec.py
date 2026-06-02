@@ -18,7 +18,7 @@ class HalfVector:
     def __repr__(self) -> str:
         return f'HalfVector({self.to_list()})'
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return np.array_equal(self.to_numpy(), other.to_numpy())
         return False
@@ -48,7 +48,7 @@ class HalfVector:
         return cls(np.frombuffer(value, dtype='>f2', count=dim, offset=4))
 
     @classmethod
-    def _to_db(cls, value: Any, dim: int | None = None) -> str | None:
+    def _to_db(cls, value: object, dim: int | None = None) -> str | None:
         if value is None:
             return value
 
@@ -61,7 +61,7 @@ class HalfVector:
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value: Any) -> bytes | None:
+    def _to_db_binary(cls, value: object) -> bytes | None:
         if value is None:
             return value
 

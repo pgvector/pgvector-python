@@ -28,7 +28,7 @@ class SparseVector:
         elements = dict(zip(self._indices, self._values))
         return f'SparseVector({elements}, {self._dim})'
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self.dimensions() == other.dimensions() and self.indices() == other.indices() and self.values() == other.values()
         return False
@@ -126,7 +126,7 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: Any, dim: int | None = None) -> str | None:
+    def _to_db(cls, value: object, dim: int | None = None) -> str | None:
         if value is None:
             return value
 
@@ -139,7 +139,7 @@ class SparseVector:
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value: Any) -> bytes | None:
+    def _to_db_binary(cls, value: object) -> bytes | None:
         if value is None:
             return value
 
