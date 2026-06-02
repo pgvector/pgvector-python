@@ -9,11 +9,11 @@ class TestBit:
 
     def test_list_none(self):
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit([True, None, True]).to_text() == '101'
+            assert Bit([True, None, True]).to_text() == '101'  # ty: ignore[invalid-argument-type]
 
     def test_list_int(self):
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit([254, 7, 0]).to_text() == '110'
+            assert Bit([254, 7, 0]).to_text() == '110'  # ty: ignore[invalid-argument-type]
 
     def test_tuple(self):
         assert Bit((True, False, True)).to_list() == [True, False, True]
@@ -46,12 +46,12 @@ class TestBit:
 
     def test_ndim_two(self):
         with pytest.raises(ValueError) as error:
-            Bit([[True, False], [True, False]])
+            Bit([[True, False], [True, False]])  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected ndim to be 1'
 
     def test_ndim_zero(self):
         with pytest.raises(ValueError) as error:
-            Bit(True)
+            Bit(True)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected ndim to be 1'
 
     def test_repr(self):

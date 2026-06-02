@@ -5,7 +5,7 @@ from warnings import warn
 
 
 class Bit:
-    def __init__(self, value: object) -> None:
+    def __init__(self, value: bytes | str | list[bool] | tuple[bool, ...] | np.ndarray) -> None:
         if isinstance(value, bytes):
             self._len = 8 * len(value)
             self._data = value
