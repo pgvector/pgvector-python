@@ -1,4 +1,3 @@
-import numpy as np
 from peewee import Expression, Field
 from typing import Any
 from .. import Vector
@@ -17,7 +16,7 @@ class VectorField(Field):
     def db_value(self, value: object) -> str | None:
         return Vector._to_db(value)
 
-    def python_value(self, value: Any) -> np.ndarray | None:
+    def python_value(self, value: Any) -> Vector | None:
         return Vector._from_db(value)
 
     def _distance(self, op: str, vector: object) -> Expression:

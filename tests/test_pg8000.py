@@ -22,8 +22,7 @@ class TestPg8000:
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
 
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
-        assert np.array_equal(res[0][0], embedding)
-        assert res[0][0].dtype == np.float32
+        assert res[0][0] == Vector([1.5, 2, 3])
         assert res[1][0] is None
 
     def test_vector_class(self):
@@ -31,8 +30,7 @@ class TestPg8000:
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
 
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
-        assert np.array_equal(res[0][0], embedding.to_numpy())
-        assert res[0][0].dtype == np.float32
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_halfvec(self):

@@ -82,15 +82,15 @@ class Vector:
         return value.to_binary()
 
     @classmethod
-    def _from_db(cls, value: str | np.ndarray | None) -> np.ndarray | None:
-        if value is None or isinstance(value, np.ndarray):
+    def _from_db(cls, value: str | Vector | None) -> Vector | None:
+        if value is None or isinstance(value, Vector):
             return value
 
-        return cls.from_text(value).to_numpy().astype(np.float32)
+        return cls.from_text(value)
 
     @classmethod
-    def _from_db_binary(cls, value: bytes | np.ndarray | None) -> np.ndarray | None:
-        if value is None or isinstance(value, np.ndarray):
+    def _from_db_binary(cls, value: bytes | Vector | None) -> Vector | None:
+        if value is None or isinstance(value, Vector):
             return value
 
-        return cls.from_binary(value).to_numpy().astype(np.float32)
+        return cls.from_binary(value)

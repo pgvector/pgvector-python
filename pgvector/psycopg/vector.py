@@ -31,7 +31,7 @@ class VectorLoader(Loader):
 
     format = Format.TEXT
 
-    def load(self, data: Buffer) -> np.ndarray | None:
+    def load(self, data: Buffer) -> Vector | None:
         if isinstance(data, memoryview):
             data = bytes(data)
         return Vector._from_db(data.decode('utf8'))
@@ -41,7 +41,7 @@ class VectorBinaryLoader(VectorLoader):
 
     format = Format.BINARY
 
-    def load(self, data: Buffer) -> np.ndarray | None:
+    def load(self, data: Buffer) -> Vector | None:
         if isinstance(data, (bytearray, memoryview)):
             data = bytes(data)
         return Vector._from_db_binary(data)

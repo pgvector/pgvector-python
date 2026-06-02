@@ -1,4 +1,3 @@
-import numpy as np
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
 from sqlalchemy import Dialect, Operators
@@ -32,7 +31,7 @@ class VECTOR(UserDefinedType):
         return process
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Any:
-        def process(value: Any) -> np.ndarray | None:
+        def process(value: Any) -> Vector | None:
             return Vector._from_db(value)
         return process
 

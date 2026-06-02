@@ -26,8 +26,7 @@ class TestPsycopg2:
 
         cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert np.array_equal(res[0][0], embedding)
-        assert res[0][0].dtype == np.float32
+        assert res[0][0] == Vector(embedding)
         assert res[1][0] is None
 
     def test_vector_class(self):
@@ -36,17 +35,16 @@ class TestPsycopg2:
 
         cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert np.array_equal(res[0][0], embedding.to_numpy())
-        assert res[0][0].dtype == np.float32
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_halfvec(self):
-        embedding = [1.5, 2, 3]
+        embedding = HalfVector([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (half_embedding) VALUES (%s), (NULL)', (embedding,))
 
         cur.execute('SELECT half_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0] == HalfVector([1.5, 2, 3])
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_halfvec_class(self):
@@ -64,7 +62,7 @@ class TestPsycopg2:
 
         cur.execute('SELECT binary_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0] == '101'
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_sparsevec(self):
@@ -73,17 +71,17 @@ class TestPsycopg2:
 
         cur.execute('SELECT sparse_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0] == SparseVector([1.5, 2, 3])
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_vector_array(self):
-        embeddings = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
         cur.execute('INSERT INTO psycopg2_items (embeddings) VALUES (%s::vector[])', (embeddings,))
 
         cur.execute('SELECT embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert np.array_equal(res[0][0], embeddings[0])
-        assert np.array_equal(res[0][1], embeddings[1])
+        assert res[0][0] == embeddings[0]
+        assert res[0][1] == embeddings[1]
 
     def test_halfvec_array(self):
         embeddings = [HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])]
@@ -129,7 +127,7 @@ class TestPsycopg2:
             cur = conn.cursor()
             cur.execute("SELECT '[1,2,3]'::vector")
             res = cur.fetchone()
-            assert np.array_equal(res[0], [1, 2, 3])
+            assert res[0] == Vector([1, 2, 3])
         finally:
             pool.putconn(conn)
 

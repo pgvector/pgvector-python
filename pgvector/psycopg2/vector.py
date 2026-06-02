@@ -11,7 +11,7 @@ class VectorAdapter:
         return adapt(Vector._to_db(self._value)).getquoted()
 
 
-def cast_vector(value: str | None, cur: cursor) -> np.ndarray | None:
+def cast_vector(value: str | None, cur: cursor) -> Vector | None:
     return Vector._from_db(value)
 
 

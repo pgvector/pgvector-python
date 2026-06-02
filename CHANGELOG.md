@@ -1,6 +1,7 @@
 ## 0.5.0 (unreleased)
 
 - Added type hints
+- Changed `vector` type to return `Vector` object instead of NumPy array
 - Removed `utils` package (use top-level `pgvector` package instead)
 - Removed re-exported classes (use top-level `pgvector` package instead)
 - Dropped support for Python < 3.10

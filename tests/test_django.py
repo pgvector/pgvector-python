@@ -14,7 +14,7 @@ from math import sqrt
 import numpy as np
 import os
 import pgvector.django
-from pgvector import HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
 from unittest import mock
 
@@ -167,12 +167,11 @@ class TestDjango:
     def test_vector(self):
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
-        assert np.array_equal(item.embedding, [1, 2, 3])
-        assert item.embedding.dtype == np.float32
+        assert item.embedding == Vector([1, 2, 3])
 
     def test_vector_l2_distance(self):
         create_items()
-        distance = L2Distance('embedding', [1, 1, 1])
+        distance = L2Distance('embedding', Vector([1, 1, 1]))
         items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
@@ -295,7 +294,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
-        assert np.array_equal(avg, [2.5, 3.5, 4.5])
+        assert avg == Vector([2.5, 3.5, 4.5])
 
     def test_vector_sum(self):
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
@@ -303,7 +302,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
-        assert np.array_equal(sum, [5, 7, 9])
+        assert sum == Vector([5, 7, 9])
 
     def test_halfvec_avg(self):
         avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
@@ -349,7 +348,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert np.array_equal(Item.objects.get(pk=1).embedding, [4, 5, 6])
+        assert Item.objects.get(pk=1).embedding == Vector([4, 5, 6])
 
     def test_vector_form_save_missing(self):
         Item(id=1).save()
@@ -467,8 +466,7 @@ class TestDjango:
 
             # this fails if the driver does not cast arrays
             item = Item.objects.get(pk=1)
-            assert np.array_equal(item.embeddings[0], [1, 2, 3])
-            assert np.array_equal(item.embeddings[1], [4, 5, 6])
+            assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
     def test_double_array(self):
         Item(id=1, double_embedding=[1, 1, 1]).save()

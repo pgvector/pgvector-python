@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector import HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
 
 db = PostgresqlDatabase('pgvector_python_test')
@@ -43,8 +43,7 @@ class TestPeewee:
     def test_vector(self):
         Item.create(id=1, embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert np.array_equal(item.embedding, [1, 2, 3])
-        assert item.embedding.dtype == np.float32
+        assert item.embedding == Vector([1, 2, 3])
 
     def test_vector_l2_distance(self):
         create_items()
@@ -170,7 +169,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
-        assert np.array_equal(avg, [2.5, 3.5, 4.5])
+        assert avg == Vector([2.5, 3.5, 4.5])
 
     def test_vector_sum(self):
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
@@ -178,7 +177,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
-        assert np.array_equal(sum, [5, 7, 9])
+        assert sum == Vector([5, 7, 9])
 
     def test_halfvec_avg(self):
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()

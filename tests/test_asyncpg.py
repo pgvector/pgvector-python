@@ -20,9 +20,8 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert np.array_equal(res[0]['embedding'], embedding.to_numpy())
-        assert res[0]['embedding'].dtype == np.float32
-        assert np.array_equal(res[1]['embedding'], embedding2)
+        assert res[0]['embedding'] == embedding
+        assert res[1]['embedding'] == Vector(embedding2)
         assert res[2]['embedding'] is None
 
         # ensures binary format is correct
@@ -116,10 +115,8 @@ class TestAsyncpg:
         await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])", embeddings2[0], embeddings2[1])
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-        assert np.array_equal(res[0]['embeddings'][0], embeddings[0].to_numpy())
-        assert np.array_equal(res[0]['embeddings'][1], embeddings[1].to_numpy())
-        assert np.array_equal(res[1]['embeddings'][0], embeddings2[0])
-        assert np.array_equal(res[1]['embeddings'][1], embeddings2[1])
+        assert res[0]['embeddings'] == embeddings
+        assert res[1]['embeddings'] == [Vector(e) for e in embeddings2]
 
         await conn.close()
 
@@ -140,7 +137,6 @@ class TestAsyncpg:
             await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
             res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
-            assert np.array_equal(res[0]['embedding'], embedding.to_numpy())
-            assert res[0]['embedding'].dtype == np.float32
-            assert np.array_equal(res[1]['embedding'], embedding2)
+            assert res[0]['embedding'] == embedding
+            assert res[1]['embedding'] == Vector(embedding2)
             assert res[2]['embedding'] is None

@@ -1,5 +1,5 @@
 import numpy as np
-from pgvector import HalfVector, SparseVector
+from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy.exc import StatementError
@@ -65,10 +65,8 @@ class TestSqlmodel:
             assert items[0].id == 1
             assert items[1].id == 2
             assert items[2].id == 3
-            assert np.array_equal(items[0].embedding, np.array([1.5, 2, 3]))  # type: ignore
-            assert items[0].embedding.dtype == np.float32  # type: ignore
-            assert np.array_equal(items[1].embedding, np.array([4, 5, 6]))  # type: ignore
-            assert items[1].embedding.dtype == np.float32  # type: ignore
+            assert items[0].embedding == Vector([1.5, 2, 3])
+            assert items[1].embedding == Vector([4, 5, 6])
             assert items[2].embedding is None
 
     def test_vector(self):
@@ -76,7 +74,7 @@ class TestSqlmodel:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
-            assert np.array_equal(item.embedding, np.array([1, 2, 3]))  # type: ignore
+            assert item.embedding == Vector([1, 2, 3])
 
     def test_vector_l2_distance(self):
         create_items()
@@ -202,7 +200,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(avg(Item.embedding))).first()
-            assert np.array_equal(res, np.array([2.5, 3.5, 4.5]))  # type: ignore
+            assert res == Vector([2.5, 3.5, 4.5])
 
     def test_vector_sum(self):
         with Session(engine) as session:
@@ -211,7 +209,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(sum(Item.embedding))).first()
-            assert np.array_equal(res, np.array([5, 7, 9]))  # type: ignore
+            assert res == Vector([5, 7, 9])
 
     def test_halfvec_avg(self):
         with Session(engine) as session:
