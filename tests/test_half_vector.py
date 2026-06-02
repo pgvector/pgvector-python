@@ -39,6 +39,12 @@ class TestHalfVector:
     def test_dimensions(self):
         assert HalfVector([1, 2, 3]).dimensions() == 3
 
+    def test_to_numpy_readonly(self):
+        arr = HalfVector([1, 2, 3]).to_numpy()
+        with pytest.raises(ValueError) as error:
+            arr[0] = 4
+        assert str(error.value) == 'assignment destination is read-only'
+
     def test_from_text(self):
         vec = HalfVector.from_text('[1.5,2,3]')
         assert vec.to_list() == [1.5, 2, 3]
