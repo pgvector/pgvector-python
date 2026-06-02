@@ -24,7 +24,8 @@ class BitBinaryDumper(BitDumper):
         return Bit._to_db_binary(obj)
 
 
-def register_bit_info(context: BaseConnection[Any], info: TypeInfo) -> None:
+def register_bit_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:
+    assert info is not None
     info.register(context)
 
     # add oid to anonymous class for set_types

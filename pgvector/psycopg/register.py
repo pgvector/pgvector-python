@@ -12,7 +12,6 @@ def register_vector(context: Connection[Any]) -> None:
     register_vector_info(context, info)
 
     info = TypeInfo.fetch(context, 'bit')
-    assert info is not None
     register_bit_info(context, info)
 
     info = TypeInfo.fetch(context, 'halfvec')
@@ -29,7 +28,6 @@ async def register_vector_async(context: AsyncConnection[Any]) -> None:
     register_vector_info(context, info)
 
     info = await TypeInfo.fetch(context, 'bit')
-    assert info is not None
     register_bit_info(context, info)
 
     info = await TypeInfo.fetch(context, 'halfvec')
