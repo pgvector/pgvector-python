@@ -1,6 +1,7 @@
 ## 0.5.0 (unreleased)
 
 - Added type hints
+- Removed `utils` package (use top-level `pgvector` package instead)
 - Removed re-exported classes (use top-level `pgvector` package instead)
 - Dropped support for Python < 3.10
 - Dropped support for SQLAlchemy < 2
