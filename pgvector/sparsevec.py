@@ -42,7 +42,7 @@ class SparseVector:
     def values(self) -> list[float]:
         return self._values
 
-    def to_coo(self):
+    def to_coo(self) -> Any:
         from scipy.sparse import coo_array
 
         coords = ([0] * len(self._indices), self._indices)

@@ -20,7 +20,7 @@ class BIT(UserDefinedType):
         if dialect.__class__.__name__ == 'PGDialect_asyncpg':
             import asyncpg
 
-            def process(value):
+            def process(value: Any) -> Any:
                 if isinstance(value, str):
                     return asyncpg.BitString(value)
                 return value

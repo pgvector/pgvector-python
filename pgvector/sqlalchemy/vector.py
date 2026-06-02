@@ -1,3 +1,4 @@
+import numpy as np
 from sqlalchemy.dialects.postgresql.base import ischema_names
 from sqlalchemy.types import UserDefinedType, Float, String
 from sqlalchemy import Dialect, Operators
@@ -19,19 +20,19 @@ class VECTOR(UserDefinedType):
         return 'VECTOR(%d)' % self.dim
 
     def bind_processor(self, dialect: Dialect) -> Any:
-        def process(value):
+        def process(value: Any) -> str | None:
             return Vector._to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect: Dialect) -> Any:
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
-        def process(value):
+        def process(value: Any) -> Any:
             return string_literal_processor(Vector._to_db(value, self.dim))  # type: ignore
         return process
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Any:
-        def process(value):
+        def process(value: Any) -> np.ndarray | None:
             return Vector._from_db(value)
         return process
 

@@ -19,19 +19,19 @@ class SPARSEVEC(UserDefinedType):
         return 'SPARSEVEC(%d)' % self.dim
 
     def bind_processor(self, dialect: Dialect) -> Any:
-        def process(value):
+        def process(value: Any) -> str | None:
             return SparseVector._to_db(value, self.dim)
         return process
 
     def literal_processor(self, dialect: Dialect) -> Any:
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
-        def process(value):
+        def process(value: Any) -> Any:
             return string_literal_processor(SparseVector._to_db(value, self.dim))  # type: ignore
         return process
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Any:
-        def process(value):
+        def process(value: Any) -> SparseVector | None:
             return SparseVector._from_db(value)
         return process
 
