@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, event, insert, inspect, select, text, Meta
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import declarative_base, mapped_column, Session
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
 from sqlalchemy.sql import func
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
@@ -64,7 +64,9 @@ with Session(setup_engine) as session:
     session.execute(text('CREATE EXTENSION IF NOT EXISTS vector'))
     session.commit()
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class Item(Base):
