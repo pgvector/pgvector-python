@@ -49,8 +49,12 @@ class VectorField(Field):
             value = value.tolist()
         super().run_validators(value)
 
-    def formfield(self, **kwargs: Any) -> forms.Field:  # type: ignore
-        return super().formfield(form_class=VectorFormField, **kwargs)
+    def formfield(self, form_class: Any = None, choices_form_class: Any = None, **kwargs: Any) -> forms.Field:
+        return super().formfield(
+            form_class=VectorFormField if form_class is None else form_class,
+            choices_form_class=choices_form_class,
+            **kwargs
+        )
 
 
 class VectorWidget(forms.TextInput):

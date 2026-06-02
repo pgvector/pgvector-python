@@ -41,8 +41,12 @@ class HalfVectorField(Field):
     def value_to_string(self, obj: Any) -> str | None:
         return self.get_prep_value(self.value_from_object(obj))
 
-    def formfield(self, **kwargs) -> forms.Field:  # type: ignore
-        return super().formfield(form_class=HalfVectorFormField, **kwargs)
+    def formfield(self, form_class: Any = None, choices_form_class: Any = None, **kwargs: Any) -> forms.Field:
+        return super().formfield(
+            form_class=HalfVectorFormField if form_class is None else form_class,
+            choices_form_class=choices_form_class,
+            **kwargs
+        )
 
 
 class HalfVectorWidget(forms.TextInput):
