@@ -9,7 +9,7 @@ class IvfflatIndex(PostgresIndex):
         self.lists = lists
         super().__init__(*expressions, **kwargs)
 
-    def deconstruct(self) -> tuple:
+    def deconstruct(self) -> tuple[Any, Any, Any]:
         path, args, kwargs = super().deconstruct()
         if self.lists is not None:
             kwargs['lists'] = self.lists
@@ -30,7 +30,7 @@ class HnswIndex(PostgresIndex):
         self.ef_construction = ef_construction
         super().__init__(*expressions, **kwargs)
 
-    def deconstruct(self) -> tuple:
+    def deconstruct(self) -> tuple[Any, Any, Any]:
         path, args, kwargs = super().deconstruct()
         if self.m is not None:
             kwargs['m'] = self.m

@@ -14,7 +14,7 @@ class VectorField(Field):
         self.dimensions = dimensions
         super().__init__(*args, **kwargs)
 
-    def deconstruct(self) -> tuple:
+    def deconstruct(self) -> tuple[Any, Any, Any, Any]:
         name, path, args, kwargs = super().deconstruct()
         if self.dimensions is not None:
             kwargs['dimensions'] = self.dimensions

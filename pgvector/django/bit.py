@@ -11,7 +11,7 @@ class BitField(Field):
         self.length = length
         super().__init__(*args, **kwargs)
 
-    def deconstruct(self) -> tuple:
+    def deconstruct(self) -> tuple[Any, Any, Any, Any]:
         name, path, args, kwargs = super().deconstruct()
         if self.length is not None:
             kwargs['length'] = self.length
