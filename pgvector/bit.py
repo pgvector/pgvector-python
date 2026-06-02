@@ -1,12 +1,11 @@
 from __future__ import annotations
 import numpy as np
 from struct import pack, unpack_from
-from typing import Any
 from warnings import warn
 
 
 class Bit:
-    def __init__(self, value: Any) -> None:
+    def __init__(self, value: object) -> None:
         if isinstance(value, bytes):
             self._len = 8 * len(value)
             self._data = value
@@ -16,11 +15,17 @@ class Bit:
             else:
                 value = np.asarray(value)
 
+                # for mypy
+                assert isinstance(value, np.ndarray)
+
                 if value.dtype != np.bool:
                     # skip warning for result of np.unpackbits
                     if value.dtype != np.uint8 or np.any(value > 1):
                         warn('expected elements to be boolean', stacklevel=2)
                     value = value.astype(bool)
+
+                    # for mypy
+                    assert isinstance(value, np.ndarray)
 
                 if value.ndim != 1:
                     raise ValueError('expected ndim to be 1')
