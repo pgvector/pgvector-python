@@ -8,9 +8,17 @@ class TestHalfVector:
     def test_list(self):
         assert HalfVector([1, 2, 3]).to_list() == [1, 2, 3]
 
+    def test_list_empty(self):
+        assert HalfVector([]).to_list() == []
+
     def test_list_str(self):
         with pytest.raises(ValueError) as error:
             HalfVector([1, 'two', 3])  # ty: ignore[invalid-argument-type]
+        assert str(error.value) == 'expected list[float]'
+
+    def test_list_list(self):
+        with pytest.raises(ValueError) as error:
+            HalfVector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected list[float]'
 
     def test_ndarray(self):
@@ -18,12 +26,7 @@ class TestHalfVector:
         assert HalfVector(arr).to_list() == [1, 2, 3]
         assert HalfVector(arr).to_numpy() is not arr
 
-    def test_ndim_two(self):
-        with pytest.raises(ValueError) as error:
-            HalfVector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
-        assert str(error.value) == 'expected list[float]'
-
-    def test_ndim_zero(self):
+    def test_int(self):
         with pytest.raises(ValueError) as error:
             HalfVector(1)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected list or ndarray'
