@@ -7,7 +7,7 @@ NO_DEFAULT = object()
 
 
 class SparseVector:
-    def __init__(self, value: Any, dimensions: int | Any = NO_DEFAULT, /) -> None:
+    def __init__(self, value: dict[int, float] | list[float] | Any, dimensions: int | Any = NO_DEFAULT, /) -> None:
         if value.__class__.__module__.startswith('scipy.sparse.'):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')

@@ -1,19 +1,21 @@
 from __future__ import annotations
 import numpy as np
 from struct import pack, unpack_from
-from typing import Any
 
 
 class HalfVector:
-    def __init__(self, value: Any) -> None:
+    def __init__(self, value: object) -> None:
         # asarray still copies if same dtype
         if not isinstance(value, np.ndarray) or value.dtype != '>f2':
             value = np.asarray(value, dtype='>f2')
 
+        # for mypy
+        assert isinstance(value, np.ndarray)
+
         if value.ndim != 1:
             raise ValueError('expected ndim to be 1')
 
-        self._value = value
+        self._value = np.atleast_1d(value)
 
     def __repr__(self) -> str:
         return f'HalfVector({self.to_list()})'
