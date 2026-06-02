@@ -1,11 +1,12 @@
 from django.db.models import FloatField, Func, Value
 from .. import Vector, HalfVector, SparseVector
+from typing import Any
 
 
 class DistanceBase(Func):
     output_field = FloatField()
 
-    def __init__(self, expression, vector, **extra):
+    def __init__(self, expression: Any, vector: Any, **extra: Any) -> None:
         if not hasattr(vector, 'resolve_expression'):
             if isinstance(vector, HalfVector):
                 vector = Value(HalfVector._to_db(vector))
@@ -23,7 +24,7 @@ class DistanceBase(Func):
 class BitDistanceBase(Func):
     output_field = FloatField()
 
-    def __init__(self, expression, vector, **extra):
+    def __init__(self, expression: Any, vector: Any, **extra: Any) -> None:
         if not hasattr(vector, 'resolve_expression'):
             vector = Value(vector)
         super().__init__(expression, vector, **extra)
