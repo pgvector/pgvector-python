@@ -601,7 +601,7 @@ class TestSqlalchemyAsync:
                 embedding = [1, 2, 3]
                 session.add(Item(id=1, half_embedding=embedding))
                 item = await session.get_one(Item, 1)
-                assert item.half_embedding == HalfVector(embedding)
+                assert item.half_embedding == HalfVector(embedding)  # ty: ignore[invalid-argument-type]
 
         await engine.dispose()
 

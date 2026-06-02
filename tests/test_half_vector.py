@@ -10,7 +10,7 @@ class TestHalfVector:
 
     def test_list_str(self):
         with pytest.raises(ValueError, match='could not convert string to float'):
-            HalfVector([1, 'two', 3])
+            HalfVector([1, 'two', 3])  # ty: ignore[invalid-argument-type]
 
     def test_tuple(self):
         assert HalfVector((1, 2, 3)).to_list() == [1, 2, 3]
@@ -27,12 +27,12 @@ class TestHalfVector:
 
     def test_ndim_two(self):
         with pytest.raises(ValueError) as error:
-            HalfVector([[1, 2], [3, 4]])
+            HalfVector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected ndim to be 1'
 
     def test_ndim_zero(self):
         with pytest.raises(ValueError) as error:
-            HalfVector(1)
+            HalfVector(1)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected ndim to be 1'
 
     def test_repr(self):

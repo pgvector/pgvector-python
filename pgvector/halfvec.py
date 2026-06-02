@@ -4,7 +4,7 @@ from struct import pack, unpack_from
 
 
 class HalfVector:
-    def __init__(self, value: object) -> None:
+    def __init__(self, value: list[float] | tuple[float, ...] | np.ndarray) -> None:
         # asarray still copies if same dtype
         if not isinstance(value, np.ndarray) or value.dtype != '>f2':
             value = np.asarray(value, dtype='>f2')
@@ -55,7 +55,7 @@ class HalfVector:
             return value
 
         if not isinstance(value, cls):
-            value = cls(value)
+            value = cls(value)  # ty: ignore[invalid-argument-type]
 
         if dim is not None and value.dimensions() != dim:
             raise ValueError('expected %d dimensions, not %d' % (dim, value.dimensions()))
@@ -68,7 +68,7 @@ class HalfVector:
             return value
 
         if not isinstance(value, cls):
-            value = cls(value)
+            value = cls(value)  # ty: ignore[invalid-argument-type]
 
         return value.to_binary()
 
