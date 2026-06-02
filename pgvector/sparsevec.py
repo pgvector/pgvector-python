@@ -1,11 +1,13 @@
+from __future__ import annotations
 import numpy as np
 from struct import pack, unpack_from
+from typing import Any
 
 NO_DEFAULT = object()
 
 
 class SparseVector:
-    def __init__(self, value, dimensions=NO_DEFAULT, /):
+    def __init__(self, value: Any, dimensions: int | Any = NO_DEFAULT, /) -> None:
         if value.__class__.__module__.startswith('scipy.sparse.'):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
@@ -22,22 +24,22 @@ class SparseVector:
 
             self._from_dense(value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         elements = dict(zip(self._indices, self._values))
         return f'SparseVector({elements}, {self._dim})'
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self.dimensions() == other.dimensions() and self.indices() == other.indices() and self.values() == other.values()
         return False
 
-    def dimensions(self):
+    def dimensions(self) -> int:
         return self._dim
 
-    def indices(self):
+    def indices(self) -> list[int]:
         return self._indices
 
-    def values(self):
+    def values(self) -> list[float]:
         return self._values
 
     def to_coo(self):
@@ -46,26 +48,26 @@ class SparseVector:
         coords = ([0] * len(self._indices), self._indices)
         return coo_array((self._values, coords), shape=(1, self._dim))
 
-    def to_list(self):
+    def to_list(self) -> list[float]:
         vec = [0.0] * self._dim
         for i, v in zip(self._indices, self._values):
             vec[i] = v
         return vec
 
-    def to_numpy(self):
+    def to_numpy(self) -> np.ndarray:
         vec = np.repeat(0.0, self._dim).astype(np.float32)
         for i, v in zip(self._indices, self._values):
             vec[i] = v
         return vec
 
-    def to_text(self):
+    def to_text(self) -> str:
         return '{' + ','.join([f'{int(i) + 1}:{float(v)}' for i, v in zip(self._indices, self._values)]) + '}/' + str(int(self._dim))
 
-    def to_binary(self):
+    def to_binary(self) -> bytes:
         nnz = len(self._indices)
         return pack(f'>iii{nnz}i{nnz}f', self._dim, nnz, 0, *self._indices, *self._values)
 
-    def _from_dict(self, d, dim):
+    def _from_dict(self, d: dict[int, float], dim: int) -> None:
         elements = [(i, v) for i, v in d.items() if v != 0]
         elements.sort()
 
@@ -73,7 +75,7 @@ class SparseVector:
         self._indices = [int(v[0]) for v in elements]
         self._values = [float(v[1]) for v in elements]
 
-    def _from_sparse(self, value):
+    def _from_sparse(self, value: Any) -> None:
         value = value.tocoo()
 
         if value.ndim == 1:
@@ -90,13 +92,13 @@ class SparseVector:
             self._indices = value.col.tolist()
         self._values = value.data.tolist()
 
-    def _from_dense(self, value):
+    def _from_dense(self, value: list[float]) -> None:
         self._dim = len(value)
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
 
     @classmethod
-    def from_text(cls, value):
+    def from_text(cls, value: str) -> SparseVector:
         elements, dim = value.split('/', 2)
         indices = []
         values = []
@@ -109,14 +111,14 @@ class SparseVector:
         return cls._from_parts(int(dim), indices, values)
 
     @classmethod
-    def from_binary(cls, value):
+    def from_binary(cls, value: bytes) -> SparseVector:
         dim, nnz, unused = unpack_from('>iii', value)
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
         return cls._from_parts(int(dim), list(indices), list(values))
 
     @classmethod
-    def _from_parts(cls, dim, indices, values):
+    def _from_parts(cls, dim: int, indices: list[int], values: list[float]) -> SparseVector:
         vec = cls.__new__(cls)
         vec._dim = dim
         vec._indices = indices
@@ -124,7 +126,7 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value, dim=None):
+    def _to_db(cls, value: Any, dim: int | None = None) -> str | None:
         if value is None:
             return value
 
@@ -137,7 +139,7 @@ class SparseVector:
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value):
+    def _to_db_binary(cls, value: Any) -> bytes | None:
         if value is None:
             return value
 
@@ -147,15 +149,15 @@ class SparseVector:
         return value.to_binary()
 
     @classmethod
-    def _from_db(cls, value):
-        if value is None or isinstance(value, cls):
+    def _from_db(cls, value: str | SparseVector | None) -> SparseVector | None:
+        if value is None or isinstance(value, SparseVector):
             return value
 
         return cls.from_text(value)
 
     @classmethod
-    def _from_db_binary(cls, value):
-        if value is None or isinstance(value, cls):
+    def _from_db_binary(cls, value: bytes | SparseVector | None) -> SparseVector | None:
+        if value is None or isinstance(value, SparseVector):
             return value
 
         return cls.from_binary(value)

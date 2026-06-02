@@ -1,21 +1,27 @@
+from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
+from psycopg.types import TypeInfo
+from typing import Any, TypeAlias
 from .. import HalfVector
+
+Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class HalfVectorDumper(Dumper):
 
     format = Format.TEXT
 
-    def dump(self, obj):
-        return HalfVector._to_db(obj).encode('utf8')
+    def dump(self, obj: HalfVector) -> Buffer | None:
+        value = HalfVector._to_db(obj)
+        return value if value is None else value.encode('utf8')
 
 
 class HalfVectorBinaryDumper(HalfVectorDumper):
 
     format = Format.BINARY
 
-    def dump(self, obj):
+    def dump(self, obj: HalfVector) -> Buffer | None:
         return HalfVector._to_db_binary(obj)
 
 
@@ -23,7 +29,7 @@ class HalfVectorLoader(Loader):
 
     format = Format.TEXT
 
-    def load(self, data):
+    def load(self, data: Buffer) -> HalfVector | None:
         if isinstance(data, memoryview):
             data = bytes(data)
         return HalfVector._from_db(data.decode('utf8'))
@@ -33,13 +39,13 @@ class HalfVectorBinaryLoader(HalfVectorLoader):
 
     format = Format.BINARY
 
-    def load(self, data):
-        if isinstance(data, memoryview):
+    def load(self, data: Buffer) -> HalfVector | None:
+        if isinstance(data, (bytearray, memoryview)):
             data = bytes(data)
         return HalfVector._from_db_binary(data)
 
 
-def register_halfvec_info(context, info):
+def register_halfvec_info(context: BaseConnection[Any], info: TypeInfo) -> None:
     info.register(context)
 
     # add oid to anonymous class for set_types

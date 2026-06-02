@@ -1,10 +1,12 @@
+from __future__ import annotations
 import numpy as np
 from struct import pack, unpack_from
+from typing import Any
 from warnings import warn
 
 
 class Bit:
-    def __init__(self, value):
+    def __init__(self, value: Any) -> None:
         if isinstance(value, bytes):
             self._len = 8 * len(value)
             self._data = value
@@ -26,32 +28,32 @@ class Bit:
             self._len = len(value)
             self._data = np.packbits(value).tobytes()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'Bit({self.to_text()})'
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, self.__class__):
             return self._len == other._len and self._data == other._data
         return False
 
-    def to_list(self):
+    def to_list(self) -> list[bool]:
         return self.to_numpy().tolist()
 
-    def to_numpy(self):
+    def to_numpy(self) -> np.ndarray:
         return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._len).astype(bool)
 
-    def to_text(self):
+    def to_text(self) -> str:
         return ''.join(format(v, '08b') for v in self._data)[:self._len]
 
-    def to_binary(self):
+    def to_binary(self) -> bytes:
         return pack('>i', self._len) + self._data
 
     @classmethod
-    def from_text(cls, value):
+    def from_text(cls, value: str) -> Bit:
         return cls(str(value))
 
     @classmethod
-    def from_binary(cls, value):
+    def from_binary(cls, value: bytes) -> Bit:
         if not isinstance(value, bytes):
             raise ValueError('expected bytes')
 
@@ -61,15 +63,15 @@ class Bit:
         return bit
 
     @classmethod
-    def _to_db(cls, value):
-        if not isinstance(value, cls):
+    def _to_db(cls, value: Bit) -> str:
+        if not isinstance(value, Bit):
             raise ValueError('expected bit')
 
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value):
-        if not isinstance(value, cls):
+    def _to_db_binary(cls, value: Bit) -> bytes:
+        if not isinstance(value, Bit):
             raise ValueError('expected bit')
 
         return value.to_binary()

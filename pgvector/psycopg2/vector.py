@@ -1,21 +1,22 @@
 import numpy as np
-from psycopg2.extensions import adapt, new_array_type, new_type, register_adapter, register_type
+from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
+from typing import Any
 from .. import Vector
 
 
 class VectorAdapter:
-    def __init__(self, value):
+    def __init__(self, value: Any) -> None:
         self._value = value
 
-    def getquoted(self):
+    def getquoted(self) -> Any:
         return adapt(Vector._to_db(self._value)).getquoted()
 
 
-def cast_vector(value, cur):
+def cast_vector(value: str | None, cur: cursor) -> np.ndarray | None:
     return Vector._from_db(value)
 
 
-def register_vector_info(oid, array_oid, scope):
+def register_vector_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
     vector = new_type((oid,), 'VECTOR', cast_vector)
     register_type(vector, scope)
 

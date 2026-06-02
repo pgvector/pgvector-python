@@ -1,22 +1,29 @@
+import numpy as np
 import psycopg
+from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
+from psycopg.types import TypeInfo
+from typing import Any, TypeAlias
 from .. import Vector
+
+Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class VectorDumper(Dumper):
 
     format = Format.TEXT
 
-    def dump(self, obj):
-        return Vector._to_db(obj).encode('utf8')
+    def dump(self, obj: Vector) -> Buffer | None:
+        value = Vector._to_db(obj)
+        return value if value is None else value.encode('utf8')
 
 
 class VectorBinaryDumper(VectorDumper):
 
     format = Format.BINARY
 
-    def dump(self, obj):
+    def dump(self, obj: Vector) -> Buffer | None:
         return Vector._to_db_binary(obj)
 
 
@@ -24,7 +31,7 @@ class VectorLoader(Loader):
 
     format = Format.TEXT
 
-    def load(self, data):
+    def load(self, data: Buffer) -> np.ndarray | None:
         if isinstance(data, memoryview):
             data = bytes(data)
         return Vector._from_db(data.decode('utf8'))
@@ -34,13 +41,13 @@ class VectorBinaryLoader(VectorLoader):
 
     format = Format.BINARY
 
-    def load(self, data):
-        if isinstance(data, memoryview):
+    def load(self, data: Buffer) -> np.ndarray | None:
+        if isinstance(data, (bytearray, memoryview)):
             data = bytes(data)
         return Vector._from_db_binary(data)
 
 
-def register_vector_info(context, info):
+def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:
     if info is None:
         raise psycopg.ProgrammingError('vector type not found in the database')
     info.register(context)

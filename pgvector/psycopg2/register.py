@@ -1,12 +1,12 @@
 import psycopg2
-from psycopg2.extensions import cursor
+from psycopg2.extensions import connection, cursor
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
 
 
 # note: register_adapter is always global
-def register_vector(conn_or_curs, globally=False, arrays=True):
+def register_vector(conn_or_curs: connection | cursor, globally: bool = False, arrays: bool = True) -> None:
     conn = conn_or_curs if hasattr(conn_or_curs, 'cursor') else conn_or_curs.connection
     cur = conn.cursor(cursor_factory=cursor)
     scope = None if globally else conn_or_curs

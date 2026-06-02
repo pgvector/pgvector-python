@@ -1,20 +1,21 @@
-from psycopg2.extensions import adapt, new_array_type, new_type, register_adapter, register_type
+from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
+from typing import Any
 from .. import SparseVector
 
 
 class SparsevecAdapter:
-    def __init__(self, value):
+    def __init__(self, value: Any) -> None:
         self._value = value
 
-    def getquoted(self):
+    def getquoted(self) -> Any:
         return adapt(SparseVector._to_db(self._value)).getquoted()
 
 
-def cast_sparsevec(value, cur):
+def cast_sparsevec(value: str | None, cur: cursor) -> SparseVector | None:
     return SparseVector._from_db(value)
 
 
-def register_sparsevec_info(oid, array_oid, scope):
+def register_sparsevec_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
     sparsevec = new_type((oid,), 'SPARSEVEC', cast_sparsevec)
     register_type(sparsevec, scope)
 
