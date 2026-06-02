@@ -1,21 +1,22 @@
 from peewee import Expression, Field
+from typing import Any
 
 
 class FixedBitField(Field):
     field_type = 'bit'
 
-    def __init__(self, max_length=None, *args, **kwargs):
+    def __init__(self, max_length: int | None = None, *args, **kwargs) -> None:
         self.max_length = max_length
         super(FixedBitField, self).__init__(*args, **kwargs)
 
-    def get_modifiers(self):
-        return self.max_length and [self.max_length] or None
+    def get_modifiers(self) -> list[int] | None:
+        return [self.max_length] if self.max_length else None
 
-    def _distance(self, op, vector):
+    def _distance(self, op: str, vector: Any) -> Expression:
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))
 
-    def hamming_distance(self, vector):
+    def hamming_distance(self, vector: Any) -> Expression:
         return self._distance('<~>', vector)
 
-    def jaccard_distance(self, vector):
+    def jaccard_distance(self, vector: Any) -> Expression:
         return self._distance('<%%>', vector)

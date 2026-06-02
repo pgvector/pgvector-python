@@ -18,7 +18,7 @@ class HALFVEC(UserDefinedType):
             return 'HALFVEC'
         return 'HALFVEC(%d)' % self.dim
 
-    def bind_processor(self, dialect: Dialect):
+    def bind_processor(self, dialect: Dialect) -> Any:
         def process(value):
             return HalfVector._to_db(value, self.dim)
         return process
