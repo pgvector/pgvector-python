@@ -1,12 +1,24 @@
 from __future__ import annotations
 import numpy as np
 from struct import pack, unpack_from
-from typing import Any
+from typing import Any, overload
 
 NO_DEFAULT = object()
 
 
 class SparseVector:
+    @overload
+    def __init__(self, value: dict[int, float], dimensions: int, /) -> None:
+        ...
+
+    @overload
+    def __init__(self, value: list[float], /) -> None:
+        ...
+
+    @overload
+    def __init__(self, value: Any, /) -> None:
+        ...
+
     def __init__(self, value: dict[int, float] | list[float] | Any, dimensions: int | Any = NO_DEFAULT, /) -> None:
         if value.__class__.__module__.startswith('scipy.sparse.'):
             if dimensions is not NO_DEFAULT:

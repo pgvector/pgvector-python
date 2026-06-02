@@ -14,7 +14,7 @@ class TestSparseVector:
 
     def test_list_dimensions(self):
         with pytest.raises(ValueError) as error:
-            SparseVector([1, 0, 2, 0, 3, 0], 6)
+            SparseVector([1, 0, 2, 0, 3, 0], 6)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'extra argument'
 
     def test_ndarray(self):
@@ -40,7 +40,7 @@ class TestSparseVector:
 
     def test_coo_array_dimensions(self):
         with pytest.raises(ValueError) as error:
-            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)
+            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'extra argument'
 
     def test_coo_matrix(self):
