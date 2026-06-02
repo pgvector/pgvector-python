@@ -29,10 +29,10 @@ class BIT(UserDefinedType):
             return super().bind_processor(dialect)
 
     class comparator_factory(UserDefinedType.Comparator):
-        def hamming_distance(self, other: Any) -> Operators:
+        def hamming_distance(self, other: object) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 
-        def jaccard_distance(self, other: Any) -> Operators:
+        def jaccard_distance(self, other: object) -> Operators:
             return self.op('<%>', return_type=Float)(other)
 
 

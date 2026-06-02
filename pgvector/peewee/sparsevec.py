@@ -19,17 +19,17 @@ class SparseVectorField(Field):
     def python_value(self, value: Any) -> SparseVector | None:
         return SparseVector._from_db(value)
 
-    def _distance(self, op: str, vector: Any) -> Expression:
+    def _distance(self, op: str, vector: object) -> Expression:
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))
 
-    def l2_distance(self, vector: Any) -> Expression:
+    def l2_distance(self, vector: object) -> Expression:
         return self._distance('<->', vector)
 
-    def max_inner_product(self, vector: Any) -> Expression:
+    def max_inner_product(self, vector: object) -> Expression:
         return self._distance('<#>', vector)
 
-    def cosine_distance(self, vector: Any) -> Expression:
+    def cosine_distance(self, vector: object) -> Expression:
         return self._distance('<=>', vector)
 
-    def l1_distance(self, vector: Any) -> Expression:
+    def l1_distance(self, vector: object) -> Expression:
         return self._distance('<+>', vector)

@@ -37,16 +37,16 @@ class VECTOR(UserDefinedType):
         return process
 
     class comparator_factory(UserDefinedType.Comparator):
-        def l2_distance(self, other: Any) -> Operators:
+        def l2_distance(self, other: object) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
-        def max_inner_product(self, other: Any) -> Operators:
+        def max_inner_product(self, other: object) -> Operators:
             return self.op('<#>', return_type=Float)(other)
 
-        def cosine_distance(self, other: Any) -> Operators:
+        def cosine_distance(self, other: object) -> Operators:
             return self.op('<=>', return_type=Float)(other)
 
-        def l1_distance(self, other: Any) -> Operators:
+        def l1_distance(self, other: object) -> Operators:
             return self.op('<+>', return_type=Float)(other)
 
 
