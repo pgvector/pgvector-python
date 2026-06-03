@@ -1,4 +1,4 @@
-## 0.5.0 (unreleased)
+## 1.0.0 (unreleased)
 
 - Added type hints
 - Changed `vector` type to return `Vector` object instead of NumPy array
