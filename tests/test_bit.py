@@ -19,8 +19,9 @@ class TestBit:
         assert Bit('101').to_list() == [True, False, True]
 
     def test_str_two(self):
-        # TODO raise
-        assert Bit('201').to_list() == [True, False, True]
+        with pytest.raises(ValueError) as error:
+            Bit('201')
+        assert str(error.value) == 'expected bit string'
 
     def test_bytes(self):
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'

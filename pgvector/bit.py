@@ -11,7 +11,15 @@ class Bit:
             data = value
         else:
             if isinstance(value, str):
-                value = [v != '0' for v in value]
+                length = len(value)
+
+                if length % 8 != 0:
+                    value += '0'*(8 - (length % 8))
+
+                try:
+                    data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
+                except ValueError:
+                    raise ValueError('expected bit string')
             else:
                 value = np.asarray(value)
 
@@ -30,8 +38,8 @@ class Bit:
                 if value.ndim != 1:
                     raise ValueError('expected ndim to be 1')
 
-            length = len(value)
-            data = np.packbits(value).tobytes()
+                length = len(value)
+                data = np.packbits(value).tobytes()
 
         self._value = pack('>i', length) + data
 
