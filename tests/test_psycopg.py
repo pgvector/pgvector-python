@@ -128,19 +128,19 @@ class TestPsycopg:
     def test_text_copy_from(self):
         embedding = [1.5, 2, 3]
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
+        with cur.copy('COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN') as copy:
             copy.write_row([Vector(embedding), HalfVector(embedding), '101', SparseVector(embedding)])
 
     def test_binary_copy_from(self):
         embedding = [1.5, 2, 3]
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+        with cur.copy('COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
             copy.write_row([Vector(embedding), HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
     def test_binary_copy_from_set_types(self):
         embedding = [1.5, 2, 3]
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
+        with cur.copy('COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
             copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
             copy.write_row([1, Vector(embedding), HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
@@ -149,17 +149,17 @@ class TestPsycopg:
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT") as copy:
+        with cur.copy('COPY psycopg_items (embedding, half_embedding) TO STDOUT') as copy:
             for row in copy.rows():
-                assert row[0] == "[1.5,2,3]"
-                assert row[1] == "[1.5,2,3]"
+                assert row[0] == '[1.5,2,3]'
+                assert row[1] == '[1.5,2,3]'
 
     def test_binary_copy_to(self):
         embedding = Vector([1.5, 2, 3])
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+        with cur.copy('COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)') as copy:
             for row in copy.rows():
                 assert Vector.from_binary(row[0]) == embedding
                 assert HalfVector.from_binary(row[1]) == half_embedding
@@ -169,7 +169,7 @@ class TestPsycopg:
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()
-        with cur.copy("COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)") as copy:
+        with cur.copy('COPY psycopg_items (embedding, half_embedding) TO STDOUT WITH (FORMAT BINARY)') as copy:
             copy.set_types(['vector', 'halfvec'])
             for row in copy.rows():
                 assert row[0] == embedding
