@@ -129,6 +129,13 @@ class SparseVector:
     @classmethod
     def from_binary(cls, value: bytes) -> SparseVector:
         dim, nnz, unused = unpack_from('>iii', value)
+
+        if len(value) != 12 + 8 * nnz:
+            raise ValueError('invalid length')
+
+        if unused != 0:
+            raise ValueError('expected unused to be 0')
+
         indices = unpack_from(f'>{nnz}i', value, 12)
         values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
         return cls._from_parts(int(dim), list(indices), list(values))
