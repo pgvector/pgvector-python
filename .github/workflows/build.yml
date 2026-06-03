@@ -24,3 +24,6 @@ jobs:
           make
           sudo make install
       - run: pytest
+
+      - run: pip install --group dev-optional
+      - run: pytest
