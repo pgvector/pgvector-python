@@ -89,6 +89,11 @@ class Bit:
         if not isinstance(value, bytes):
             raise ValueError('expected bytes')
 
+        length, = unpack_from('>i', value)
+
+        if len(value) != 4 + (length + 7) // 8:
+            raise ValueError('invalid length')
+
         bit = cls.__new__(cls)
         bit._value = value
         return bit
