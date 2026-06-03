@@ -47,7 +47,7 @@ class Vector:
         return np.frombuffer(self._value, dtype='>f4', count=self.dimensions(), offset=4)
 
     def to_text(self) -> str:
-        return f'[{','.join([str(v) for v in self.to_list()])}]'
+        return f'[{",".join([str(v) for v in self.to_list()])}]'
 
     def to_binary(self) -> bytes:
         return self._value
