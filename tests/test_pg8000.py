@@ -25,7 +25,8 @@ class TestPg8000:
 
     def test_vector(self):
         embedding = Vector([1.5, 2, 3])
-        conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
+        embedding2 = None
+        conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
 
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == embedding
@@ -42,7 +43,8 @@ class TestPg8000:
 
     def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])
-        conn.run('INSERT INTO pg8000_items (half_embedding) VALUES (:embedding), (NULL)', embedding=embedding)
+        embedding2 = None
+        conn.run('INSERT INTO pg8000_items (half_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
 
         res = conn.run('SELECT half_embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == embedding
@@ -50,7 +52,8 @@ class TestPg8000:
 
     def test_bit(self):
         embedding = '101'
-        conn.run('INSERT INTO pg8000_items (binary_embedding) VALUES (:embedding), (NULL)', embedding=embedding)
+        embedding2 = None
+        conn.run('INSERT INTO pg8000_items (binary_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
 
         res = conn.run('SELECT binary_embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == '101'
@@ -58,7 +61,8 @@ class TestPg8000:
 
     def test_sparsevec(self):
         embedding = SparseVector([1.5, 2, 3])
-        conn.run('INSERT INTO pg8000_items (sparse_embedding) VALUES (:embedding), (NULL)', embedding=embedding)
+        embedding2 = None
+        conn.run('INSERT INTO pg8000_items (sparse_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
 
         res = conn.run('SELECT sparse_embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == embedding
