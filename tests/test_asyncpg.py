@@ -3,6 +3,12 @@ from pgvector import HalfVector, SparseVector, Vector
 from pgvector.asyncpg import register_vector
 import pytest
 
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+
 
 class TestAsyncpg:
     async def setup_connection(self):
@@ -19,12 +25,14 @@ class TestAsyncpg:
 
         embedding = Vector([1.5, 2, 3])
         embedding2 = [4.5, 5, 6]
-        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
+        embedding3 = np.array([7.5, 8, 9]) if NUMPY_AVAILABLE else [7.5, 8, 9]
+        await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), ($3), (NULL)", embedding, embedding2, embedding3)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
         assert res[0]['embedding'] == embedding
         assert res[1]['embedding'] == Vector(embedding2)
-        assert res[2]['embedding'] is None
+        assert res[2]['embedding'] == Vector(embedding3)
+        assert res[3]['embedding'] is None
 
         # ensures binary format is correct
         text_res = await conn.fetch("SELECT embedding::text FROM asyncpg_items ORDER BY id LIMIT 1")
