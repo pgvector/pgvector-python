@@ -28,7 +28,8 @@ class TestPsycopg2:
 
     def test_vector(self):
         embedding = Vector([1.5, 2, 3])
-        cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
+        embedding2 = None
+        cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (%s)', (embedding, embedding2))
 
         cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
