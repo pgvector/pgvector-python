@@ -25,7 +25,8 @@ class TestPsycopg:
 
     def test_vector(self):
         embedding = Vector([1.5, 2, 3])
-        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
+        embedding2 = None
+        conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (%s)', (embedding, embedding2))
 
         res = conn.execute('SELECT embedding FROM psycopg_items ORDER BY id').fetchall()
         assert res[0][0] == embedding
