@@ -9,7 +9,6 @@ Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class BitDumper(Dumper):
-
     format = Format.TEXT
 
     def dump(self, obj: Bit) -> Buffer | None:
@@ -17,7 +16,6 @@ class BitDumper(Dumper):
 
 
 class BitBinaryDumper(BitDumper):
-
     format = Format.BINARY
 
     def dump(self, obj: Bit) -> Buffer | None:

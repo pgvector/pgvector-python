@@ -10,7 +10,6 @@ Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class VectorDumper(Dumper):
-
     format = Format.TEXT
 
     def dump(self, obj: Vector) -> Buffer | None:
@@ -19,7 +18,6 @@ class VectorDumper(Dumper):
 
 
 class VectorBinaryDumper(VectorDumper):
-
     format = Format.BINARY
 
     def dump(self, obj: Vector) -> Buffer | None:
@@ -27,7 +25,6 @@ class VectorBinaryDumper(VectorDumper):
 
 
 class VectorLoader(Loader):
-
     format = Format.TEXT
 
     def load(self, data: Buffer) -> Vector | None:
@@ -37,7 +34,6 @@ class VectorLoader(Loader):
 
 
 class VectorBinaryLoader(VectorLoader):
-
     format = Format.BINARY
 
     def load(self, data: Buffer) -> Vector | None:

@@ -9,7 +9,6 @@ Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class HalfVectorDumper(Dumper):
-
     format = Format.TEXT
 
     def dump(self, obj: HalfVector) -> Buffer | None:
@@ -18,7 +17,6 @@ class HalfVectorDumper(Dumper):
 
 
 class HalfVectorBinaryDumper(HalfVectorDumper):
-
     format = Format.BINARY
 
     def dump(self, obj: HalfVector) -> Buffer | None:
@@ -26,7 +24,6 @@ class HalfVectorBinaryDumper(HalfVectorDumper):
 
 
 class HalfVectorLoader(Loader):
-
     format = Format.TEXT
 
     def load(self, data: Buffer) -> HalfVector | None:
@@ -36,7 +33,6 @@ class HalfVectorLoader(Loader):
 
 
 class HalfVectorBinaryLoader(HalfVectorLoader):
-
     format = Format.BINARY
 
     def load(self, data: Buffer) -> HalfVector | None:

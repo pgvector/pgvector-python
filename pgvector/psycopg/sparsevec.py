@@ -9,7 +9,6 @@ Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class SparseVectorDumper(Dumper):
-
     format = Format.TEXT
 
     def dump(self, obj: SparseVector) -> Buffer | None:
@@ -18,7 +17,6 @@ class SparseVectorDumper(Dumper):
 
 
 class SparseVectorBinaryDumper(SparseVectorDumper):
-
     format = Format.BINARY
 
     def dump(self, obj: SparseVector) -> Buffer | None:
@@ -26,7 +24,6 @@ class SparseVectorBinaryDumper(SparseVectorDumper):
 
 
 class SparseVectorLoader(Loader):
-
     format = Format.TEXT
 
     def load(self, data: Buffer) -> SparseVector | None:
@@ -36,7 +33,6 @@ class SparseVectorLoader(Loader):
 
 
 class SparseVectorBinaryLoader(SparseVectorLoader):
-
     format = Format.BINARY
 
     def load(self, data: Buffer) -> SparseVector | None:
