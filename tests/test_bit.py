@@ -8,12 +8,14 @@ class TestBit:
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
     def test_list_none(self):
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit([True, None, True]).to_text() == '101'  # ty: ignore[invalid-argument-type]
+        with pytest.raises(ValueError) as error:
+            Bit([True, None, True])  # ty: ignore[invalid-argument-type]
+        assert str(error.value) == 'expected list[bool]'
 
     def test_list_int(self):
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit([254, 7, 0]).to_text() == '110'  # ty: ignore[invalid-argument-type]
+        with pytest.raises(ValueError) as error:
+            Bit([254, 7, 0])  # ty: ignore[invalid-argument-type]
+        assert str(error.value) == 'expected list[bool]'
 
     def test_str(self):
         assert Bit('101').to_list() == [True, False, True]
@@ -49,12 +51,12 @@ class TestBit:
     def test_ndim_two(self):
         with pytest.raises(ValueError) as error:
             Bit([[True, False], [True, False]])  # ty: ignore[invalid-argument-type]
-        assert str(error.value) == 'expected ndim to be 1'
+        assert str(error.value) == 'expected list[bool]'
 
     def test_ndim_zero(self):
         with pytest.raises(ValueError) as error:
             Bit(True)  # ty: ignore[invalid-argument-type]
-        assert str(error.value) == 'expected ndim to be 1'
+        assert str(error.value) == 'expected bytes, str, list, or ndarray'
 
     def test_repr(self):
         assert repr(Bit([True, False, True])) == 'Bit(101)'
