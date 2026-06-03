@@ -1,5 +1,6 @@
 from pgvector import Bit
 import pytest
+import random
 
 try:
     import numpy as np
@@ -68,6 +69,10 @@ class TestBit:
         with pytest.raises(ValueError) as error:
             Bit(True)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected bytes, str, list, or ndarray'
+
+    def test_random(self):
+        value = ''.join(random.choices(['0', '1'], k=random.randint(1024, 2048)))
+        assert Bit(value).to_text() == value
 
     def test_repr(self):
         assert repr(Bit([True, False, True])) == 'Bit(101)'
