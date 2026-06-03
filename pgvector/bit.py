@@ -13,7 +13,7 @@ class Bit:
         if isinstance(value, bytes):
             length = 8 * len(value)
             data = value
-        else:
+        elif isinstance(value, (list, str)):
             if isinstance(value, list):
                 def bit_value(v: bool) -> str:
                     if v is True:
@@ -24,30 +24,29 @@ class Bit:
 
                 value = ''.join([bit_value(v) for v in value])
 
-            if isinstance(value, str):
-                length = len(value)
+            length = len(value)
 
-                if length % 8 != 0:
-                    value += '0' * (8 - (length % 8))
+            if length % 8 != 0:
+                value += '0' * (8 - (length % 8))
 
-                try:
-                    data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
-                except ValueError:
-                    raise ValueError('expected bit string')
-            elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
-                if value.dtype != np.bool:
-                    # skip error for result of np.unpackbits
-                    if value.dtype != np.uint8 or np.any(value > 1):
-                        raise ValueError('expected elements to be boolean')
-                    value = value.astype(bool)
+            try:
+                data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
+            except ValueError:
+                raise ValueError('expected bit string')
+        elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
+            if value.dtype != np.bool:
+                # skip error for result of np.unpackbits
+                if value.dtype != np.uint8 or np.any(value > 1):
+                    raise ValueError('expected elements to be boolean')
+                value = value.astype(bool)
 
-                if value.ndim != 1:
-                    raise ValueError('expected ndim to be 1')
+            if value.ndim != 1:
+                raise ValueError('expected ndim to be 1')
 
-                length = len(value)
-                data = np.packbits(value).tobytes()
-            else:
-                raise ValueError('expected bytes, str, list, or ndarray')
+            length = len(value)
+            data = np.packbits(value).tobytes()
+        else:
+            raise ValueError('expected bytes, str, list, or ndarray')
 
         self._value = pack('>i', length) + data
 
