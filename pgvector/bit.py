@@ -14,7 +14,7 @@ class Bit:
                 length = len(value)
 
                 if length % 8 != 0:
-                    value += '0'*(8 - (length % 8))
+                    value += '0' * (8 - (length % 8))
 
                 try:
                     data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
