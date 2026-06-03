@@ -474,7 +474,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
                 session.commit()
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_ndim(self, engine):
         item = Item(embedding=np.array([[1, 2, 3]]))
         with Session(engine) as session:
@@ -482,7 +482,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected ndim to be 1'):
                 session.commit()
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_dtype(self, engine):
         item = Item(embedding=np.array(['one', 'two', 'three']))
         with Session(engine) as session:
@@ -671,7 +671,7 @@ class TestSqlalchemyAsyncArray:
                 item = await session.get_one(Item, 1)
                 assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
-                if np is not None:
+                if NUMPY_AVAILABLE:
                     session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
                     item = await session.get_one(Item, 2)
                     assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]

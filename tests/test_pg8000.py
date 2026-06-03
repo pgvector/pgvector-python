@@ -31,7 +31,7 @@ class TestPg8000:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy(self):
         embedding = np.array([1.5, 2, 3])
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)

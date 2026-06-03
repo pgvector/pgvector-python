@@ -46,26 +46,26 @@ class TestPsycopg:
         res = next(conn.execute('SELECT %b::vector::text', (embedding,)))[0]
         assert res == '[1.5,2,3]'
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_binary_format(self):
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
         assert res == Vector(embedding)
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_text_format(self):
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert res == Vector(embedding)
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_binary_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = next(conn.execute('SELECT %b::vector', (embedding,)))[0]
         assert res == Vector([3, 2, 1.5])
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_text_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous

@@ -26,7 +26,7 @@ class TestVector:
             Vector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected list[float]'
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray(self):
         arr = np.array([1, 2, 3])
         assert Vector(arr).to_list() == [1, 2, 3]
@@ -48,7 +48,7 @@ class TestVector:
     def test_dimensions(self):
         assert Vector([1, 2, 3]).dimensions() == 3
 
-    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
+    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_to_numpy_readonly(self):
         arr = Vector([1, 2, 3]).to_numpy()
         with pytest.raises(ValueError) as error:
@@ -58,13 +58,13 @@ class TestVector:
     def test_from_text(self):
         vec = Vector.from_text('[1.5,2,3]')
         assert vec.to_list() == [1.5, 2, 3]
-        if np is not None:
+        if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
 
     def test_from_binary(self):
         data = pack('>HH3f', 3, 0, 1.5, 2, 3)
         vec = Vector.from_binary(data)
         assert vec.to_list() == [1.5, 2, 3]
-        if np is not None:
+        if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
         assert vec.to_binary() == data
