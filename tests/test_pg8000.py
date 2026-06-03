@@ -1,8 +1,13 @@
 from getpass import getuser
-import numpy as np
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.pg8000 import register_vector
 from pg8000.native import Connection
+import pytest
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 conn = Connection(getuser(), database='pgvector_python_test')
 
@@ -18,19 +23,20 @@ class TestPg8000:
         conn.run('DELETE FROM pg8000_items')
 
     def test_vector(self):
-        embedding = np.array([1.5, 2, 3])
-        conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
-
-        res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
-        assert res[0][0] == Vector([1.5, 2, 3])
-        assert res[1][0] is None
-
-    def test_vector_class(self):
         embedding = Vector([1.5, 2, 3])
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
 
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == embedding
+        assert res[1][0] is None
+
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy(self):
+        embedding = np.array([1.5, 2, 3])
+        conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (NULL)', embedding=embedding)
+
+        res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
+        assert res[0][0] == Vector([1.5, 2, 3])
         assert res[1][0] is None
 
     def test_halfvec(self):

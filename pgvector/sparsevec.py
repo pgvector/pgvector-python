@@ -1,7 +1,11 @@
 from __future__ import annotations
-import numpy as np
 from struct import pack, unpack_from
 from typing import Any, overload
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 NO_DEFAULT = object()
 

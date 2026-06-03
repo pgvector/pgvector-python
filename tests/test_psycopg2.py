@@ -1,9 +1,14 @@
-import numpy as np
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.psycopg2 import register_vector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
 from psycopg2.pool import ThreadedConnectionPool
+import pytest
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
 conn.autocommit = True
@@ -21,15 +26,6 @@ class TestPsycopg2:
         cur.execute('DELETE FROM psycopg2_items')
 
     def test_vector(self):
-        embedding = np.array([1.5, 2, 3])
-        cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
-
-        cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
-        res = cur.fetchall()
-        assert res[0][0] == Vector(embedding)
-        assert res[1][0] is None
-
-    def test_vector_class(self):
         embedding = Vector([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
@@ -38,16 +34,17 @@ class TestPsycopg2:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    def test_halfvec(self):
-        embedding = HalfVector([1.5, 2, 3])
-        cur.execute('INSERT INTO psycopg2_items (half_embedding) VALUES (%s), (NULL)', (embedding,))
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy(self):
+        embedding = np.array([1.5, 2, 3])
+        cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
-        cur.execute('SELECT half_embedding FROM psycopg2_items ORDER BY id')
+        cur.execute('SELECT embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
-        assert res[0][0] == embedding
+        assert res[0][0] == Vector(embedding)
         assert res[1][0] is None
 
-    def test_halfvec_class(self):
+    def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (half_embedding) VALUES (%s), (NULL)', (embedding,))
 

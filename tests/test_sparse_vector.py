@@ -1,15 +1,24 @@
-import numpy as np
 from pgvector import SparseVector
 import pytest
-from scipy.sparse import coo_array, coo_matrix, csr_array, csr_matrix
 from struct import pack
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
+
+try:
+    from scipy.sparse import coo_array, coo_matrix, csr_array, csr_matrix
+except ImportError:
+    coo_array = None
 
 
 class TestSparseVector:
     def test_list(self):
         vec = SparseVector([1, 0, 2, 0, 3, 0])
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
-        assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
+        if np is not None:
+            assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
         assert vec.indices() == [0, 2, 4]
 
     def test_list_dimensions(self):
@@ -17,6 +26,7 @@ class TestSparseVector:
             SparseVector([1, 0, 2, 0, 3, 0], 6)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'extra argument'
 
+    @pytest.mark.skipif(np is None, reason='NumPy required')
     def test_ndarray(self):
         vec = SparseVector(np.array([1, 0, 2, 0, 3, 0]))
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
@@ -32,35 +42,41 @@ class TestSparseVector:
             SparseVector({0: 1, 2: 2, 4: 3})
         assert str(error.value) == 'missing dimensions'
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_coo_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_coo_array_dimensions(self):
         with pytest.raises(ValueError) as error:
             SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'extra argument'
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_coo_matrix(self):
         mat = coo_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_dok_array(self):
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_csr_array(self):
         arr = csr_array(np.array([[1, 0, 2, 0, 3, 0]]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
+    @pytest.mark.skipif(coo_array is None, reason='SciPy required')
     def test_csr_matrix(self):
         mat = csr_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
@@ -86,6 +102,7 @@ class TestSparseVector:
     def test_values(self):
         assert SparseVector([1, 0, 2, 0, 3, 0]).values() == [1, 2, 3]
 
+    @pytest.mark.skipif(np is None or coo_array is None, reason='NumPy and SciPy required')
     def test_to_coo(self):
         assert np.array_equal(SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray(), [[1, 0, 2, 0, 3, 0]])
 
@@ -99,7 +116,8 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert vec.values() == [1.5, 2, 3]
         assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
+        if np is not None:
+            assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
 
     def test_from_binary(self):
         data = pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
@@ -108,5 +126,6 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert vec.values() == [1.5, 2, 3]
         assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
+        if np is not None:
+            assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_binary() == data

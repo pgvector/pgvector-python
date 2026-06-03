@@ -1,5 +1,4 @@
 from math import sqrt
-import numpy as np
 from peewee import Model, PostgresqlDatabase, fn
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
@@ -197,7 +196,7 @@ class TestPeewee:
 
     def test_get_or_create(self):
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
-        Item.get_or_create(embedding=np.array([4, 5, 6]))
+        Item.get_or_create(embedding=Vector([4, 5, 6]))
         Item.get_or_create(embedding=Item.embedding.to_value([7, 8, 9]))
 
     def test_vector_array(self):

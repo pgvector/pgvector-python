@@ -11,12 +11,16 @@ from django.db.models.functions import Cast
 from django.db.migrations.loader import MigrationLoader
 from django.forms import ModelForm
 from math import sqrt
-import numpy as np
 import os
 import pgvector.django
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
 from unittest import mock
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 settings.configure(
     DATABASES={
@@ -458,7 +462,7 @@ class TestDjango:
         assert Item.objects.first().sparse_embedding is None
 
     def test_vector_array(self):
-        Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]).save()
+        Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]).save()
 
         with connection.cursor() as cursor:
             from pgvector.psycopg import register_vector

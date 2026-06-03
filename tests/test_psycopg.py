@@ -1,9 +1,13 @@
-import numpy as np
 from pgvector import Bit, HalfVector, SparseVector, Vector
 from pgvector.psycopg import register_vector, register_vector_async
 import psycopg
 from psycopg_pool import ConnectionPool, AsyncConnectionPool
 import pytest
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
@@ -19,49 +23,53 @@ class TestPsycopg:
         conn.execute('DELETE FROM psycopg_items')
 
     def test_vector(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = Vector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
         res = conn.execute('SELECT embedding FROM psycopg_items ORDER BY id').fetchall()
-        assert res[0][0] == Vector(embedding)
+        assert res[0][0] == embedding
         assert res[1][0] is None
 
     def test_vector_binary_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
+        assert res == embedding
+
+    def test_vector_text_format(self):
+        embedding = Vector([1.5, 2, 3])
+        res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
+        assert res == embedding
+
+    def test_vector_binary_format_correct(self):
+        embedding = Vector([1.5, 2, 3])
+        res = next(conn.execute('SELECT %b::vector::text', (embedding,)))[0]
+        assert res == '[1.5,2,3]'
+
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy_binary_format(self):
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
         assert res == Vector(embedding)
 
-    def test_vector_text_format(self):
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy_text_format(self):
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert res == Vector(embedding)
 
-    def test_vector_binary_format_correct(self):
-        embedding = np.array([1.5, 2, 3])
-        res = next(conn.execute('SELECT %b::vector::text', (embedding,)))[0]
-        assert res == '[1.5,2,3]'
-
-    def test_vector_text_format_non_contiguous(self):
-        embedding = np.flipud(np.array([1.5, 2, 3]))
-        assert not embedding.data.contiguous
-        res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
-        assert res == Vector([3, 2, 1.5])
-
-    def test_vector_binary_format_non_contiguous(self):
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy_binary_format_non_contiguous(self):
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = next(conn.execute('SELECT %b::vector', (embedding,)))[0]
         assert res == Vector([3, 2, 1.5])
 
-    def test_vector_class_binary_format(self):
-        embedding = Vector([1.5, 2, 3])
-        res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
-        assert res == embedding
-
-    def test_vector_class_text_format(self):
-        embedding = Vector([1.5, 2, 3])
+    @pytest.mark.skipif(np is None, reason='NumPy required')
+    def test_vector_numpy_text_format_non_contiguous(self):
+        embedding = np.flipud(np.array([1.5, 2, 3]))
+        assert not embedding.data.contiguous
         res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
-        assert res == embedding
+        assert res == Vector([3, 2, 1.5])
 
     def test_halfvec(self):
         embedding = HalfVector([1.5, 2, 3])
@@ -116,26 +124,26 @@ class TestPsycopg:
         assert res == embedding
 
     def test_text_copy_from(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = [1.5, 2, 3]
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN") as copy:
-            copy.write_row([embedding, HalfVector(embedding), '101', SparseVector(embedding)])
+            copy.write_row([Vector(embedding), HalfVector(embedding), '101', SparseVector(embedding)])
 
     def test_binary_copy_from(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = [1.5, 2, 3]
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
-            copy.write_row([embedding, HalfVector(embedding), Bit('101'), SparseVector(embedding)])
+            copy.write_row([Vector(embedding), HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
     def test_binary_copy_from_set_types(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = [1.5, 2, 3]
         cur = conn.cursor()
         with cur.copy("COPY psycopg_items (id, embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)") as copy:
             copy.set_types(['int8', 'vector', 'halfvec', 'bit', 'sparsevec'])
-            copy.write_row([1, embedding, HalfVector(embedding), Bit('101'), SparseVector(embedding)])
+            copy.write_row([1, Vector(embedding), HalfVector(embedding), Bit('101'), SparseVector(embedding)])
 
     def test_text_copy_to(self):
-        embedding = np.array([1.5, 2, 3])
+        embedding = Vector([1.5, 2, 3])
         half_embedding = HalfVector([1.5, 2, 3])
         conn.execute('INSERT INTO psycopg_items (embedding, half_embedding) VALUES (%s, %s)', (embedding, half_embedding))
         cur = conn.cursor()

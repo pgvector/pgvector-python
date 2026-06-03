@@ -1,6 +1,10 @@
 from __future__ import annotations
-import numpy as np
 import struct
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 
 class Vector:
@@ -11,7 +15,7 @@ class Vector:
                 self._value = struct.pack(f'>HH{dim}f', dim, 0, *value)
             except struct.error:
                 raise ValueError('expected list[float]')
-        elif isinstance(value, np.ndarray):
+        elif np is not None and isinstance(value, np.ndarray):
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 

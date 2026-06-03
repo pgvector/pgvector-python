@@ -1,6 +1,5 @@
 import asyncpg
 from getpass import getuser
-import numpy as np
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
@@ -10,6 +9,11 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
 from sqlalchemy.sql import func
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
@@ -165,7 +169,7 @@ class TestSqlalchemy:
         hnsw_index.create(engine)
 
     def test_orm(self, engine):
-        item = Item(embedding=np.array([1.5, 2, 3]))
+        item = Item(embedding=Vector([1.5, 2, 3]))
         item2 = Item(embedding=[4, 5, 6])
         item3 = Item()
 
@@ -469,6 +473,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
                 session.commit()
 
+    @pytest.mark.skipif(np is None, reason='NumPy required')
     def test_bad_ndim(self, engine):
         item = Item(embedding=np.array([[1, 2, 3]]))
         with Session(engine) as session:
@@ -476,6 +481,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected ndim to be 1'):
                 session.commit()
 
+    @pytest.mark.skipif(np is None, reason='NumPy required')
     def test_bad_dtype(self, engine):
         item = Item(embedding=np.array(['one', 'two', 'three']))
         with Session(engine) as session:
@@ -493,11 +499,11 @@ class TestSqlalchemy:
 
     def test_insert(self, engine):
         with Session(engine) as session:
-            session.execute(insert(Item).values(embedding=np.array([1, 2, 3])))
+            session.execute(insert(Item).values(embedding=Vector([1, 2, 3])))
 
     def test_insert_bulk(self, engine):
         with Session(engine) as session:
-            session.execute(insert(Item), [{'embedding': np.array([1, 2, 3])}])
+            session.execute(insert(Item), [{'embedding': Vector([1, 2, 3])}])
 
     # register_vector in psycopg2 tests change this behavior
     # def test_insert_text(self):
@@ -511,7 +517,7 @@ class TestSqlalchemy:
         AutoBase.prepare()
         AutoItem = AutoBase.classes.sqlalchemy_orm_item
         with Session(engine) as session:
-            session.execute(insert(AutoItem), [{'embedding': np.array([1, 2, 3])}])
+            session.execute(insert(AutoItem), [{'embedding': Vector([1, 2, 3])}])
             item = session.query(AutoItem).first()
             assert item.embedding == Vector([1, 2, 3])
 
@@ -556,7 +562,7 @@ class TestSqlalchemyArray:
 
     def test_vector_array(self, engine):
         with Session(engine) as session:
-            session.add(Item(id=1, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+            session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
             session.commit()
 
             # this fails if the driver does not cast arrays
@@ -565,7 +571,7 @@ class TestSqlalchemyArray:
 
     def test_halfvec_array(self, engine):
         with Session(engine) as session:
-            session.add(Item(id=1, half_embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+            session.add(Item(id=1, half_embeddings=[HalfVector([1, 2, 3]), HalfVector([4, 5, 6])]))
             session.commit()
 
             # this fails if the driver does not cast arrays
@@ -664,8 +670,9 @@ class TestSqlalchemyAsyncArray:
                 item = await session.get_one(Item, 1)
                 assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
-                session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
-                item = await session.get_one(Item, 2)
-                assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
+                if np is not None:
+                    session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
+                    item = await session.get_one(Item, 2)
+                    assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
         await engine.dispose()

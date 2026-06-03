@@ -1,7 +1,11 @@
 from __future__ import annotations
-import numpy as np
 from struct import pack, unpack_from
 from warnings import warn
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 
 class Bit:
@@ -30,7 +34,7 @@ class Bit:
                     data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
                 except ValueError:
                     raise ValueError('expected bit string')
-            elif isinstance(value, np.ndarray):
+            elif np is not None and isinstance(value, np.ndarray):
                 if value.dtype != np.bool:
                     # skip warning for result of np.unpackbits
                     if value.dtype != np.uint8 or np.any(value > 1):
@@ -63,7 +67,8 @@ class Bit:
         return length
 
     def to_list(self) -> list[bool]:
-        return self.to_numpy().tolist()
+        # TODO improve
+        return [v != '0' for v in self.to_text()]
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.bool]]:
         return np.unpackbits(np.frombuffer(self._value[4:], dtype=np.uint8), count=self._length()).astype(bool)

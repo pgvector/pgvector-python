@@ -1,5 +1,4 @@
 import asyncpg
-import numpy as np
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.asyncpg import register_vector
 import pytest
@@ -16,7 +15,7 @@ class TestAsyncpg:
         await register_vector(conn)
 
         embedding = Vector([1.5, 2, 3])
-        embedding2 = np.array([4.5, 5, 6])
+        embedding2 = [4.5, 5, 6]
         await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
@@ -111,7 +110,7 @@ class TestAsyncpg:
         embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
         await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES ($1)", embeddings)
 
-        embeddings2 = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
+        embeddings2 = [[1.5, 2, 3], [4.5, 5, 6]]
         await conn.execute("INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])", embeddings2[0], embeddings2[1])
 
         res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
@@ -133,7 +132,7 @@ class TestAsyncpg:
             await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding vector(3))')
 
             embedding = Vector([1.5, 2, 3])
-            embedding2 = np.array([1.5, 2, 3])
+            embedding2 = [1.5, 2, 3]
             await conn.execute("INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2), (NULL)", embedding, embedding2)
 
             res = await conn.fetch("SELECT * FROM asyncpg_items ORDER BY id")
