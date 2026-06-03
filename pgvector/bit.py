@@ -42,9 +42,6 @@ class Bit:
                         warn('expected elements to be boolean', stacklevel=2)
                     value = value.astype(bool)
 
-                    # for mypy
-                    assert isinstance(value, np.ndarray)
-
                 if value.ndim != 1:
                     raise ValueError('expected ndim to be 1')
 
