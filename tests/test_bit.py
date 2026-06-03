@@ -18,6 +18,10 @@ class TestBit:
     def test_str(self):
         assert Bit('101').to_list() == [True, False, True]
 
+    def test_str_two(self):
+        # TODO raise
+        assert Bit('201').to_list() == [True, False, True]
+
     def test_bytes(self):
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
         assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
