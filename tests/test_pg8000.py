@@ -25,13 +25,13 @@ class TestPg8000:
 
     def test_vector(self):
         embedding = Vector([1.5, 2, 3])
-        embedding2 = np.array([4.5, 5, 6]) if NUMPY_AVAILABLE else [4.5, 5, 6]
+        embedding2 = np.array([4.5, 5, 6]) if NUMPY_AVAILABLE else Vector([4.5, 5, 6])
         embedding3 = None
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (:embedding2), (:embedding3)', embedding=embedding, embedding2=embedding2, embedding3=embedding3)
 
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
         assert res[0][0] == embedding
-        assert res[1][0] == Vector(embedding2)
+        assert res[1][0] == Vector([4.5, 5, 6])
         assert res[2][0] is None
 
     def test_halfvec(self):
