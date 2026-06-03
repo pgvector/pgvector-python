@@ -4,8 +4,9 @@ from warnings import warn
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 
 class Bit:
@@ -34,7 +35,7 @@ class Bit:
                     data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
                 except ValueError:
                     raise ValueError('expected bit string')
-            elif np is not None and isinstance(value, np.ndarray):
+            elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
                 if value.dtype != np.bool:
                     # skip warning for result of np.unpackbits
                     if value.dtype != np.uint8 or np.any(value > 1):

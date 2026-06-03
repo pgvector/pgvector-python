@@ -4,8 +4,9 @@ from struct import pack
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 
 class TestVector:
@@ -25,7 +26,7 @@ class TestVector:
             Vector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
         assert str(error.value) == 'expected list[float]'
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray(self):
         arr = np.array([1, 2, 3])
         assert Vector(arr).to_list() == [1, 2, 3]
@@ -47,7 +48,7 @@ class TestVector:
     def test_dimensions(self):
         assert Vector([1, 2, 3]).dimensions() == 3
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_to_numpy_readonly(self):
         arr = Vector([1, 2, 3]).to_numpy()
         with pytest.raises(ValueError) as error:

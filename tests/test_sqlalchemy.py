@@ -12,8 +12,9 @@ from sqlalchemy.sql import func
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
@@ -473,7 +474,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
                 session.commit()
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_ndim(self, engine):
         item = Item(embedding=np.array([[1, 2, 3]]))
         with Session(engine) as session:
@@ -481,7 +482,7 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected ndim to be 1'):
                 session.commit()
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_dtype(self, engine):
         item = Item(embedding=np.array(['one', 'two', 'three']))
         with Session(engine) as session:

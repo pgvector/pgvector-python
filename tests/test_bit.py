@@ -3,8 +3,9 @@ import pytest
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 
 class TestBit:
@@ -33,24 +34,24 @@ class TestBit:
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
         assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray(self):
         arr = np.array([True, False, True])
         assert Bit(arr).to_list() == [True, False, True]
         assert np.array_equal(Bit(arr).to_numpy(), arr)
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_unpackbits(self):
         arr = np.unpackbits(np.array([254, 7, 0], dtype=np.uint8))
         assert Bit(arr).to_text() == '111111100000011100000000'
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
         with pytest.warns(UserWarning, match='expected elements to be boolean'):
             assert Bit(arr).to_text() == '110'
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint16(self):
         arr = np.array([254, 7, 0], dtype=np.uint16)
         with pytest.warns(UserWarning, match='expected elements to be boolean'):

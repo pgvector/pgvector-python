@@ -7,8 +7,9 @@ from typing import Any, Optional
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:

@@ -7,8 +7,9 @@ import pytest
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 conn = psycopg2.connect(dbname='pgvector_python_test')
 conn.autocommit = True
@@ -34,7 +35,7 @@ class TestPsycopg2:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    @pytest.mark.skipif(np is None, reason='NumPy required')
+    @pytest.mark.skipif(NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy(self):
         embedding = np.array([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))

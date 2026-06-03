@@ -5,7 +5,7 @@ from typing import Any, overload
 try:
     import numpy as np
 except ImportError:
-    np = None
+    pass
 
 NO_DEFAULT = object()
 

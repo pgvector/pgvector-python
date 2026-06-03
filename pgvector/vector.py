@@ -3,8 +3,9 @@ import struct
 
 try:
     import numpy as np
+    NUMPY_AVAILABLE = True
 except ImportError:
-    np = None
+    NUMPY_AVAILABLE = False
 
 
 class Vector:
@@ -15,7 +16,7 @@ class Vector:
                 self._value = struct.pack(f'>HH{dim}f', dim, 0, *value)
             except struct.error:
                 raise ValueError('expected list[float]')
-        elif np is not None and isinstance(value, np.ndarray):
+        elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
