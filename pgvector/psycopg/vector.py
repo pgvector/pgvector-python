@@ -1,4 +1,3 @@
-import numpy as np
 import psycopg
 from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper

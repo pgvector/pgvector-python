@@ -1,4 +1,3 @@
-import numpy as np
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
 from .. import Vector
 
@@ -23,5 +22,9 @@ def register_vector_info(oid: int, array_oid: int | None, scope: connection | cu
         vectorarray = new_array_type((array_oid,), 'VECTORARRAY', vector)
         register_type(vectorarray, scope)
 
-    register_adapter(np.ndarray, VectorAdapter)
     register_adapter(Vector, VectorAdapter)
+    try:
+        import numpy as np
+        register_adapter(np.ndarray, VectorAdapter)
+    except ImportError:
+        pass
