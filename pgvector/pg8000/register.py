@@ -11,12 +11,13 @@ def register_vector(conn: Connection) -> None:
         raise RuntimeError('vector type not found in the database')
 
     conn.register_out_adapter(Vector, Vector._to_db)
+    conn.register_in_adapter(type_info['vector'], Vector._from_db)
+
     try:
         import numpy as np
         conn.register_out_adapter(np.ndarray, Vector._to_db)
     except ImportError:
         pass
-    conn.register_in_adapter(type_info['vector'], Vector._from_db)
 
     if 'halfvec' in type_info:
         conn.register_out_adapter(HalfVector, HalfVector._to_db)
