@@ -3,16 +3,19 @@ from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from psycopg.types import TypeInfo
-from typing import Any, TypeAlias
+from typing import Any, TypeAlias, TYPE_CHECKING
 from .. import Vector
 
 Buffer: TypeAlias = bytes | bytearray | memoryview
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class VectorDumper(Dumper):
     format = Format.TEXT
 
-    def dump(self, obj: Vector) -> Buffer | None:
+    def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
         value = Vector._to_db(obj)
         return value if value is None else value.encode('utf8')
 
@@ -20,7 +23,7 @@ class VectorDumper(Dumper):
 class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
-    def dump(self, obj: Vector) -> Buffer | None:
+    def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
         return Vector._to_db_binary(obj)
 
 
