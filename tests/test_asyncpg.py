@@ -19,7 +19,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_vector(self):
-        conn = await self.setup_connection();
+        conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding vector(3))')
 
@@ -43,7 +43,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_halfvec(self):
-        conn = await self.setup_connection();
+        conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
 
@@ -65,7 +65,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_bit(self):
-        conn = await self.setup_connection();
+        conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding bit(3))')
 
@@ -86,7 +86,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_sparsevec(self):
-        conn = await self.setup_connection();
+        conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding sparsevec(3))')
 
@@ -106,7 +106,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_vector_array(self):
-        conn = await self.setup_connection();
+        conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embeddings vector[])')
 
