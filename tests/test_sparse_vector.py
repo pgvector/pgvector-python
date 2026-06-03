@@ -23,6 +23,9 @@ class TestSparseVector:
             assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
         assert vec.indices() == [0, 2, 4]
 
+    def test_list_empty(self):
+        assert SparseVector([]).to_list() == []
+
     def test_list_dimensions(self):
         with pytest.raises(ValueError) as error:
             SparseVector([1, 0, 2, 0, 3, 0], 6)  # ty: ignore[invalid-argument-type]
@@ -38,6 +41,9 @@ class TestSparseVector:
         vec = SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
+
+    def test_dict_empty(self):
+        assert SparseVector({}, 0).to_list() == []
 
     def test_dict_no_dimensions(self):
         with pytest.raises(ValueError) as error:
