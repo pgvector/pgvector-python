@@ -1,6 +1,5 @@
 from __future__ import annotations
 from struct import pack, unpack_from
-from warnings import warn
 
 try:
     import numpy as np
@@ -37,7 +36,7 @@ class Bit:
                     raise ValueError('expected bit string')
             elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
                 if value.dtype != np.bool:
-                    # skip warning for result of np.unpackbits
+                    # skip error for result of np.unpackbits
                     if value.dtype != np.uint8 or np.any(value > 1):
                         raise ValueError('expected elements to be boolean')
                     value = value.astype(bool)
