@@ -15,12 +15,12 @@ class TestAsyncpg:
         conn = await asyncpg.connect(database='pgvector_python_test')
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
         await register_vector(conn)
-        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         return conn
 
     @pytest.mark.asyncio
     async def test_vector(self):
         conn = await self.setup_connection();
+        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding vector(3))')
 
         embedding = Vector([1.5, 2, 3])
@@ -44,6 +44,7 @@ class TestAsyncpg:
     @pytest.mark.asyncio
     async def test_halfvec(self):
         conn = await self.setup_connection();
+        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
 
         embedding = HalfVector([1.5, 2, 3])
@@ -65,6 +66,7 @@ class TestAsyncpg:
     @pytest.mark.asyncio
     async def test_bit(self):
         conn = await self.setup_connection();
+        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding bit(3))')
 
         embedding = asyncpg.BitString('101')  # type: ignore
@@ -85,6 +87,7 @@ class TestAsyncpg:
     @pytest.mark.asyncio
     async def test_sparsevec(self):
         conn = await self.setup_connection();
+        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding sparsevec(3))')
 
         embedding = SparseVector([1.5, 2, 3])
@@ -104,6 +107,7 @@ class TestAsyncpg:
     @pytest.mark.asyncio
     async def test_vector_array(self):
         conn = await self.setup_connection();
+        await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embeddings vector[])')
 
         embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
