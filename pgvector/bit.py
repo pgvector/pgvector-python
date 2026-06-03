@@ -39,7 +39,7 @@ class Bit:
                 if value.dtype != np.bool:
                     # skip warning for result of np.unpackbits
                     if value.dtype != np.uint8 or np.any(value > 1):
-                        warn('expected elements to be boolean', stacklevel=2)
+                        raise ValueError('expected elements to be boolean')
                     value = value.astype(bool)
 
                 if value.ndim != 1:

@@ -53,14 +53,16 @@ class TestBit:
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint8(self):
         arr = np.array([254, 7, 0], dtype=np.uint8)
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit(arr).to_text() == '110'
+        with pytest.raises(ValueError) as error:
+            Bit(arr)
+        assert str(error.value) == 'expected elements to be boolean'
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint16(self):
         arr = np.array([254, 7, 0], dtype=np.uint16)
-        with pytest.warns(UserWarning, match='expected elements to be boolean'):
-            assert Bit(arr).to_text() == '110'
+        with pytest.raises(ValueError) as error:
+            Bit(arr)
+        assert str(error.value) == 'expected elements to be boolean'
 
     def test_bool(self):
         with pytest.raises(ValueError) as error:
