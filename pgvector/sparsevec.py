@@ -149,15 +149,12 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: object, dim: int | None = None) -> str | None:
+    def _to_db(cls, value: object) -> str | None:
         if value is None:
             return value
 
         if not isinstance(value, cls):
             value = cls(value)
-
-        if dim is not None and value.dimensions() != dim:
-            raise ValueError('expected %d dimensions, not %d' % (dim, value.dimensions()))
 
         return value.to_text()
 

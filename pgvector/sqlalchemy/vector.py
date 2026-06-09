@@ -20,14 +20,14 @@ class VECTOR(UserDefinedType):
 
     def bind_processor(self, dialect: Dialect) -> Any:
         def process(value: Any) -> str | None:
-            return Vector._to_db(value, self.dim)
+            return Vector._to_db(value)
         return process
 
     def literal_processor(self, dialect: Dialect) -> Any:
         string_literal_processor = self._string._cached_literal_processor(dialect)
 
         def process(value: Any) -> Any:
-            return string_literal_processor(Vector._to_db(value, self.dim))  # type: ignore
+            return string_literal_processor(Vector._to_db(value))  # type: ignore
         return process
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Any:
