@@ -31,7 +31,7 @@ class HalfVectorField(Field):
         if value is None or isinstance(value, HalfVector):
             return value
         elif isinstance(value, str):
-            return HalfVector._from_db(value)
+            return HalfVector.from_text(value)
         else:
             return HalfVector(value)
 

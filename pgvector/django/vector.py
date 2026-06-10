@@ -31,7 +31,7 @@ class VectorField(Field):
         if value is None or isinstance(value, Vector):
             return value
         elif isinstance(value, str):
-            return Vector._from_db(value)
+            return Vector.from_text(value)
         else:
             return Vector(value)
 

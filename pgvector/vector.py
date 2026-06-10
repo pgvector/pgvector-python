@@ -96,10 +96,3 @@ class Vector:
             return value
 
         return cls.from_text(value)
-
-    @classmethod
-    def _from_db_binary(cls, value: bytes | Vector | None) -> Vector | None:
-        if value is None or isinstance(value, Vector):
-            return value
-
-        return cls.from_binary(value)

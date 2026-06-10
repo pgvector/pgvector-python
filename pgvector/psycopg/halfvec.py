@@ -12,15 +12,14 @@ class HalfVectorDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj: HalfVector) -> Buffer | None:
-        value = HalfVector._to_db(obj)
-        return value if value is None else value.encode('utf8')
+        return obj.to_text().encode('utf8')
 
 
 class HalfVectorBinaryDumper(HalfVectorDumper):
     format = Format.BINARY
 
     def dump(self, obj: HalfVector) -> Buffer | None:
-        return HalfVector._to_db_binary(obj)
+        return obj.to_binary()
 
 
 class HalfVectorLoader(Loader):
@@ -29,7 +28,7 @@ class HalfVectorLoader(Loader):
     def load(self, data: Buffer) -> HalfVector | None:
         if isinstance(data, memoryview):
             data = bytes(data)
-        return HalfVector._from_db(data.decode('utf8'))
+        return HalfVector.from_text(data.decode('utf8'))
 
 
 class HalfVectorBinaryLoader(HalfVectorLoader):
@@ -38,7 +37,7 @@ class HalfVectorBinaryLoader(HalfVectorLoader):
     def load(self, data: Buffer) -> HalfVector | None:
         if isinstance(data, (bytearray, memoryview)):
             data = bytes(data)
-        return HalfVector._from_db_binary(data)
+        return HalfVector.from_binary(data)
 
 
 def register_halfvec_info(context: BaseConnection[Any], info: TypeInfo) -> None:

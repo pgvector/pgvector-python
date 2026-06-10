@@ -16,15 +16,18 @@ class VectorDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
-        value = Vector._to_db(obj)
-        return value if value is None else value.encode('utf8')
+        if not isinstance(obj, Vector):
+            obj = Vector(obj)
+        return obj.to_text().encode('utf8')
 
 
 class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
     def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
-        return Vector._to_db_binary(obj)
+        if not isinstance(obj, Vector):
+            obj = Vector(obj)
+        return obj.to_binary()
 
 
 class VectorLoader(Loader):
@@ -33,7 +36,7 @@ class VectorLoader(Loader):
     def load(self, data: Buffer) -> Vector | None:
         if isinstance(data, memoryview):
             data = bytes(data)
-        return Vector._from_db(data.decode('utf8'))
+        return Vector.from_text(data.decode('utf8'))
 
 
 class VectorBinaryLoader(VectorLoader):
@@ -42,7 +45,7 @@ class VectorBinaryLoader(VectorLoader):
     def load(self, data: Buffer) -> Vector | None:
         if isinstance(data, (bytearray, memoryview)):
             data = bytes(data)
-        return Vector._from_db_binary(data)
+        return Vector.from_binary(data)
 
 
 def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:

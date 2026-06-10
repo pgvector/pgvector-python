@@ -7,7 +7,7 @@ async def register_vector(conn: Connection, schema: str = 'public') -> None:
         'vector',
         schema=schema,
         encoder=Vector._to_db_binary,
-        decoder=Vector._from_db_binary,
+        decoder=Vector.from_binary,
         format='binary'
     )
 
@@ -16,7 +16,7 @@ async def register_vector(conn: Connection, schema: str = 'public') -> None:
             'halfvec',
             schema=schema,
             encoder=HalfVector._to_db_binary,
-            decoder=HalfVector._from_db_binary,
+            decoder=HalfVector.from_binary,
             format='binary'
         )
 
@@ -24,7 +24,7 @@ async def register_vector(conn: Connection, schema: str = 'public') -> None:
             'sparsevec',
             schema=schema,
             encoder=SparseVector._to_db_binary,
-            decoder=SparseVector._from_db_binary,
+            decoder=SparseVector.from_binary,
             format='binary'
         )
     except ValueError as e:

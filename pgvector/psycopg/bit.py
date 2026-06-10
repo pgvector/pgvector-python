@@ -12,14 +12,14 @@ class BitDumper(Dumper):
     format = Format.TEXT
 
     def dump(self, obj: Bit) -> Buffer | None:
-        return Bit._to_db(obj).encode('utf8')
+        return obj.to_text().encode('utf8')
 
 
 class BitBinaryDumper(BitDumper):
     format = Format.BINARY
 
     def dump(self, obj: Bit) -> Buffer | None:
-        return Bit._to_db_binary(obj)
+        return obj.to_binary()
 
 
 def register_bit_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:

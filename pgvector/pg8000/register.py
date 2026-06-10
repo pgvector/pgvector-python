@@ -11,7 +11,7 @@ def register_vector(conn: Connection) -> None:
         raise RuntimeError('vector type not found in the database')
 
     conn.register_out_adapter(Vector, Vector._to_db)
-    conn.register_in_adapter(type_info['vector'], Vector._from_db)
+    conn.register_in_adapter(type_info['vector'], Vector.from_text)
 
     try:
         import numpy as np
@@ -21,8 +21,8 @@ def register_vector(conn: Connection) -> None:
 
     if 'halfvec' in type_info:
         conn.register_out_adapter(HalfVector, HalfVector._to_db)
-        conn.register_in_adapter(type_info['halfvec'], HalfVector._from_db)
+        conn.register_in_adapter(type_info['halfvec'], HalfVector.from_text)
 
     if 'sparsevec' in type_info:
         conn.register_out_adapter(SparseVector, SparseVector._to_db)
-        conn.register_in_adapter(type_info['sparsevec'], SparseVector._from_db)
+        conn.register_in_adapter(type_info['sparsevec'], SparseVector.from_text)

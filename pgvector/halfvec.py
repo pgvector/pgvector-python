@@ -96,10 +96,3 @@ class HalfVector:
             return value
 
         return cls.from_text(value)
-
-    @classmethod
-    def _from_db_binary(cls, value: bytes | HalfVector | None) -> HalfVector | None:
-        if value is None or isinstance(value, HalfVector):
-            return value
-
-        return cls.from_binary(value)
