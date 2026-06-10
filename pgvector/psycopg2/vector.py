@@ -1,13 +1,19 @@
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
+from typing import TYPE_CHECKING
 from .. import Vector
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class VectorAdapter:
-    def __init__(self, value: object) -> None:
+    def __init__(self, value: Vector | np.ndarray) -> None:
+        if not isinstance(value, Vector):
+            value = Vector(value)
         self._value = value
 
     def getquoted(self) -> bytes:
-        return adapt(Vector._to_db(self._value)).getquoted()
+        return adapt(self._value.to_text()).getquoted()
 
 
 def cast_vector(value: str | None, cur: cursor) -> Vector | None:

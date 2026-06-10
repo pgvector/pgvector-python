@@ -3,11 +3,11 @@ from .. import HalfVector
 
 
 class HalfvecAdapter:
-    def __init__(self, value: object) -> None:
+    def __init__(self, value: HalfVector) -> None:
         self._value = value
 
     def getquoted(self) -> bytes:
-        return adapt(HalfVector._to_db(self._value)).getquoted()
+        return adapt(self._value.to_text()).getquoted()
 
 
 def cast_halfvec(value: str | None, cur: cursor) -> HalfVector | None:

@@ -3,11 +3,11 @@ from .. import SparseVector
 
 
 class SparsevecAdapter:
-    def __init__(self, value: object) -> None:
+    def __init__(self, value: SparseVector) -> None:
         self._value = value
 
     def getquoted(self) -> bytes:
-        return adapt(SparseVector._to_db(self._value)).getquoted()
+        return adapt(self._value.to_text()).getquoted()
 
 
 def cast_sparsevec(value: str | None, cur: cursor) -> SparseVector | None:
