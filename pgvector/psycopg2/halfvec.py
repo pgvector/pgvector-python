@@ -11,7 +11,9 @@ class HalfvecAdapter:
 
 
 def cast_halfvec(value: str | None, cur: cursor) -> HalfVector | None:
-    return HalfVector._from_db(value)
+    if value is None:
+        return None
+    return HalfVector.from_text(value)
 
 
 def register_halfvec_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:

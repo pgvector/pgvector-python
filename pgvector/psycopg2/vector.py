@@ -11,7 +11,9 @@ class VectorAdapter:
 
 
 def cast_vector(value: str | None, cur: cursor) -> Vector | None:
-    return Vector._from_db(value)
+    if value is None:
+        return None
+    return Vector.from_text(value)
 
 
 def register_vector_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:

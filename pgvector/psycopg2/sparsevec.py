@@ -11,7 +11,9 @@ class SparsevecAdapter:
 
 
 def cast_sparsevec(value: str | None, cur: cursor) -> SparseVector | None:
-    return SparseVector._from_db(value)
+    if value is None:
+        return None
+    return SparseVector.from_text(value)
 
 
 def register_sparsevec_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
