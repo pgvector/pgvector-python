@@ -40,10 +40,10 @@ session = Session(engine)
 session.execute(insert(User), users)
 session.execute(insert(Item), items)
 
-user = session.get(User, 1)
+user = session.get_one(User, 1)
 items = session.scalars(select(Item).order_by(Item.factors.max_inner_product(user.factors)).limit(5))
 print('user-based recs:', [item.id for item in items])
 
-item = session.get(Item, 50)
+item = session.get_one(Item, 50)
 items = session.scalars(select(Item).filter(Item.id != item.id).order_by(Item.factors.cosine_distance(item.factors)).limit(5))
 print('item-based recs:', [item.id for item in items])
