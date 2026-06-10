@@ -9,7 +9,7 @@ except ImportError:
 
 
 class VectorAdapter:
-    def __init__(self, value: Vector | np.ndarray) -> None:
+    def __init__(self, value: 'Vector | np.ndarray') -> None:
         if not isinstance(value, Vector):
             value = Vector(value)
         self._value = value
