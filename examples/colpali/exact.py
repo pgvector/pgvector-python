@@ -1,7 +1,8 @@
 from colpali_engine.models import ColQwen2, ColQwen2Processor
 from colpali_engine.utils.torch_utils import get_torch_device
 from datasets import load_dataset
-from pgvector.psycopg import register_vector, Bit
+from pgvector import Bit
+from pgvector.psycopg import register_vector
 import psycopg
 import torch
 
