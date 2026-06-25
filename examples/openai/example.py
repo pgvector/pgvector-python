@@ -1,5 +1,5 @@
-import numpy as np
 from openai import OpenAI
+from pgvector import Vector
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -25,10 +25,10 @@ input = [
 ]
 embeddings = embed(input)
 for content, embedding in zip(input, embeddings):
-    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, np.array(embedding)))
+    conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, Vector(embedding)))
 
 query = 'forest'
 query_embedding = embed([query])[0]
-result = conn.execute('SELECT content FROM documents ORDER BY embedding <=> %s LIMIT 5', (np.array(query_embedding),)).fetchall()
+result = conn.execute('SELECT content FROM documents ORDER BY embedding <=> %s LIMIT 5', (Vector(query_embedding),)).fetchall()
 for row in result:
     print(row[0])
