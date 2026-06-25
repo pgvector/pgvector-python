@@ -1,7 +1,8 @@
 # good resource
 # https://www.rdkit.org/docs/GettingStartedInPython.html#morgan-fingerprints-circular-fingerprints
 
-from pgvector.psycopg import register_vector, Bit
+from pgvector import Bit
+from pgvector.psycopg import register_vector
 import psycopg
 from rdkit import Chem
 from rdkit.Chem import AllChem
