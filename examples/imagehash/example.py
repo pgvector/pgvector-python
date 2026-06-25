@@ -1,7 +1,8 @@
 from datasets import load_dataset
 from imagehash import phash
 import matplotlib.pyplot as plt
-from pgvector.psycopg import register_vector, Bit
+from pgvector import Bit
+from pgvector.psycopg import register_vector
 import psycopg
 
 
@@ -18,7 +19,7 @@ conn.execute('DROP TABLE IF EXISTS images')
 conn.execute('CREATE TABLE images (id bigserial PRIMARY KEY, hash bit(64))')
 
 print('Loading dataset')
-dataset = load_dataset('mnist')
+dataset = load_dataset('ylecun/mnist')
 
 print('Generating hashes')
 images = [{'hash': hash_image(row['image'])} for row in dataset['train']]
