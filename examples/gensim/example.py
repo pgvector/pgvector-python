@@ -1,7 +1,7 @@
 from gensim.corpora.dictionary import Dictionary
 from gensim.models import LdaModel
 from gensim.utils import simple_preprocess
-import numpy as np
+from pgvector import Vector
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -26,7 +26,7 @@ corpus = [dictionary.doc2bow(tokens) for tokens in docs]
 model = LdaModel(corpus, num_topics=20)
 
 for content, bow in zip(input, corpus):
-    embedding = np.array([v[1] for v in model.get_document_topics(bow, minimum_probability=0)])
+    embedding = Vector([v[1] for v in model.get_document_topics(bow, minimum_probability=0)])
     conn.execute('INSERT INTO documents (content, embedding) VALUES (%s, %s)', (content, embedding))
 
 document_id = 1
