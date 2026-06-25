@@ -1,11 +1,11 @@
 # Run:
+# ollama serve
 # ollama pull llama3.2
 # ollama pull nomic-embed-text
-# ollama serve
 
-import numpy as np
 import ollama
 from pathlib import Path
+from pgvector import Vector
 from pgvector.psycopg import register_vector
 import psycopg
 import urllib.request
@@ -55,7 +55,7 @@ input = 'search_query: ' + query
 embedding = ollama.embed(model='nomic-embed-text', input=input).embeddings[0]
 
 # retrieve chunks
-result = conn.execute('SELECT content FROM chunks ORDER BY embedding <=> %s LIMIT 5', (np.array(embedding),)).fetchall()
+result = conn.execute('SELECT content FROM chunks ORDER BY embedding <=> %s LIMIT 5', (Vector(embedding),)).fetchall()
 context = '\n\n'.join([row[0] for row in result])
 
 # get answer
