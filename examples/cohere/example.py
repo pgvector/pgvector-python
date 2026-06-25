@@ -1,6 +1,7 @@
 import cohere
 import numpy as np
-from pgvector.psycopg import register_vector, Bit
+from pgvector import Bit
+from pgvector.psycopg import register_vector
 import psycopg
 
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
