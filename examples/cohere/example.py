@@ -1,5 +1,4 @@
 import cohere
-import numpy as np
 from pgvector import Bit
 from pgvector.psycopg import register_vector
 import psycopg
@@ -16,7 +15,7 @@ conn.execute('CREATE TABLE documents (id bigserial PRIMARY KEY, content text, em
 def embed(input, input_type):
     co = cohere.ClientV2()
     response = co.embed(texts=input, model='embed-v4.0', input_type=input_type, embedding_types=['ubinary'])
-    return [np.unpackbits(np.array(embedding, dtype=np.uint8)) for embedding in response.embeddings.ubinary]
+    return [bytes(embedding) for embedding in response.embeddings.ubinary]
 
 
 input = [
