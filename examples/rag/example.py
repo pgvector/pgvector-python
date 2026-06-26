@@ -51,8 +51,7 @@ if load_data:
 
 # embed query
 # nomic-embed-text has task instruction prefix
-input = 'search_query: ' + query
-embedding = ollama.embed(model='nomic-embed-text', input=input).embeddings[0]
+embedding = ollama.embed(model='nomic-embed-text', input=f'search_query: {query}').embeddings[0]
 
 # retrieve chunks
 result = conn.execute('SELECT content FROM chunks ORDER BY embedding <=> %s LIMIT 5', (Vector(embedding),)).fetchall()
