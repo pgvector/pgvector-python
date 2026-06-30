@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
-from sqlalchemy.types import UserDefinedType, Float, String
+from sqlalchemy.types import UserDefinedType, TypeEngine, Float, String
 from sqlalchemy import Dialect, Operators
 from typing import Any
 from .. import Vector
@@ -35,7 +35,7 @@ class VECTOR(UserDefinedType):
             return Vector._from_db(value)
         return process
 
-    class comparator_factory(UserDefinedType.Comparator):
+    class comparator_factory(TypeEngine.Comparator):
         def l2_distance(self, other: object) -> Operators:
             return self.op('<->', return_type=Float)(other)
 

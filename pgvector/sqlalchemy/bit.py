@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.postgresql.base import ischema_names
-from sqlalchemy.types import UserDefinedType, Float
+from sqlalchemy.types import UserDefinedType, TypeEngine, Float
 from sqlalchemy import Dialect, Operators
 from typing import Any
 
@@ -28,7 +28,7 @@ class BIT(UserDefinedType):
         else:
             return super().bind_processor(dialect)
 
-    class comparator_factory(UserDefinedType.Comparator):
+    class comparator_factory(TypeEngine.Comparator):
         def hamming_distance(self, other: object) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 
