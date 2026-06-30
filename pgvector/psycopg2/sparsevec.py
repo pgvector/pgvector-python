@@ -10,9 +10,11 @@ class SparsevecAdapter:
         return adapt(self._value.to_text()).getquoted()
 
 
-def cast_sparsevec(value: str | None, cur: cursor) -> SparseVector | None:
+def cast_sparsevec(value: str | bytes | None, cur: cursor) -> SparseVector | None:
     if value is None:
         return None
+    if isinstance(value, bytes):
+        raise ValueError('expected str')
     return SparseVector.from_text(value)
 
 

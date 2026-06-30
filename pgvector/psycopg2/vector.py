@@ -18,9 +18,11 @@ class VectorAdapter:
         return adapt(self._value.to_text()).getquoted()
 
 
-def cast_vector(value: str | None, cur: cursor) -> Vector | None:
+def cast_vector(value: str | bytes | None, cur: cursor) -> Vector | None:
     if value is None:
         return None
+    if isinstance(value, bytes):
+        raise ValueError('expected str')
     return Vector.from_text(value)
 
 

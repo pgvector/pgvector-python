@@ -10,9 +10,11 @@ class HalfvecAdapter:
         return adapt(self._value.to_text()).getquoted()
 
 
-def cast_halfvec(value: str | None, cur: cursor) -> HalfVector | None:
+def cast_halfvec(value: str | bytes | None, cur: cursor) -> HalfVector | None:
     if value is None:
         return None
+    if isinstance(value, bytes):
+        raise ValueError('expected str')
     return HalfVector.from_text(value)
 
 
