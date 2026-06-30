@@ -62,7 +62,7 @@ class TestBit:
     def test_ndarray_uint16(self):
         arr = np.array([254, 7, 0], dtype=np.uint16)
         with pytest.raises(ValueError) as error:
-            Bit(arr)
+            Bit(arr)  # type: ignore
         assert str(error.value) == 'expected elements to be boolean'
 
     def test_bool(self):
