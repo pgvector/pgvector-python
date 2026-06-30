@@ -19,7 +19,7 @@ class Item(BaseModel):
     binary_embedding = FixedBitField(max_length=3, null=True)
     sparse_embedding = SparseVectorField(dimensions=3, null=True)
 
-    class Meta:
+    class Meta:  # type: ignore
         table_name = 'peewee_item'
 
 
@@ -161,7 +161,7 @@ class TestPeewee:
 
     def test_where(self):
         create_items()
-        items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)
+        items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)  # type: ignore
         assert [v.id for v in items] == [1]
 
     def test_vector_avg(self):
@@ -207,9 +207,9 @@ class TestPeewee:
         ext_db = PostgresqlExtDatabase('pgvector_python_test')
 
         class ExtItem(BaseModel):
-            embeddings = ArrayField(VectorField, field_kwargs={'dimensions': 3}, index=False)
+            embeddings = ArrayField(VectorField, field_kwargs={'dimensions': 3}, index=False)  # type: ignore
 
-            class Meta:
+            class Meta:  # type: ignore
                 database = ext_db
                 table_name = 'peewee_ext_item'
 
