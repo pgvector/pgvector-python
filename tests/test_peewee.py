@@ -2,6 +2,7 @@ from math import sqrt
 from peewee import Model, PostgresqlDatabase, fn
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
+from typing import Any
 
 db = PostgresqlDatabase('pgvector_python_test')
 
@@ -12,6 +13,7 @@ class BaseModel(Model):
 
 
 class Item(BaseModel):
+    id: Any  # for typing
     embedding = VectorField(dimensions=3, null=True)
     half_embedding = HalfVectorField(dimensions=3, null=True)
     binary_embedding = FixedBitField(max_length=3, null=True)
