@@ -423,13 +423,13 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
             items = session.query(Item.embedding.l2_distance([1, 1, 1])).first()
-            assert items[0] == 3
+            assert items == (3,)
 
     def test_select_orm(self, engine):
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
             items = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
-            assert items[0] == 3
+            assert items == [3]
 
     def test_avg(self, engine):
         with Session(engine) as session:
@@ -520,7 +520,7 @@ class TestSqlalchemy:
         with Session(engine) as session:
             session.execute(insert(AutoItem), [{'embedding': Vector([1, 2, 3])}])
             item = session.query(AutoItem).first()
-            assert item.embedding == Vector([1, 2, 3])
+            assert item is not None and item.embedding == Vector([1, 2, 3])
 
     def test_half_precision(self, engine):
         create_items()
