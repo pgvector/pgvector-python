@@ -191,7 +191,7 @@ class TestPsycopg:
 
         with pool.connection() as conn:
             res = conn.execute("SELECT '[1,2,3]'::vector").fetchone()
-            assert res[0] == Vector([1, 2, 3])
+            assert res == (Vector([1, 2, 3]),)
 
         pool.close()
 
@@ -226,6 +226,6 @@ class TestPsycopg:
             async with conn.cursor() as cur:
                 await cur.execute("SELECT '[1,2,3]'::vector")
                 res = await cur.fetchone()
-                assert res[0] == Vector([1, 2, 3])
+                assert res == (Vector([1, 2, 3]),)
 
         await pool.close()

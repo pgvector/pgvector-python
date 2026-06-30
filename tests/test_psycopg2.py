@@ -79,8 +79,7 @@ class TestPsycopg2:
 
         cur.execute('SELECT embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert res[0][0] == embeddings[0]
-        assert res[0][1] == embeddings[1]
+        assert res == (embeddings,)
 
     def test_halfvec_array(self):
         embeddings = [HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])]
@@ -88,7 +87,7 @@ class TestPsycopg2:
 
         cur.execute('SELECT half_embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert res[0] == [HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])]
+        assert res == ([HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])],)
 
     def test_sparsevec_array(self):
         embeddings = [SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])]
@@ -96,7 +95,7 @@ class TestPsycopg2:
 
         cur.execute('SELECT sparse_embeddings FROM psycopg2_items ORDER BY id')
         res = cur.fetchone()
-        assert res[0] == [SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])]
+        assert res == ([SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])],)
 
     def test_cursor_factory(self):
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
@@ -126,7 +125,7 @@ class TestPsycopg2:
             cur = conn.cursor()
             cur.execute("SELECT '[1,2,3]'::vector")
             res = cur.fetchone()
-            assert res[0] == Vector([1, 2, 3])
+            assert res == (Vector([1, 2, 3]),)
         finally:
             pool.putconn(conn)
 
