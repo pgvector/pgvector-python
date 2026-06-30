@@ -124,7 +124,7 @@ class TestAsyncpg:
         assert res[0]['embeddings'] == embeddings
         assert res[1]['embeddings'] == [Vector(e) for e in embeddings2]
         if NUMPY_AVAILABLE:
-            assert res[2]['embeddings'] == [Vector(e) for e in embeddings3]
+            assert res[2]['embeddings'] == [Vector(e) for e in embeddings3]  # type: ignore
 
         await conn.close()
 

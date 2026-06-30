@@ -17,7 +17,7 @@ with Session(engine) as session:
 
 
 class Item(SQLModel, table=True):
-    __tablename__ = 'sqlmodel_item'
+    __tablename__ = 'sqlmodel_item'  # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     embedding: Optional[Any] = Field(default=None, sa_type=VECTOR(3))  # type: ignore
