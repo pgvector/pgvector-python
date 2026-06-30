@@ -4,7 +4,7 @@ from typing import Any
 
 
 class DistanceBase(Func):
-    output_field = FloatField()
+    output_field = FloatField()  # type: ignore
 
     def __init__(self, expression: Any, vector: Any, **extra: Any) -> None:
         if not hasattr(vector, 'resolve_expression'):
@@ -20,7 +20,7 @@ class DistanceBase(Func):
 
 
 class BitDistanceBase(Func):
-    output_field = FloatField()
+    output_field = FloatField()  # type: ignore
 
     def __init__(self, expression: Any, vector: Any, **extra: Any) -> None:
         if not hasattr(vector, 'resolve_expression'):
