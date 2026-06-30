@@ -33,8 +33,9 @@ class SparseVectorField(Field):
     def get_prep_value(self, value: Any) -> str | None:
         return SparseVector._to_db(value)
 
-    def value_to_string(self, obj: Any) -> str | None:
-        return self.get_prep_value(self.value_from_object(obj))
+    def value_to_string(self, obj: Any) -> str:
+        value = self.get_prep_value(self.value_from_object(obj))
+        return '' if value is None else value
 
     def formfield(self, form_class: Any = None, choices_form_class: Any = None, **kwargs: Any) -> forms.Field:
         return super().formfield(
