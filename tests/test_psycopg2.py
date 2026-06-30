@@ -106,7 +106,7 @@ class TestPsycopg2:
 
     def test_cursor_factory_connection(self):
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
-            conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)
+            conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)  # type: ignore
             register_vector(conn)
             conn.close()
 
