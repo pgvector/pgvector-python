@@ -1,8 +1,10 @@
 from pgvector import Bit, HalfVector, SparseVector, Vector
 from pgvector.psycopg import register_vector, register_vector_async
 import psycopg
+from psycopg import Connection, AsyncConnection
 from psycopg_pool import ConnectionPool, AsyncConnectionPool
 import pytest
+from typing import Any
 
 try:
     import numpy as np
@@ -184,7 +186,7 @@ class TestPsycopg:
         assert res[0][1] == embeddings[1]
 
     def test_pool(self):
-        def configure(conn):
+        def configure(conn: Connection[Any]):
             register_vector(conn)
 
         pool = ConnectionPool(conninfo='postgres://localhost/pgvector_python_test', open=True, configure=configure)
@@ -216,7 +218,7 @@ class TestPsycopg:
 
     @pytest.mark.asyncio
     async def test_async_pool(self):
-        async def configure(conn):
+        async def configure(conn: AsyncConnection[Any]):
             await register_vector_async(conn)
 
         pool = AsyncConnectionPool(conninfo='postgres://localhost/pgvector_python_test', open=False, configure=configure)
