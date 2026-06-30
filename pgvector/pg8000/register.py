@@ -1,10 +1,11 @@
 from pg8000.native import Connection
+from typing import Any
 from .. import Vector, HalfVector, SparseVector
 
 
 def register_vector(conn: Connection) -> None:
     # use to_regtype to get first matching type in search path
-    res = conn.run("SELECT typname, oid FROM pg_type WHERE oid IN (to_regtype('vector'), to_regtype('halfvec'), to_regtype('sparsevec'))")
+    res: Any = conn.run("SELECT typname, oid FROM pg_type WHERE oid IN (to_regtype('vector'), to_regtype('halfvec'), to_regtype('sparsevec'))")
     type_info = dict(res)
 
     if 'vector' not in type_info:
