@@ -535,7 +535,7 @@ class TestSqlalchemy:
             session.add(Item(id=3, embedding=[1, 2, 3]))
             session.commit()
 
-            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))  # type: ignore
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
 
@@ -550,7 +550,7 @@ class TestSqlalchemy:
             session.add(Item(id=3, embedding=[1, 2, 3]))
             session.commit()
 
-            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))  # type: ignore
             subquery = session.query(Item).order_by(distance).limit(20).subquery()
             items = session.query(subquery).order_by(subquery.c.embedding.cosine_distance([3, -1, 2])).limit(5).all()
             assert [v.id for v in items] == [2, 3, 1]
