@@ -181,6 +181,19 @@ class TestDjango:
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
+    def test_vector_l2_distance_list(self):
+        create_items()
+        distance = L2Distance('embedding', [1, 1, 1])
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.id for v in items] == [1, 3, 2]
+        assert [v.distance for v in items] == [0, 1, sqrt(3)]
+
+    def test_vector_l2_distance_none(self):
+        create_items()
+        distance = L2Distance('embedding', None)
+        items = Item.objects.annotate(distance=distance).order_by(distance)
+        assert [v.distance for v in items] == [None, None, None]
+
     def test_vector_max_inner_product(self):
         create_items()
         distance = MaxInnerProduct('embedding', [1, 1, 1])
