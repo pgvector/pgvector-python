@@ -4,7 +4,7 @@ lint:
 	pycodestyle . --ignore=E501 --exclude=.venv
 
 check:
-	ty check pgvector tests
+	ty check pgvector tests --ignore unused-type-ignore-comment
 
 build:
 	python3 -m build

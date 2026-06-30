@@ -22,7 +22,7 @@ class BIT(UserDefinedType):
 
             def process(value: Any) -> Any:
                 if isinstance(value, str):
-                    return asyncpg.BitString(value)
+                    return asyncpg.BitString(value)  # type: ignore
                 return value
             return process
         else:
