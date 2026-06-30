@@ -45,6 +45,8 @@ files = [
     "pgvector",
     "tests"
 ]
+strict = true
+disable_error_code = ["unused-ignore"]
 ignore_missing_imports = true
 python_executable = ".venv/bin/python"
 

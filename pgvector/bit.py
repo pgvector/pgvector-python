@@ -58,7 +58,7 @@ class Bit:
             return self.to_binary() == other.to_binary()
         return False
 
-    def _length(self):
+    def _length(self) -> int:
         length, = unpack_from('>i', self._value)
         return length
 
