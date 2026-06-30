@@ -5,7 +5,7 @@ from typing import Any
 from .. import SparseVector
 
 
-class SPARSEVEC(UserDefinedType):
+class SPARSEVEC(UserDefinedType[Any]):
     cache_ok = True
     _string = String()
 
@@ -35,7 +35,7 @@ class SPARSEVEC(UserDefinedType):
             return SparseVector._from_db(value)
         return process
 
-    class Comparator(TypeEngine.Comparator):
+    class Comparator(TypeEngine.Comparator[Any]):
         def l2_distance(self, other: object) -> Operators:
             return self.op('<->', return_type=Float)(other)
 

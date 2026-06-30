@@ -4,7 +4,7 @@ from sqlalchemy import Dialect, Operators
 from typing import Any
 
 
-class BIT(UserDefinedType):
+class BIT(UserDefinedType[Any]):
     cache_ok = True
 
     def __init__(self, length: int | None = None) -> None:
@@ -28,7 +28,7 @@ class BIT(UserDefinedType):
         else:
             return super().bind_processor(dialect)
 
-    class Comparator(TypeEngine.Comparator):
+    class Comparator(TypeEngine.Comparator[Any]):
         def hamming_distance(self, other: object) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 

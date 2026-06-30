@@ -5,7 +5,7 @@ from typing import Any
 from .. import Vector
 
 
-class VECTOR(UserDefinedType):
+class VECTOR(UserDefinedType[Any]):
     cache_ok = True
     _string = String()
 
@@ -35,7 +35,7 @@ class VECTOR(UserDefinedType):
             return Vector._from_db(value)
         return process
 
-    class Comparator(TypeEngine.Comparator):
+    class Comparator(TypeEngine.Comparator[Any]):
         def l2_distance(self, other: object) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
