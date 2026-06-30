@@ -1,5 +1,6 @@
 from __future__ import annotations
 import struct
+from typing import cast
 
 try:
     import numpy as np
@@ -38,7 +39,7 @@ class HalfVector:
 
     def dimensions(self) -> int:
         dim, = struct.unpack_from('>H', self._value)
-        return dim
+        return cast(int, dim)
 
     def to_list(self) -> list[float]:
         return list(struct.unpack_from(f'>{self.dimensions()}e', self._value[4:]))

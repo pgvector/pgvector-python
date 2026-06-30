@@ -1,5 +1,6 @@
 from __future__ import annotations
 from struct import pack, unpack_from
+from typing import cast
 
 try:
     import numpy as np
@@ -60,7 +61,7 @@ class Bit:
 
     def _length(self) -> int:
         length, = unpack_from('>i', self._value)
-        return length
+        return cast(int, length)
 
     def to_list(self) -> list[bool]:
         # TODO improve
