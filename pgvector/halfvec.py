@@ -76,7 +76,7 @@ class HalfVector:
             return value
 
         if not isinstance(value, cls):
-            value = cls(value)  # ty: ignore[invalid-argument-type]
+            value = cls(value)  # type: ignore
 
         return value.to_text()
 
@@ -86,7 +86,7 @@ class HalfVector:
             return value
 
         if not isinstance(value, cls):
-            value = cls(value)  # ty: ignore[invalid-argument-type]
+            value = cls(value)  # type: ignore
 
         return value.to_binary()
 

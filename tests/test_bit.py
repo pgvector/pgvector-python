@@ -15,17 +15,17 @@ class TestBit:
 
     def test_list_none(self):
         with pytest.raises(ValueError) as error:
-            Bit([True, None, True])  # ty: ignore[invalid-argument-type]
+            Bit([True, None, True])  # type: ignore
         assert str(error.value) == 'expected list[bool]'
 
     def test_list_int(self):
         with pytest.raises(ValueError) as error:
-            Bit([254, 7, 0])  # ty: ignore[invalid-argument-type]
+            Bit([254, 7, 0])  # type: ignore
         assert str(error.value) == 'expected list[bool]'
 
     def test_list_list(self):
         with pytest.raises(ValueError) as error:
-            Bit([[True, False], [True, False]])  # ty: ignore[invalid-argument-type]
+            Bit([[True, False], [True, False]])  # type: ignore
         assert str(error.value) == 'expected list[bool]'
 
     def test_str(self):
@@ -67,7 +67,7 @@ class TestBit:
 
     def test_bool(self):
         with pytest.raises(ValueError) as error:
-            Bit(True)  # ty: ignore[invalid-argument-type]
+            Bit(True)  # type: ignore
         assert str(error.value) == 'expected bytes, str, list, or ndarray'
 
     def test_random(self):

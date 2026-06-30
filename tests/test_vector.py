@@ -18,12 +18,12 @@ class TestVector:
 
     def test_list_str(self):
         with pytest.raises(ValueError) as error:
-            Vector([1, 'two', 3])  # ty: ignore[invalid-argument-type]
+            Vector([1, 'two', 3])  # type: ignore
         assert str(error.value) == 'expected list[float]'
 
     def test_list_list(self):
         with pytest.raises(ValueError) as error:
-            Vector([[1, 2], [3, 4]])  # ty: ignore[invalid-argument-type]
+            Vector([[1, 2], [3, 4]])  # type: ignore
         assert str(error.value) == 'expected list[float]'
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
@@ -34,7 +34,7 @@ class TestVector:
 
     def test_int(self):
         with pytest.raises(ValueError) as error:
-            Vector(1)  # ty: ignore[invalid-argument-type]
+            Vector(1)  # type: ignore
         assert str(error.value) == 'expected list or ndarray'
 
     def test_repr(self):

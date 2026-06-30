@@ -28,7 +28,7 @@ class TestSparseVector:
 
     def test_list_dimensions(self):
         with pytest.raises(ValueError) as error:
-            SparseVector([1, 0, 2, 0, 3, 0], 6)  # ty: ignore[invalid-argument-type]
+            SparseVector([1, 0, 2, 0, 3, 0], 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
@@ -60,7 +60,7 @@ class TestSparseVector:
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_coo_array_dimensions(self):
         with pytest.raises(ValueError) as error:
-            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # ty: ignore[invalid-argument-type]
+            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
