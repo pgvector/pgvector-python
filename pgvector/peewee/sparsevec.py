@@ -8,7 +8,7 @@ class SparseVectorField(Field):
 
     def __init__(self, dimensions: int | None = None, *args: Any, **kwargs: Any) -> None:
         self.dimensions = dimensions
-        super(SparseVectorField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_modifiers(self) -> list[int] | None:
         return [self.dimensions] if self.dimensions else None

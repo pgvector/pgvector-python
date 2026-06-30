@@ -10,7 +10,7 @@ class VECTOR(UserDefinedType):
     _string = String()
 
     def __init__(self, dim: int | None = None) -> None:
-        super(UserDefinedType, self).__init__()
+        super().__init__()
         self.dim = dim
 
     def get_col_spec(self, **kw: Any) -> str:

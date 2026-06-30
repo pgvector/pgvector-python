@@ -8,7 +8,7 @@ class BIT(UserDefinedType):
     cache_ok = True
 
     def __init__(self, length: int | None = None) -> None:
-        super(UserDefinedType, self).__init__()
+        super().__init__()
         self.length = length
 
     def get_col_spec(self, **kw: Any) -> str:
