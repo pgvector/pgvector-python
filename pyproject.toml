@@ -41,17 +41,21 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
-python_executable = ".venv/bin/python"
 files = [
     "pgvector",
     "tests"
 ]
 ignore_missing_imports = true
+python_executable = ".venv/bin/python"
 
 [tool.pyright]
+include = [
+    "pgvector",
+    "tests"
+]
+reportPossiblyUnboundVariable = "none"
 venv = ".venv"
 venvPath = "."
-reportPossiblyUnboundVariable = "none"
 
 [tool.pyrefly]
 project-includes = [
