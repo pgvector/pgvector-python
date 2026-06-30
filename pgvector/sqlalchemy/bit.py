@@ -28,12 +28,14 @@ class BIT(UserDefinedType):
         else:
             return super().bind_processor(dialect)
 
-    class comparator_factory(TypeEngine.Comparator):
+    class Comparator(TypeEngine.Comparator):
         def hamming_distance(self, other: object) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 
         def jaccard_distance(self, other: object) -> Operators:
             return self.op('<%>', return_type=Float)(other)
+
+    comparator_factory = Comparator
 
 
 # for reflection

@@ -35,7 +35,7 @@ class SPARSEVEC(UserDefinedType):
             return SparseVector._from_db(value)
         return process
 
-    class comparator_factory(TypeEngine.Comparator):
+    class Comparator(TypeEngine.Comparator):
         def l2_distance(self, other: object) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
@@ -47,6 +47,8 @@ class SPARSEVEC(UserDefinedType):
 
         def l1_distance(self, other: object) -> Operators:
             return self.op('<+>', return_type=Float)(other)
+
+    comparator_factory = Comparator
 
 
 # for reflection
