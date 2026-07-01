@@ -46,7 +46,7 @@ files = [
     "tests"
 ]
 strict = true
-disable_error_code = ["unused-ignore", "no-untyped-def", "no-untyped-call"]
+disable_error_code = ["unused-ignore", "no-untyped-def"]
 ignore_missing_imports = true
 disallow_subclassing_any = false
 python_executable = ".venv/bin/python"

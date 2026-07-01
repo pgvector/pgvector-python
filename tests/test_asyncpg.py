@@ -1,4 +1,5 @@
 import asyncpg
+from asyncpg import Connection
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.asyncpg import register_vector
 import pytest
@@ -11,7 +12,7 @@ except ImportError:
 
 
 class TestAsyncpg:
-    async def setup_connection(self):
+    async def setup_connection(self) -> Connection:
         conn = await asyncpg.connect(database='pgvector_python_test')
         await conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
         await register_vector(conn)

@@ -115,7 +115,7 @@ binary_quantize_index = Index(
 binary_quantize_index.create(setup_engine)
 
 
-def create_items():
+def create_items() -> None:
     with Session(setup_engine) as session:
         session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])))
         session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector([2, 2, 2])))
@@ -123,7 +123,7 @@ def create_items():
         session.commit()
 
 
-def delete_items():
+def delete_items() -> None:
     with Session(setup_engine) as session:
         session.query(Item).delete()
         session.commit()

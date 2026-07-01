@@ -39,7 +39,7 @@ index = Index(
 index.create(engine)
 
 
-def create_items():
+def create_items() -> None:
     with Session(engine) as session:
         session.add(Item(id=1, embedding=[1, 1, 1], half_embedding=[1, 1, 1], binary_embedding='000', sparse_embedding=SparseVector([1, 1, 1])))
         session.add(Item(id=2, embedding=[2, 2, 2], half_embedding=[2, 2, 2], binary_embedding='101', sparse_embedding=SparseVector([2, 2, 2])))
