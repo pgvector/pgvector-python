@@ -131,7 +131,7 @@ class TestAsyncpg:
 
     @pytest.mark.asyncio
     async def test_pool(self) -> None:
-        async def init(conn) -> None:
+        async def init(conn: Connection) -> None:
             await register_vector(conn)
 
         pool = await asyncpg.create_pool(database='pgvector_python_test', init=init)

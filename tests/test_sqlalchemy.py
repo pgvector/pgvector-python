@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, Asyn
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
 from sqlalchemy.sql import func
+from typing import Any
 
 try:
     import numpy as np
@@ -21,7 +22,7 @@ psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_p
 
 
 @event.listens_for(psycopg2_type_engine, 'connect')
-def psycopg2_connect(dbapi_connection, connection_record):
+def psycopg2_connect(dbapi_connection: Any, connection_record: Any) -> None:
     from pgvector.psycopg2 import register_vector
     register_vector(dbapi_connection)
 
@@ -33,7 +34,7 @@ psycopg_type_engine = create_engine('postgresql+psycopg://localhost/pgvector_pyt
 
 
 @event.listens_for(psycopg_type_engine, 'connect')
-def psycopg_connect(dbapi_connection, connection_record) -> None:
+def psycopg_connect(dbapi_connection: Any, connection_record: Any) -> None:
     from pgvector.psycopg import register_vector
     register_vector(dbapi_connection)
 
@@ -43,7 +44,7 @@ psycopg_async_type_engine = create_async_engine('postgresql+psycopg://localhost/
 
 
 @event.listens_for(psycopg_async_type_engine.sync_engine, 'connect')
-def psycopg_async_connect(dbapi_connection, connection_record) -> None:
+def psycopg_async_connect(dbapi_connection: Any, connection_record: Any) -> None:
     from pgvector.psycopg import register_vector_async
     dbapi_connection.run_async(register_vector_async)
 
@@ -53,7 +54,7 @@ asyncpg_type_engine = create_async_engine('postgresql+asyncpg://localhost/pgvect
 
 
 @event.listens_for(asyncpg_type_engine.sync_engine, 'connect')
-def asyncpg_connect(dbapi_connection, connection_record) -> None:
+def asyncpg_connect(dbapi_connection: Any, connection_record: Any) -> None:
     from pgvector.asyncpg import register_vector
     dbapi_connection.run_async(register_vector)
 
