@@ -78,3 +78,4 @@ project-includes = [
     "pgvector/**/*.py",
     "tests/**/*.py"
 ]
+preset = "strict"
