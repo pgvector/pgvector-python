@@ -51,6 +51,15 @@ ignore_missing_imports = true
 disallow_subclassing_any = false
 python_executable = ".venv/bin/python"
 
+[tool.ty.src]
+include = [
+    "pgvector",
+    "tests"
+]
+
+[tool.ty.rules]
+unused-type-ignore-comment = "ignore"
+
 [tool.pyright]
 include = [
     "pgvector",
