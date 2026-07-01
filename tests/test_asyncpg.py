@@ -19,7 +19,7 @@ class TestAsyncpg:
         return conn
 
     @pytest.mark.asyncio
-    async def test_vector(self):
+    async def test_vector(self) -> None:
         conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding vector(3))')
@@ -43,7 +43,7 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
-    async def test_halfvec(self):
+    async def test_halfvec(self) -> None:
         conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding halfvec(3))')
@@ -65,7 +65,7 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
-    async def test_bit(self):
+    async def test_bit(self) -> None:
         conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding bit(3))')
@@ -86,7 +86,7 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
-    async def test_sparsevec(self):
+    async def test_sparsevec(self) -> None:
         conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding sparsevec(3))')
@@ -106,7 +106,7 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
-    async def test_vector_array(self):
+    async def test_vector_array(self) -> None:
         conn = await self.setup_connection()
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embeddings vector[])')
@@ -130,8 +130,8 @@ class TestAsyncpg:
         await conn.close()
 
     @pytest.mark.asyncio
-    async def test_pool(self):
-        async def init(conn):
+    async def test_pool(self) -> None:
+        async def init(conn) -> None:
             await register_vector(conn)
 
         pool = await asyncpg.create_pool(database='pgvector_python_test', init=init)

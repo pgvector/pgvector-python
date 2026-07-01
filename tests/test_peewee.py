@@ -38,133 +38,133 @@ def create_items() -> None:
 
 
 class TestPeewee:
-    def setup_method(self):
+    def setup_method(self) -> None:
         Item.truncate_table()
 
-    def test_vector(self):
+    def test_vector(self) -> None:
         Item.create(id=1, embedding=[1, 2, 3])
         item = Item.get_by_id(1)
         assert item.embedding == Vector([1, 2, 3])
 
-    def test_vector_l2_distance(self):
+    def test_vector_l2_distance(self) -> None:
         create_items()
         distance = Item.embedding.l2_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
-    def test_vector_max_inner_product(self):
+    def test_vector_max_inner_product(self) -> None:
         create_items()
         distance = Item.embedding.max_inner_product([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
-    def test_vector_cosine_distance(self):
+    def test_vector_cosine_distance(self) -> None:
         create_items()
         distance = Item.embedding.cosine_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
-    def test_vector_l1_distance(self):
+    def test_vector_l1_distance(self) -> None:
         create_items()
         distance = Item.embedding.l1_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
-    def test_halfvec(self):
+    def test_halfvec(self) -> None:
         Item.create(id=1, half_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
         assert item.half_embedding == HalfVector([1, 2, 3])
 
-    def test_halfvec_l2_distance(self):
+    def test_halfvec_l2_distance(self) -> None:
         create_items()
         distance = Item.half_embedding.l2_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
-    def test_halfvec_max_inner_product(self):
+    def test_halfvec_max_inner_product(self) -> None:
         create_items()
         distance = Item.half_embedding.max_inner_product([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
-    def test_halfvec_cosine_distance(self):
+    def test_halfvec_cosine_distance(self) -> None:
         create_items()
         distance = Item.half_embedding.cosine_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
-    def test_halfvec_l1_distance(self):
+    def test_halfvec_l1_distance(self) -> None:
         create_items()
         distance = Item.half_embedding.l1_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
-    def test_bit(self):
+    def test_bit(self) -> None:
         Item.create(id=1, binary_embedding='101')
         item = Item.get_by_id(1)
         assert item.binary_embedding == '101'
 
-    def test_bit_hamming_distance(self):
+    def test_bit_hamming_distance(self) -> None:
         create_items()
         distance = Item.binary_embedding.hamming_distance('101')
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [0, 1, 2]
 
-    def test_bit_jaccard_distance(self):
+    def test_bit_jaccard_distance(self) -> None:
         create_items()
         distance = Item.binary_embedding.jaccard_distance('101')
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         # assert [v.distance for v in items] == [0, 1/3, 1]
 
-    def test_sparsevec(self):
+    def test_sparsevec(self) -> None:
         Item.create(id=1, sparse_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
         assert item.sparse_embedding == SparseVector([1, 2, 3])
 
-    def test_sparsevec_l2_distance(self):
+    def test_sparsevec_l2_distance(self) -> None:
         create_items()
         distance = Item.sparse_embedding.l2_distance(SparseVector([1, 1, 1]))
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
-    def test_sparsevec_max_inner_product(self):
+    def test_sparsevec_max_inner_product(self) -> None:
         create_items()
         distance = Item.sparse_embedding.max_inner_product([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
-    def test_sparsevec_cosine_distance(self):
+    def test_sparsevec_cosine_distance(self) -> None:
         create_items()
         distance = Item.sparse_embedding.cosine_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
-    def test_sparsevec_l1_distance(self):
+    def test_sparsevec_l1_distance(self) -> None:
         create_items()
         distance = Item.sparse_embedding.l1_distance([1, 1, 1])
         items = Item.select(Item.id, distance.alias('distance')).order_by(distance).limit(5)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
-    def test_where(self):
+    def test_where(self) -> None:
         create_items()
         items = Item.select().where(Item.embedding.l2_distance([1, 1, 1]) < 1)  # type: ignore
         assert [v.id for v in items] == [1]
 
-    def test_vector_avg(self):
+    def test_vector_avg(self) -> None:
         avg = Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
         assert avg is None
         Item.create(embedding=[1, 2, 3])
@@ -172,7 +172,7 @@ class TestPeewee:
         avg = Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
         assert avg == Vector([2.5, 3.5, 4.5])
 
-    def test_vector_sum(self):
+    def test_vector_sum(self) -> None:
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
         assert sum is None
         Item.create(embedding=[1, 2, 3])
@@ -180,7 +180,7 @@ class TestPeewee:
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
         assert sum == Vector([5, 7, 9])
 
-    def test_halfvec_avg(self):
+    def test_halfvec_avg(self) -> None:
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()
         assert avg is None
         Item.create(half_embedding=[1, 2, 3])
@@ -188,7 +188,7 @@ class TestPeewee:
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()
         assert avg == HalfVector([2.5, 3.5, 4.5])
 
-    def test_halfvec_sum(self):
+    def test_halfvec_sum(self) -> None:
         sum = Item.select(fn.sum(Item.half_embedding).coerce(True)).scalar()
         assert sum is None
         Item.create(half_embedding=[1, 2, 3])
@@ -196,12 +196,12 @@ class TestPeewee:
         sum = Item.select(fn.sum(Item.half_embedding).coerce(True)).scalar()
         assert sum == HalfVector([5, 7, 9])
 
-    def test_get_or_create(self):
+    def test_get_or_create(self) -> None:
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
         Item.get_or_create(embedding=Vector([4, 5, 6]))
         Item.get_or_create(embedding=Item.embedding.to_value([7, 8, 9]))
 
-    def test_vector_array(self):
+    def test_vector_array(self) -> None:
         from playhouse.postgres_ext import PostgresqlExtDatabase, ArrayField
 
         ext_db = PostgresqlExtDatabase('pgvector_python_test')

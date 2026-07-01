@@ -23,10 +23,10 @@ register_vector(cur)
 
 
 class TestPsycopg2:
-    def setup_method(self):
+    def setup_method(self) -> None:
         cur.execute('DELETE FROM psycopg2_items')
 
-    def test_vector(self):
+    def test_vector(self) -> None:
         embedding = Vector([1.5, 2, 3])
         embedding2 = None
         cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (%s)', (embedding, embedding2))
@@ -37,7 +37,7 @@ class TestPsycopg2:
         assert res[1][0] is None
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
-    def test_vector_numpy(self):
+    def test_vector_numpy(self) -> None:
         embedding = np.array([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (embedding) VALUES (%s), (NULL)', (embedding,))
 
@@ -46,7 +46,7 @@ class TestPsycopg2:
         assert res[0][0] == Vector(embedding)
         assert res[1][0] is None
 
-    def test_halfvec(self):
+    def test_halfvec(self) -> None:
         embedding = HalfVector([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (half_embedding) VALUES (%s), (NULL)', (embedding,))
 
@@ -55,7 +55,7 @@ class TestPsycopg2:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    def test_bit(self):
+    def test_bit(self) -> None:
         embedding = '101'
         cur.execute('INSERT INTO psycopg2_items (binary_embedding) VALUES (%s), (NULL)', (embedding,))
 
@@ -64,7 +64,7 @@ class TestPsycopg2:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    def test_sparsevec(self):
+    def test_sparsevec(self) -> None:
         embedding = SparseVector([1.5, 2, 3])
         cur.execute('INSERT INTO psycopg2_items (sparse_embedding) VALUES (%s), (NULL)', (embedding,))
 
@@ -73,7 +73,7 @@ class TestPsycopg2:
         assert res[0][0] == embedding
         assert res[1][0] is None
 
-    def test_vector_array(self):
+    def test_vector_array(self) -> None:
         embeddings = [Vector([1.5, 2, 3]), Vector([4.5, 5, 6])]
         cur.execute('INSERT INTO psycopg2_items (embeddings) VALUES (%s::vector[])', (embeddings,))
 
@@ -81,7 +81,7 @@ class TestPsycopg2:
         res = cur.fetchone()
         assert res == (embeddings,)
 
-    def test_halfvec_array(self):
+    def test_halfvec_array(self) -> None:
         embeddings = [HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])]
         cur.execute('INSERT INTO psycopg2_items (half_embeddings) VALUES (%s::halfvec[])', (embeddings,))
 
@@ -89,7 +89,7 @@ class TestPsycopg2:
         res = cur.fetchone()
         assert res == ([HalfVector([1.5, 2, 3]), HalfVector([4.5, 5, 6])],)
 
-    def test_sparsevec_array(self):
+    def test_sparsevec_array(self) -> None:
         embeddings = [SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])]
         cur.execute('INSERT INTO psycopg2_items (sparse_embeddings) VALUES (%s::sparsevec[])', (embeddings,))
 
@@ -97,20 +97,20 @@ class TestPsycopg2:
         res = cur.fetchone()
         assert res == ([SparseVector([1.5, 2, 3]), SparseVector([4.5, 5, 6])],)
 
-    def test_cursor_factory(self):
+    def test_cursor_factory(self) -> None:
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
             conn = psycopg2.connect(dbname='pgvector_python_test')
             cur = conn.cursor(cursor_factory=cursor_factory)
             register_vector(cur)
             conn.close()
 
-    def test_cursor_factory_connection(self):
+    def test_cursor_factory_connection(self) -> None:
         for cursor_factory in [DictCursor, RealDictCursor, NamedTupleCursor]:
             conn = psycopg2.connect(dbname='pgvector_python_test', cursor_factory=cursor_factory)  # type: ignore
             register_vector(conn)
             conn.close()
 
-    def test_pool(self):
+    def test_pool(self) -> None:
         pool = ThreadedConnectionPool(1, 1, dbname='pgvector_python_test')
 
         conn = pool.getconn()

@@ -20,10 +20,10 @@ register_vector(conn)
 
 
 class TestPg8000:
-    def setup_method(self):
+    def setup_method(self) -> None:
         conn.run('DELETE FROM pg8000_items')
 
-    def test_vector(self):
+    def test_vector(self) -> None:
         embedding = Vector([1.5, 2, 3])
         embedding2 = np.array([4.5, 5, 6]) if NUMPY_AVAILABLE else Vector([4.5, 5, 6])
         embedding3 = None
@@ -32,7 +32,7 @@ class TestPg8000:
         res = conn.run('SELECT embedding FROM pg8000_items ORDER BY id')
         assert res == [[embedding], [Vector([4.5, 5, 6])], [None]]
 
-    def test_halfvec(self):
+    def test_halfvec(self) -> None:
         embedding = HalfVector([1.5, 2, 3])
         embedding2 = None
         conn.run('INSERT INTO pg8000_items (half_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
@@ -40,7 +40,7 @@ class TestPg8000:
         res = conn.run('SELECT half_embedding FROM pg8000_items ORDER BY id')
         assert res == [[embedding], [None]]
 
-    def test_bit(self):
+    def test_bit(self) -> None:
         embedding = '101'
         embedding2 = None
         conn.run('INSERT INTO pg8000_items (binary_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
@@ -48,7 +48,7 @@ class TestPg8000:
         res = conn.run('SELECT binary_embedding FROM pg8000_items ORDER BY id')
         assert res == [['101'], [None]]
 
-    def test_sparsevec(self):
+    def test_sparsevec(self) -> None:
         embedding = SparseVector([1.5, 2, 3])
         embedding2 = None
         conn.run('INSERT INTO pg8000_items (sparse_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)

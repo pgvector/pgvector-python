@@ -16,109 +16,109 @@ except ImportError:
 
 
 class TestSparseVector:
-    def test_list(self):
+    def test_list(self) -> None:
         vec = SparseVector([1, 0, 2, 0, 3, 0])
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
         assert vec.indices() == [0, 2, 4]
 
-    def test_list_empty(self):
+    def test_list_empty(self) -> None:
         assert SparseVector([]).to_list() == []
 
-    def test_list_dimensions(self):
+    def test_list_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector([1, 0, 2, 0, 3, 0], 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
-    def test_ndarray(self):
+    def test_ndarray(self) -> None:
         vec = SparseVector(np.array([1, 0, 2, 0, 3, 0]))
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_dict(self):
+    def test_dict(self) -> None:
         vec = SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_dict_empty(self):
+    def test_dict_empty(self) -> None:
         assert SparseVector({}, 0).to_list() == []
 
-    def test_dict_no_dimensions(self):
+    def test_dict_no_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector({0: 1, 2: 2, 4: 3})
         assert str(error.value) == 'missing dimensions'
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_coo_array(self):
+    def test_coo_array(self) -> None:
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_coo_array_dimensions(self):
+    def test_coo_array_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_coo_matrix(self):
+    def test_coo_matrix(self) -> None:
         mat = coo_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_dok_array(self):
+    def test_dok_array(self) -> None:
         arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_csr_array(self):
+    def test_csr_array(self) -> None:
         arr = csr_array(np.array([[1, 0, 2, 0, 3, 0]]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
-    def test_csr_matrix(self):
+    def test_csr_matrix(self) -> None:
         mat = csr_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_repr(self):
+    def test_repr(self) -> None:
         assert repr(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
         assert str(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
 
-    def test_equality(self):
+    def test_equality(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector([1, 0, 2, 0, 3, 0])
         assert SparseVector([1, 0, 2, 0, 3, 0]) != SparseVector([1, 0, 2, 0, 3, 1])
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
         assert SparseVector({}, 1) != SparseVector({}, 2)
 
-    def test_dimensions(self):
+    def test_dimensions(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]).dimensions() == 6
 
-    def test_indices(self):
+    def test_indices(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]).indices() == [0, 2, 4]
 
-    def test_values(self):
+    def test_values(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]).values() == [1, 2, 3]
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE or not SCIPY_AVAILABLE, reason='NumPy and SciPy required')
-    def test_to_coo(self):
+    def test_to_coo(self) -> None:
         assert np.array_equal(SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray(), [[1, 0, 2, 0, 3, 0]])
 
-    def test_zero_vector_text(self):
+    def test_zero_vector_text(self) -> None:
         vec = SparseVector({}, 3)
         assert vec.to_list() == SparseVector.from_text(vec.to_text()).to_list()
 
-    def test_from_text(self):
+    def test_from_text(self) -> None:
         vec = SparseVector.from_text('{1:1.5,3:2,5:3}/6')
         assert vec.dimensions() == 6
         assert vec.indices() == [0, 2, 4]
@@ -127,7 +127,7 @@ class TestSparseVector:
         if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
 
-    def test_from_binary(self):
+    def test_from_binary(self) -> None:
         data = pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
         vec = SparseVector.from_binary(data)
         assert vec.dimensions() == 6
