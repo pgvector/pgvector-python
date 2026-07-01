@@ -2,7 +2,6 @@ from getpass import getuser
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.pg8000 import register_vector
 from pg8000.native import Connection
-import pytest
 
 try:
     import numpy as np

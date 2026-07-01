@@ -5,12 +5,6 @@ from sqlalchemy.exc import StatementError
 from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text
 from typing import Any, Optional
 
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
-
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
     session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))  # type: ignore
