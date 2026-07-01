@@ -3,9 +3,9 @@ from getpass import getuser
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
-from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY
+from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY, Engine
 from sqlalchemy.exc import StatementError
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
 from sqlalchemy.sql import func
@@ -134,7 +134,7 @@ class TestSqlalchemy:
     def setup_method(self):
         delete_items()
 
-    def test_core(self, engine):
+    def test_core(self, engine: Engine):
         metadata = MetaData()
 
         item_table = Table(
@@ -169,7 +169,7 @@ class TestSqlalchemy:
         )
         hnsw_index.create(engine)
 
-    def test_orm(self, engine):
+    def test_orm(self, engine: Engine):
         item = Item(embedding=Vector([1.5, 2, 3]))
         item2 = Item(embedding=[4, 5, 6])
         item3 = Item()
@@ -191,136 +191,136 @@ class TestSqlalchemy:
             assert items[1].embedding == Vector([4, 5, 6])
             assert items[2].embedding is None
 
-    def test_vector(self, engine):
+    def test_vector(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
             assert item.embedding == Vector([1, 2, 3])
 
-    def test_vector_l2_distance(self, engine):
+    def test_vector_l2_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_vector_l2_distance_orm(self, engine):
+    def test_vector_l2_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_vector_max_inner_product(self, engine):
+    def test_vector_max_inner_product(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.max_inner_product([1, 1, 1])).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_vector_max_inner_product_orm(self, engine):
+    def test_vector_max_inner_product_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.max_inner_product([1, 1, 1])))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_vector_cosine_distance(self, engine):
+    def test_vector_cosine_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_vector_cosine_distance_orm(self, engine):
+    def test_vector_cosine_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_vector_l1_distance(self, engine):
+    def test_vector_l1_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.embedding.l1_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_vector_l1_distance_orm(self, engine):
+    def test_vector_l1_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_halfvec(self, engine):
+    def test_halfvec(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
             assert item.half_embedding == HalfVector([1, 2, 3])
 
-    def test_halfvec_l2_distance(self, engine):
+    def test_halfvec_l2_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_halfvec_l2_distance_orm(self, engine):
+    def test_halfvec_l2_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.half_embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_halfvec_max_inner_product(self, engine):
+    def test_halfvec_max_inner_product(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.half_embedding.max_inner_product([1, 1, 1])).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_halfvec_max_inner_product_orm(self, engine):
+    def test_halfvec_max_inner_product_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.half_embedding.max_inner_product([1, 1, 1])))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_halfvec_cosine_distance(self, engine):
+    def test_halfvec_cosine_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.half_embedding.cosine_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_halfvec_cosine_distance_orm(self, engine):
+    def test_halfvec_cosine_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.half_embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_halfvec_l1_distance(self, engine):
+    def test_halfvec_l1_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_halfvec_l1_distance_orm(self, engine):
+    def test_halfvec_l1_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.half_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_bit(self, engine):
+    def test_bit(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, binary_embedding='101'))
             session.commit()
             item = session.get_one(Item, 1)
             assert item.binary_embedding == '101'
 
-    def test_bit_hamming_distance(self, engine):
+    def test_bit_hamming_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.binary_embedding.hamming_distance('101')).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_bit_hamming_distance_orm(self, engine):
+    def test_bit_hamming_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.binary_embedding.hamming_distance('101')))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_bit_jaccard_distance(self, engine):
+    def test_bit_jaccard_distance(self, engine: Engine):
         if engine == pg8000_engine:
             return
 
@@ -329,7 +329,7 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(Item.binary_embedding.jaccard_distance('101')).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_bit_jaccard_distance_orm(self, engine):
+    def test_bit_jaccard_distance_orm(self, engine: Engine):
         if engine == pg8000_engine:
             return
 
@@ -338,100 +338,100 @@ class TestSqlalchemy:
             items = session.scalars(select(Item).order_by(Item.binary_embedding.jaccard_distance('101')))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_sparsevec(self, engine):
+    def test_sparsevec(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, sparse_embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
             assert item.sparse_embedding == SparseVector([1, 2, 3])
 
-    def test_sparsevec_l2_distance(self, engine):
+    def test_sparsevec_l2_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_sparsevec_l2_distance_orm(self, engine):
+    def test_sparsevec_l2_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.sparse_embedding.l2_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_sparsevec_max_inner_product(self, engine):
+    def test_sparsevec_max_inner_product(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.sparse_embedding.max_inner_product([1, 1, 1])).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_sparsevec_max_inner_product_orm(self, engine):
+    def test_sparsevec_max_inner_product_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.sparse_embedding.max_inner_product([1, 1, 1])))
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_sparsevec_cosine_distance(self, engine):
+    def test_sparsevec_cosine_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.sparse_embedding.cosine_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_sparsevec_cosine_distance_orm(self, engine):
+    def test_sparsevec_cosine_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.sparse_embedding.cosine_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 2, 3]
 
-    def test_sparsevec_l1_distance(self, engine):
+    def test_sparsevec_l1_distance(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_sparsevec_l1_distance_orm(self, engine):
+    def test_sparsevec_l1_distance_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).order_by(Item.sparse_embedding.l1_distance([1, 1, 1])))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_subquery(self, engine):
+    def test_subquery(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             subquery = select(Item.embedding).filter_by(id=1).scalar_subquery()
             items = session.query(Item).order_by(Item.embedding.l2_distance(subquery)).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_subquery_orm(self, engine):
+    def test_subquery_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             subquery = select(Item.embedding).filter_by(id=1).scalar_subquery()
             items = session.scalars(select(Item).order_by(Item.embedding.l2_distance(subquery)))
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_filter(self, engine):
+    def test_filter(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1).all()
             assert [v.id for v in items] == [1]
 
-    def test_filter_orm(self, engine):
+    def test_filter_orm(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.scalars(select(Item).filter(Item.embedding.l2_distance([1, 1, 1]) < 1))
             assert [v.id for v in items] == [1]
 
-    def test_select(self, engine):
+    def test_select(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
             items = session.query(Item.embedding.l2_distance([1, 1, 1])).first()
             assert items == (3,)
 
-    def test_select_orm(self, engine):
+    def test_select_orm(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
             items = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
             assert items == [3]
 
-    def test_avg(self, engine):
+    def test_avg(self, engine: Engine):
         with Session(engine) as session:
             res = session.query(avg(Item.embedding)).one()[0]
             assert res is None
@@ -440,7 +440,7 @@ class TestSqlalchemy:
             res = session.query(avg(Item.embedding)).one()[0]
             assert res == Vector([2.5, 3.5, 4.5])
 
-    def test_avg_orm(self, engine):
+    def test_avg_orm(self, engine: Engine):
         with Session(engine) as session:
             res = session.scalars(select(avg(Item.embedding))).first()
             assert res is None
@@ -449,7 +449,7 @@ class TestSqlalchemy:
             res = session.scalars(select(avg(Item.embedding))).one()
             assert res == Vector([2.5, 3.5, 4.5])
 
-    def test_sum(self, engine):
+    def test_sum(self, engine: Engine):
         with Session(engine) as session:
             res = session.query(sum(Item.embedding)).one()[0]
             assert res is None
@@ -458,7 +458,7 @@ class TestSqlalchemy:
             res = session.query(sum(Item.embedding)).one()[0]
             assert res == Vector([5, 7, 9])
 
-    def test_sum_orm(self, engine):
+    def test_sum_orm(self, engine: Engine):
         with Session(engine) as session:
             res = session.scalars(select(sum(Item.embedding))).first()
             assert res is None
@@ -467,7 +467,7 @@ class TestSqlalchemy:
             res = session.scalars(select(sum(Item.embedding))).one()
             assert res == Vector([5, 7, 9])
 
-    def test_bad_dimensions(self, engine):
+    def test_bad_dimensions(self, engine: Engine):
         item = Item(embedding=[1, 2])
         with Session(engine) as session:
             session.add(item)
@@ -475,7 +475,7 @@ class TestSqlalchemy:
                 session.commit()
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
-    def test_bad_ndim(self, engine):
+    def test_bad_ndim(self, engine: Engine):
         item = Item(embedding=np.array([[1, 2, 3]]))
         with Session(engine) as session:
             session.add(item)
@@ -483,26 +483,26 @@ class TestSqlalchemy:
                 session.commit()
 
     @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
-    def test_bad_dtype(self, engine):
+    def test_bad_dtype(self, engine: Engine):
         item = Item(embedding=np.array(['one', 'two', 'three']))
         with Session(engine) as session:
             session.add(item)
             with pytest.raises(StatementError, match='could not convert string to float'):
                 session.commit()
 
-    def test_inspect(self, engine):
+    def test_inspect(self, engine: Engine):
         columns = inspect(engine).get_columns('sqlalchemy_orm_item')
         assert isinstance(columns[1]['type'], VECTOR)
 
-    def test_literal_binds(self, engine):
+    def test_literal_binds(self, engine: Engine):
         sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(engine, compile_kwargs={'literal_binds': True})
         assert "embedding <-> '[1.0,2.0,3.0]'" in str(sql)
 
-    def test_insert(self, engine):
+    def test_insert(self, engine: Engine):
         with Session(engine) as session:
             session.execute(insert(Item).values(embedding=Vector([1, 2, 3])))
 
-    def test_insert_bulk(self, engine):
+    def test_insert_bulk(self, engine: Engine):
         with Session(engine) as session:
             session.execute(insert(Item), [{'embedding': Vector([1, 2, 3])}])
 
@@ -511,7 +511,7 @@ class TestSqlalchemy:
     #     with Session(engine) as session:
     #         session.execute(text('INSERT INTO sqlalchemy_orm_item (embedding) VALUES (:embedding)'), {'embedding': np.array([1, 2, 3])})
 
-    def test_automap(self, engine):
+    def test_automap(self, engine: Engine):
         metadata = MetaData()
         metadata.reflect(engine, only=['sqlalchemy_orm_item'])
         AutoBase = automap_base(metadata=metadata)
@@ -522,13 +522,13 @@ class TestSqlalchemy:
             item = session.query(AutoItem).first()
             assert item is not None and item.embedding == Vector([1, 2, 3])
 
-    def test_half_precision(self, engine):
+    def test_half_precision(self, engine: Engine):
         create_items()
         with Session(engine) as session:
             items = session.query(Item).order_by(func.cast(Item.embedding, HALFVEC(3)).l2_distance([1, 1, 1])).all()
             assert [v.id for v in items] == [1, 3, 2]
 
-    def test_binary_quantize(self, engine):
+    def test_binary_quantize(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, embedding=[-1, -2, -3]))
             session.add(Item(id=2, embedding=[1, -2, 3]))
@@ -539,7 +539,7 @@ class TestSqlalchemy:
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
 
-    def test_binary_quantize_reranking(self, engine):
+    def test_binary_quantize_reranking(self, engine: Engine):
         # recreate index (could also vacuum table)
         binary_quantize_index.drop(setup_engine)
         binary_quantize_index.create(setup_engine)
@@ -561,7 +561,7 @@ class TestSqlalchemyArray:
     def setup_method(self):
         delete_items()
 
-    def test_vector_array(self, engine):
+    def test_vector_array(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]))
             session.commit()
@@ -570,7 +570,7 @@ class TestSqlalchemyArray:
             item = session.get_one(Item, 1)
             assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
 
-    def test_halfvec_array(self, engine):
+    def test_halfvec_array(self, engine: Engine):
         with Session(engine) as session:
             session.add(Item(id=1, half_embeddings=[HalfVector([1, 2, 3]), HalfVector([4, 5, 6])]))
             session.commit()
@@ -586,7 +586,7 @@ class TestSqlalchemyAsync:
         delete_items()
 
     @pytest.mark.asyncio
-    async def test_vector(self, engine):
+    async def test_vector(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -599,7 +599,7 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
     @pytest.mark.asyncio
-    async def test_halfvec(self, engine):
+    async def test_halfvec(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -612,7 +612,7 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
     @pytest.mark.asyncio
-    async def test_bit(self, engine):
+    async def test_bit(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -630,7 +630,7 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
     @pytest.mark.asyncio
-    async def test_sparsevec(self, engine):
+    async def test_sparsevec(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -643,7 +643,7 @@ class TestSqlalchemyAsync:
         await engine.dispose()
 
     @pytest.mark.asyncio
-    async def test_avg(self, engine):
+    async def test_avg(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
@@ -662,7 +662,7 @@ class TestSqlalchemyAsyncArray:
         delete_items()
 
     @pytest.mark.asyncio
-    async def test_vector_array(self, engine):
+    async def test_vector_array(self, engine: AsyncEngine):
         async_session = async_sessionmaker(engine, expire_on_commit=False)
 
         async with async_session() as session:
