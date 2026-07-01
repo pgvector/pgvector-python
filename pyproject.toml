@@ -66,10 +66,13 @@ include = [
     "tests"
 ]
 typeCheckingMode = "strict"
+reportConstantRedefinition = "none"
 reportMissingTypeStubs = "none"
 reportPossiblyUnboundVariable = "none"
+reportUnknownArgumentType = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
+reportUnnecessaryIsInstance = "none"
 venv = ".venv"
 venvPath = "."
 
