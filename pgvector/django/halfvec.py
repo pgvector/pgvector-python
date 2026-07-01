@@ -51,7 +51,7 @@ class HalfVectorField(Field):
 
 
 class HalfVectorWidget(forms.TextInput):
-    def format_value(self, value: Any) -> str | None:
+    def format_value(self, value: Any) -> Any:
         if isinstance(value, HalfVector):
             value = value.to_list()
         return super().format_value(value)

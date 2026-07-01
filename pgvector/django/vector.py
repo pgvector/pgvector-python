@@ -51,7 +51,7 @@ class VectorField(Field):
 
 
 class VectorWidget(forms.TextInput):
-    def format_value(self, value: Any) -> str | None:
+    def format_value(self, value: Any) -> Any:
         if isinstance(value, Vector):
             value = value.to_list()
         return super().format_value(value)

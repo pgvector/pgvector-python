@@ -46,7 +46,7 @@ class SparseVectorField(Field):
 
 
 class SparseVectorWidget(forms.TextInput):
-    def format_value(self, value: Any) -> str | None:
+    def format_value(self, value: Any) -> Any:
         if isinstance(value, SparseVector):
             value = value.to_text()
         return super().format_value(value)

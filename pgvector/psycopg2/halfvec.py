@@ -1,4 +1,5 @@
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
+from typing import Any
 from .. import HalfVector
 
 
@@ -6,7 +7,7 @@ class HalfvecAdapter:
     def __init__(self, value: HalfVector) -> None:
         self._value = value
 
-    def getquoted(self) -> bytes:
+    def getquoted(self) -> Any:
         return adapt(self._value.to_text()).getquoted()
 
 
