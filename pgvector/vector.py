@@ -38,8 +38,8 @@ class Vector:
         return False
 
     def dimensions(self) -> int:
-        dim, = struct.unpack_from('>H', self._value)
-        return cast(int, dim)
+        dim, = cast(tuple[int], struct.unpack_from('>H', self._value))
+        return dim
 
     def to_list(self) -> list[float]:
         return list(struct.unpack_from(f'>{self.dimensions()}f', self._value[4:]))

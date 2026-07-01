@@ -60,8 +60,8 @@ class Bit:
         return False
 
     def _length(self) -> int:
-        length, = unpack_from('>i', self._value)
-        return cast(int, length)
+        length, = cast(tuple[int], unpack_from('>i', self._value))
+        return length
 
     def to_list(self) -> list[bool]:
         # TODO improve
