@@ -79,3 +79,6 @@ project-includes = [
     "tests/**/*.py"
 ]
 preset = "strict"
+
+[tool.pyrefly.errors]
+missing-override-decorator = false
