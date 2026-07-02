@@ -41,6 +41,10 @@ class TestHalfVector:
         assert HalfVector(arr.astype('>f2')).to_list() == [1, 2, 3]
         assert HalfVector(arr.astype('>f2')).to_binary() == HalfVector([1, 2, 3]).to_binary()
 
+        with pytest.raises(ValueError) as error:
+            HalfVector(np.array(['one', 'two', 'three']))
+        assert 'could not convert string to float' in str(error.value)
+
     def test_int(self) -> None:
         with pytest.raises(ValueError) as error:
             HalfVector(1)  # type: ignore

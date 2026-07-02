@@ -41,6 +41,10 @@ class TestVector:
         assert Vector(arr.astype('>f4')).to_list() == [1, 2, 3]
         assert Vector(arr.astype('>f4')).to_binary() == Vector([1, 2, 3]).to_binary()
 
+        with pytest.raises(ValueError) as error:
+            Vector(np.array(['one', 'two', 'three']))
+        assert 'could not convert string to float' in str(error.value)
+
     def test_int(self) -> None:
         with pytest.raises(ValueError) as error:
             Vector(1)  # type: ignore
