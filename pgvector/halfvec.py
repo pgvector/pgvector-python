@@ -96,8 +96,8 @@ class HalfVector:
         return value.to_binary()
 
     @classmethod
-    def _from_db(cls, value: str | HalfVector | None) -> HalfVector | None:
-        if value is None or isinstance(value, HalfVector):
-            return value
+    def _from_db(cls, value: str | HalfVector) -> list[float]:
+        if isinstance(value, str):
+            value = cls.from_text(value)
 
-        return cls.from_text(value)
+        return value.to_list()

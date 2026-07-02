@@ -32,8 +32,7 @@ class VECTOR(UserDefinedType[Any]):
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Any:
         def process(value: Any) -> list[float] | None:
-            value = Vector._from_db(value)
-            return None if value is None else value.to_list()
+            return None if value is None else Vector._from_db(value)
         return process
 
     class Comparator(TypeEngine.Comparator[Any]):

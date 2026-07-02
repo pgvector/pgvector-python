@@ -17,8 +17,7 @@ class HalfVectorField(Field):
         return HalfVector._to_db(value)
 
     def python_value(self, value: Any) -> list[float] | None:
-        value = HalfVector._from_db(value)
-        return None if value is None else value.to_list()
+        return None if value is None else HalfVector._from_db(value)
 
     def _distance(self, op: str, vector: object) -> Expression:
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))

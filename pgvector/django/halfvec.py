@@ -25,8 +25,7 @@ class HalfVectorField(Field):
         return 'halfvec(%d)' % self.dimensions
 
     def from_db_value(self, value: Any, expression: Any, connection: Any) -> list[float] | None:
-        value = HalfVector._from_db(value)
-        return None if value is None else value.to_list()
+        return None if value is None else HalfVector._from_db(value)
 
     def to_python(self, value: Any) -> list[float] | None:
         if value is None or isinstance(value, list):
