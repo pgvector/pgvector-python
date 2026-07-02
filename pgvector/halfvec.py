@@ -1,5 +1,7 @@
 from __future__ import annotations
+import array
 import struct
+import sys
 
 try:
     import numpy as np
@@ -11,20 +13,24 @@ except ImportError:
 class HalfVector:
     def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
         if isinstance(value, list):
+            dim = len(value)
             try:
-                self._value = [float(v) for v in value]
-            except (TypeError, ValueError):
+                self._value = array.array('H', struct.pack(f'{dim}e', *value))
+            except struct.error:
                 raise ValueError('expected list[float]')
         elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
-            self._value = [float(v) for v in value]
+            if value.dtype != np.float16:
+                value = np.asarray(value, dtype=np.float16)
+
+            self._value = array.array('H', value.tobytes())
         else:
             raise ValueError('expected list or ndarray')
 
     def __repr__(self) -> str:
-        return f'HalfVector({self._value})'
+        return f'HalfVector({self.to_list()})'
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
@@ -35,23 +41,26 @@ class HalfVector:
         return len(self._value)
 
     def to_list(self) -> list[float]:
-        return self._value
+        dim = len(self._value)
+        return list(struct.unpack(f'{dim}e', self._value.tobytes()))
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float16]]:
-        return np.array(self._value, dtype=np.float16)
+        return np.frombuffer(self._value, dtype=np.float16)
 
     def to_text(self) -> str:
-        return f'[{",".join([str(v) for v in self._value])}]'
+        return f'[{",".join([str(v) for v in self.to_list()])}]'
 
     def to_binary(self) -> bytes:
-        dim = len(self._value)
-        return struct.pack(f'>HH{dim}e', dim, 0, *self._value)
+        if sys.byteorder == 'big':
+            value = self._value
+        else:
+            value = array.array('H', self._value)
+            value.byteswap()
+        return struct.pack(f'>HH', len(value), 0) + value.tobytes()
 
     @classmethod
     def from_text(cls, value: str) -> HalfVector:
-        vec = cls.__new__(cls)
-        vec._value = [float(v) for v in value[1:-1].split(',')]
-        return vec
+        return cls([float(v) for v in value[1:-1].split(',')])
 
     @classmethod
     def from_binary(cls, value: bytes) -> HalfVector:
@@ -64,7 +73,9 @@ class HalfVector:
             raise ValueError('expected unused to be 0')
 
         vec = cls.__new__(cls)
-        vec._value = list(struct.unpack_from(f'>{dim}e', value[4:]))
+        vec._value = array.array('H', value[4:])
+        if sys.byteorder != 'big':
+            vec._value.byteswap()
         return vec
 
     @classmethod
