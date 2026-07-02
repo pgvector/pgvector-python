@@ -136,9 +136,9 @@ class SparseVector:
         if unused != 0:
             raise ValueError('expected unused to be 0')
 
-        indices = unpack_from(f'>{nnz}i', value, 12)
-        values = unpack_from(f'>{nnz}f', value, 12 + nnz * 4)
-        return cls._from_parts(int(dim), list(indices), list(values))
+        indices = list(unpack_from(f'>{nnz}i', value, 12))
+        values = list(unpack_from(f'>{nnz}f', value, 12 + nnz * 4))
+        return cls._from_parts(dim, indices, values)
 
     @classmethod
     def _from_parts(cls, dim: int, indices: list[int], values: list[float]) -> SparseVector:
