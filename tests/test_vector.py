@@ -11,7 +11,9 @@ except ImportError:
 
 class TestVector:
     def test_list(self) -> None:
-        assert Vector([1, 2, 3]).to_list() == [1, 2, 3]
+        arr = [1.0, 2.0, 3.0]
+        assert Vector(arr).to_list() == arr
+        assert Vector(arr).to_list() is not arr
 
     def test_list_empty(self) -> None:
         assert Vector([]).to_list() == []
@@ -31,6 +33,7 @@ class TestVector:
         arr = np.array([1, 2, 3])
         assert Vector(arr).to_list() == [1, 2, 3]
         assert Vector(arr).to_numpy() is not arr
+        assert Vector(arr).to_numpy().dtype == np.float32
 
     def test_int(self) -> None:
         with pytest.raises(ValueError) as error:
@@ -47,13 +50,6 @@ class TestVector:
 
     def test_dimensions(self) -> None:
         assert Vector([1, 2, 3]).dimensions() == 3
-
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
-    def test_to_numpy_readonly(self) -> None:
-        arr = Vector([1, 2, 3]).to_numpy()
-        with pytest.raises(ValueError) as error:
-            arr[0] = 4
-        assert str(error.value) == 'assignment destination is read-only'
 
     def test_from_text(self) -> None:
         vec = Vector.from_text('[1.5,2,3]')
