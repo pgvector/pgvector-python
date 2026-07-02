@@ -76,6 +76,10 @@ class HalfVector:
         if value is None:
             return value
 
+        # fast path for high-level libraries
+        if isinstance(value, list):
+            return f'[{",".join([str(float(v)) for v in value])}]'
+
         if not isinstance(value, cls):
             value = cls(value)  # type: ignore
 
