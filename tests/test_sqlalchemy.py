@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, event, insert, inspect, select, text, Meta
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, Session
 from sqlalchemy.sql import func
 from typing import Any
 
@@ -78,13 +78,13 @@ class Base(DeclarativeBase):
 class Item(Base):
     __tablename__ = 'sqlalchemy_orm_item'
 
-    id = mapped_column(Integer, primary_key=True)
-    embedding = mapped_column(VECTOR(3))
-    half_embedding = mapped_column(HALFVEC(3))
-    binary_embedding = mapped_column(BIT(3))
-    sparse_embedding = mapped_column(SPARSEVEC(3))
-    embeddings = mapped_column(ARRAY(VECTOR(3)))
-    half_embeddings = mapped_column(ARRAY(HALFVEC(3)))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    embedding: Mapped[Vector] = mapped_column(VECTOR(3))
+    half_embedding: Mapped[HalfVector] = mapped_column(HALFVEC(3))
+    binary_embedding: Mapped[Any] = mapped_column(BIT(3))
+    sparse_embedding: Mapped[SparseVector] = mapped_column(SPARSEVEC(3))
+    embeddings: Mapped[list[Vector]] = mapped_column(ARRAY(VECTOR(3)))
+    half_embeddings: Mapped[list[HalfVector]] = mapped_column(ARRAY(HALFVEC(3)))
 
 
 Base.metadata.drop_all(setup_engine)
