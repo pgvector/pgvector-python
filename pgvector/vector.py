@@ -86,6 +86,16 @@ class Vector:
         if value is None:
             return value
 
+        # fast path for NumPy
+        if NUMPY_AVAILABLE and isinstance(value, np.ndarray):
+            if value.ndim != 1:
+                raise ValueError('expected ndim to be 1')
+
+            if value.dtype != '>f4':
+                value = np.asarray(value, dtype='>f4')
+
+            return struct.pack('>HH', len(value), 0) + value.tobytes()
+
         if not isinstance(value, cls):
             value = cls(value)  # type: ignore
 
