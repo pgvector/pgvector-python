@@ -1,5 +1,6 @@
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
+from pydantic import ConfigDict
 import pytest
 from sqlalchemy.exc import StatementError
 from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text
@@ -11,6 +12,7 @@ with Session(engine) as session:
 
 class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'  # type: ignore
+    model_config = ConfigDict(arbitrary_types_allowed=True)  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
     embedding: Vector | list[float] | None = Field(default=None, sa_type=VECTOR(3))  # type: ignore

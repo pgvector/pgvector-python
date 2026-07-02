@@ -79,12 +79,12 @@ class Item(Base):
     __tablename__ = 'sqlalchemy_orm_item'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    embedding: Mapped[Vector] = mapped_column(VECTOR(3))
-    half_embedding: Mapped[HalfVector] = mapped_column(HALFVEC(3))
-    binary_embedding: Mapped[Any] = mapped_column(BIT(3))
-    sparse_embedding: Mapped[SparseVector] = mapped_column(SPARSEVEC(3))
-    embeddings: Mapped[list[Vector]] = mapped_column(ARRAY(VECTOR(3)))
-    half_embeddings: Mapped[list[HalfVector]] = mapped_column(ARRAY(HALFVEC(3)))
+    embedding: Mapped[Vector | None] = mapped_column(VECTOR(3))
+    half_embedding: Mapped[HalfVector | None] = mapped_column(HALFVEC(3))
+    binary_embedding: Mapped[Any | None] = mapped_column(BIT(3))
+    sparse_embedding: Mapped[SparseVector | None] = mapped_column(SPARSEVEC(3))
+    embeddings: Mapped[list[Vector] | None] = mapped_column(ARRAY(VECTOR(3)))
+    half_embeddings: Mapped[list[HalfVector] | None] = mapped_column(ARRAY(HALFVEC(3)))
 
 
 Base.metadata.drop_all(setup_engine)
