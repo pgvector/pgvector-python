@@ -81,7 +81,7 @@ class Item(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     embedding: Mapped[list[float] | None] = mapped_column(VECTOR(3))
     half_embedding: Mapped[list[float] | None] = mapped_column(HALFVEC(3))
-    binary_embedding: Mapped[Any | None] = mapped_column(BIT(3))
+    binary_embedding: Mapped[str | None] = mapped_column(BIT(3))
     sparse_embedding: Mapped[SparseVector | None] = mapped_column(SPARSEVEC(3))
     embeddings: Mapped[list[list[float]] | None] = mapped_column(ARRAY(VECTOR(3), dimensions=1))
     half_embeddings: Mapped[list[list[float]] | None] = mapped_column(ARRAY(HALFVEC(3), dimensions=1))
