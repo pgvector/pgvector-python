@@ -28,13 +28,9 @@ class VectorField(Field):
         return Vector._from_db(value)
 
     def to_python(self, value: Any) -> list[float] | None:
-        if value is None or isinstance(value, list):
+        if isinstance(value, list):
             return value
-        if isinstance(value, str):
-            value = Vector.from_text(value)
-        elif not isinstance(value, Vector):
-            value = Vector(value)
-        return value.to_list()  # type: ignore
+        return Vector._from_db(value)
 
     def get_prep_value(self, value: Any) -> str | None:
         return Vector._to_db(value)

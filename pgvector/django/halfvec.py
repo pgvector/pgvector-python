@@ -28,13 +28,9 @@ class HalfVectorField(Field):
         return HalfVector._from_db(value)
 
     def to_python(self, value: Any) -> list[float] | None:
-        if value is None or isinstance(value, list):
+        if isinstance(value, list):
             return value
-        if isinstance(value, str):
-            value = HalfVector.from_text(value)
-        elif not isinstance(value, HalfVector):
-            value = HalfVector(value)
-        return value.to_list()  # type: ignore
+        return HalfVector._from_db(value)
 
     def get_prep_value(self, value: Any) -> str | None:
         return HalfVector._to_db(value)
