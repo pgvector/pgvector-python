@@ -1,5 +1,4 @@
 import numpy as np
-from pgvector import Vector
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -26,7 +25,7 @@ with cur.copy('COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)') as copy:
     copy.set_types(['vector'])
 
     for i, embedding in enumerate(embeddings):
-        copy.write_row([Vector(embedding)])
+        copy.write_row([embedding])
 
         # show progress
         if i % 10000 == 0:
