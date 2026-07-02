@@ -1,6 +1,6 @@
 ## 1.0.0 (unreleased)
 
-- Added type hints
+- Added experimental support for type hints
 - Changed `vector` type to return `Vector` object instead of NumPy array
 - Removed `utils` package (use top-level `pgvector` package instead)
 - Removed re-exported classes (use top-level `pgvector` package instead)
