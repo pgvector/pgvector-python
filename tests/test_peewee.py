@@ -1,6 +1,6 @@
 from math import sqrt
 from peewee import Model, PostgresqlDatabase, fn
-from pgvector import HalfVector, SparseVector, Vector
+from pgvector import SparseVector, Vector
 from pgvector.peewee import VectorField, HalfVectorField, FixedBitField, SparseVectorField
 from typing import Any
 
@@ -44,7 +44,7 @@ class TestPeewee:
     def test_vector(self) -> None:
         Item.create(id=1, embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert item.embedding == Vector([1, 2, 3])
+        assert item.embedding == [1, 2, 3]
 
     def test_vector_l2_distance(self) -> None:
         create_items()
@@ -77,7 +77,7 @@ class TestPeewee:
     def test_halfvec(self) -> None:
         Item.create(id=1, half_embedding=[1, 2, 3])
         item = Item.get_by_id(1)
-        assert item.half_embedding == HalfVector([1, 2, 3])
+        assert item.half_embedding == [1, 2, 3]
 
     def test_halfvec_l2_distance(self) -> None:
         create_items()
@@ -170,7 +170,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.embedding).coerce(True)).scalar()
-        assert avg == Vector([2.5, 3.5, 4.5])
+        assert avg == [2.5, 3.5, 4.5]
 
     def test_vector_sum(self) -> None:
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
@@ -178,7 +178,7 @@ class TestPeewee:
         Item.create(embedding=[1, 2, 3])
         Item.create(embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.embedding).coerce(True)).scalar()
-        assert sum == Vector([5, 7, 9])
+        assert sum == [5, 7, 9]
 
     def test_halfvec_avg(self) -> None:
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()
@@ -186,7 +186,7 @@ class TestPeewee:
         Item.create(half_embedding=[1, 2, 3])
         Item.create(half_embedding=[4, 5, 6])
         avg = Item.select(fn.avg(Item.half_embedding).coerce(True)).scalar()
-        assert avg == HalfVector([2.5, 3.5, 4.5])
+        assert avg == [2.5, 3.5, 4.5]
 
     def test_halfvec_sum(self) -> None:
         sum = Item.select(fn.sum(Item.half_embedding).coerce(True)).scalar()
@@ -194,7 +194,7 @@ class TestPeewee:
         Item.create(half_embedding=[1, 2, 3])
         Item.create(half_embedding=[4, 5, 6])
         sum = Item.select(fn.sum(Item.half_embedding).coerce(True)).scalar()
-        assert sum == HalfVector([5, 7, 9])
+        assert sum == [5, 7, 9]
 
     def test_get_or_create(self) -> None:
         Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})

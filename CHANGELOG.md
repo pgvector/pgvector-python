@@ -1,7 +1,8 @@
 ## 1.0.0 (unreleased)
 
 - Added experimental support for type hints
-- Changed `vector` type to return `Vector` object instead of NumPy array
+- Changed `vector` and `halfvec` types to return list for Django, SQLAlchemy, SQLModel, and Peewee
+- Changed `vector` type to return `Vector` object for Psycopg 3, Psycopg 2, asyncpg, and pg8000
 - Removed `utils` package (use top-level `pgvector` package instead)
 - Removed re-exported classes (use top-level `pgvector` package instead)
 - Removed dependency on NumPy

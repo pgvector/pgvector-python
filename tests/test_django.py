@@ -11,7 +11,7 @@ from django.forms import ModelForm
 from math import sqrt
 import os
 import pgvector.django
-from pgvector import HalfVector, SparseVector, Vector
+from pgvector import SparseVector
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
 from unittest import mock
 
@@ -164,11 +164,11 @@ class TestDjango:
     def test_vector(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)  # type: ignore
-        assert item.embedding == Vector([1, 2, 3])
+        assert item.embedding == [1, 2, 3]
 
     def test_vector_l2_distance(self) -> None:
         create_items()
-        distance = L2Distance('embedding', Vector([1, 1, 1]))
+        distance = L2Distance('embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
@@ -210,32 +210,32 @@ class TestDjango:
     def test_halfvec(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)  # type: ignore
-        assert item.half_embedding == HalfVector([1, 2, 3])
+        assert item.half_embedding == [1, 2, 3]
 
     def test_halfvec_l2_distance(self) -> None:
         create_items()
-        distance = L2Distance('half_embedding', HalfVector([1, 1, 1]))
+        distance = L2Distance('half_embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_halfvec_max_inner_product(self) -> None:
         create_items()
-        distance = MaxInnerProduct('half_embedding', HalfVector([1, 1, 1]))
+        distance = MaxInnerProduct('half_embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_halfvec_cosine_distance(self) -> None:
         create_items()
-        distance = CosineDistance('half_embedding', HalfVector([1, 1, 1]))
+        distance = CosineDistance('half_embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
     def test_halfvec_l1_distance(self) -> None:
         create_items()
-        distance = L1Distance('half_embedding', HalfVector([1, 1, 1]))
+        distance = L1Distance('half_embedding', [1, 1, 1])
         items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
@@ -304,7 +304,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']  # type: ignore
-        assert avg == Vector([2.5, 3.5, 4.5])
+        assert avg == [2.5, 3.5, 4.5]
 
     def test_vector_sum(self) -> None:
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']  # type: ignore
@@ -312,7 +312,7 @@ class TestDjango:
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']  # type: ignore
-        assert sum == Vector([5, 7, 9])
+        assert sum == [5, 7, 9]
 
     def test_halfvec_avg(self) -> None:
         avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']  # type: ignore
@@ -320,7 +320,7 @@ class TestDjango:
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
         avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']  # type: ignore
-        assert avg == HalfVector([2.5, 3.5, 4.5])
+        assert avg == [2.5, 3.5, 4.5]
 
     def test_halfvec_sum(self) -> None:
         sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']  # type: ignore
@@ -328,7 +328,7 @@ class TestDjango:
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
         sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']  # type: ignore
-        assert sum == HalfVector([5, 7, 9])
+        assert sum == [5, 7, 9]
 
     def test_serialization(self) -> None:
         create_items()
@@ -358,7 +358,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).embedding == Vector([4, 5, 6])  # type: ignore
+        assert Item.objects.get(pk=1).embedding == [4, 5, 6]  # type: ignore
 
     def test_vector_form_save_missing(self) -> None:
         Item(id=1).save()
@@ -386,7 +386,7 @@ class TestDjango:
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).half_embedding == HalfVector([4, 5, 6])  # type: ignore
+        assert Item.objects.get(pk=1).half_embedding == [4, 5, 6]  # type: ignore
 
     def test_halfvec_form_save_missing(self) -> None:
         Item(id=1).save()
@@ -468,7 +468,7 @@ class TestDjango:
         assert Item.objects.first().sparse_embedding is None  # type: ignore
 
     def test_vector_array(self) -> None:
-        Item(id=1, embeddings=[Vector([1, 2, 3]), Vector([4, 5, 6])]).save()
+        Item(id=1, embeddings=[[1, 2, 3], [4, 5, 6]]).save()
 
         with connection.cursor() as cursor:
             from pgvector.psycopg import register_vector
@@ -476,7 +476,7 @@ class TestDjango:
 
             # this fails if the driver does not cast arrays
             item = Item.objects.get(pk=1)  # type: ignore
-            assert item.embeddings == [Vector([1, 2, 3]), Vector([4, 5, 6])]
+            assert item.embeddings == [[1, 2, 3], [4, 5, 6]]
 
     def test_double_array(self) -> None:
         Item(id=1, double_embedding=[1, 1, 1]).save()

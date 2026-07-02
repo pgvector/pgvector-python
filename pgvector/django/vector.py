@@ -24,16 +24,18 @@ class VectorField(Field):
             return 'vector'
         return 'vector(%d)' % self.dimensions
 
-    def from_db_value(self, value: Any, expression: Any, connection: Any) -> Vector | None:
-        return Vector._from_db(value)
+    def from_db_value(self, value: Any, expression: Any, connection: Any) -> list[float] | None:
+        value = Vector._from_db(value)
+        return None if value is None else value.to_list()
 
-    def to_python(self, value: Any) -> Vector | None:
-        if value is None or isinstance(value, Vector):
+    def to_python(self, value: Any) -> list[float] | None:
+        if value is None or isinstance(value, list):
             return value
-        elif isinstance(value, str):
-            return Vector.from_text(value)
-        else:
-            return Vector(value)
+        if isinstance(value, str):
+            value = Vector.from_text(value)
+        if not isinstance(value, Vector):
+            value = Vector(value)
+        return value.to_list()
 
     def get_prep_value(self, value: Any) -> str | None:
         return Vector._to_db(value)
@@ -50,16 +52,7 @@ class VectorField(Field):
         )
 
 
-class VectorWidget(forms.TextInput):
-    def format_value(self, value: Any) -> Any:
-        if isinstance(value, Vector):
-            value = value.to_list()
-        return super().format_value(value)
-
-
 class VectorFormField(forms.CharField):
-    widget = VectorWidget
-
     def to_python(self, value: Any) -> Any:
         if isinstance(value, str) and value == '':
             return None

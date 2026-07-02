@@ -1,4 +1,4 @@
-from pgvector import HalfVector, SparseVector, Vector
+from pgvector import SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 from pydantic import ConfigDict
 import pytest
@@ -15,8 +15,8 @@ class Item(SQLModel, table=True):
     model_config = ConfigDict(arbitrary_types_allowed=True)  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
-    embedding: Vector | list[float] | None = Field(default=None, sa_type=VECTOR(3))  # type: ignore
-    half_embedding: HalfVector | list[float] | None = Field(default=None, sa_type=HALFVEC(3))  # type: ignore
+    embedding: list[float] | None = Field(default=None, sa_type=VECTOR(3))  # type: ignore
+    half_embedding: list[float] | None = Field(default=None, sa_type=HALFVEC(3))  # type: ignore
     binary_embedding: str | None = Field(default=None, sa_type=BIT(3))  # type: ignore
     sparse_embedding: SparseVector | list[float] | None = Field(default=None, sa_type=SPARSEVEC(3))  # type: ignore
 
@@ -65,8 +65,8 @@ class TestSqlmodel:
             assert items[0].id == 1
             assert items[1].id == 2
             assert items[2].id == 3
-            assert items[0].embedding == Vector([1.5, 2, 3])
-            assert items[1].embedding == Vector([4, 5, 6])
+            assert items[0].embedding == [1.5, 2, 3]
+            assert items[1].embedding == [4, 5, 6]
             assert items[2].embedding is None
 
     def test_vector(self) -> None:
@@ -74,7 +74,7 @@ class TestSqlmodel:
             session.add(Item(id=1, embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
-            assert item.embedding == Vector([1, 2, 3])
+            assert item.embedding == [1, 2, 3]
 
     def test_vector_l2_distance(self) -> None:
         create_items()
@@ -105,7 +105,7 @@ class TestSqlmodel:
             session.add(Item(id=1, half_embedding=[1, 2, 3]))
             session.commit()
             item = session.get_one(Item, 1)
-            assert item.half_embedding == HalfVector([1, 2, 3])
+            assert item.half_embedding == [1, 2, 3]
 
     def test_halfvec_l2_distance(self) -> None:
         create_items()
@@ -200,7 +200,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(avg(Item.embedding))).first()
-            assert res == Vector([2.5, 3.5, 4.5])
+            assert res == [2.5, 3.5, 4.5]
 
     def test_vector_sum(self) -> None:
         with Session(engine) as session:
@@ -209,7 +209,7 @@ class TestSqlmodel:
             session.add(Item(embedding=[1, 2, 3]))
             session.add(Item(embedding=[4, 5, 6]))
             res = session.exec(select(sum(Item.embedding))).first()
-            assert res == Vector([5, 7, 9])
+            assert res == [5, 7, 9]
 
     def test_halfvec_avg(self) -> None:
         with Session(engine) as session:
@@ -218,7 +218,7 @@ class TestSqlmodel:
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
             res = session.exec(select(avg(Item.half_embedding))).first()
-            assert res == HalfVector([2.5, 3.5, 4.5])
+            assert res == [2.5, 3.5, 4.5]
 
     def test_halfvec_sum(self) -> None:
         with Session(engine) as session:
@@ -227,7 +227,7 @@ class TestSqlmodel:
             session.add(Item(half_embedding=[1, 2, 3]))
             session.add(Item(half_embedding=[4, 5, 6]))
             res = session.exec(select(sum(Item.half_embedding))).first()
-            assert res == HalfVector([5, 7, 9])
+            assert res == [5, 7, 9]
 
     def test_bad_dimensions(self) -> None:
         item = Item(embedding=[1, 2])

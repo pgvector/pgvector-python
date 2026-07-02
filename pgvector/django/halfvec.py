@@ -24,16 +24,18 @@ class HalfVectorField(Field):
             return 'halfvec'
         return 'halfvec(%d)' % self.dimensions
 
-    def from_db_value(self, value: Any, expression: Any, connection: Any) -> HalfVector | None:
-        return HalfVector._from_db(value)
+    def from_db_value(self, value: Any, expression: Any, connection: Any) -> list[float] | None:
+        value = HalfVector._from_db(value)
+        return None if value is None else value.to_list()
 
-    def to_python(self, value: Any) -> HalfVector | None:
-        if value is None or isinstance(value, HalfVector):
+    def to_python(self, value: Any) -> list[float] | None:
+        if value is None or isinstance(value, list):
             return value
-        elif isinstance(value, str):
-            return HalfVector.from_text(value)
-        else:
-            return HalfVector(value)
+        if isinstance(value, str):
+            value = HalfVector.from_text(value)
+        if not isinstance(value, HalfVector):
+            value = HalfVector(value)
+        return value.to_list()
 
     def get_prep_value(self, value: Any) -> str | None:
         return HalfVector._to_db(value)
@@ -50,16 +52,7 @@ class HalfVectorField(Field):
         )
 
 
-class HalfVectorWidget(forms.TextInput):
-    def format_value(self, value: Any) -> Any:
-        if isinstance(value, HalfVector):
-            value = value.to_list()
-        return super().format_value(value)
-
-
 class HalfVectorFormField(forms.CharField):
-    widget = HalfVectorWidget
-
     def to_python(self, value: Any) -> Any:
         if isinstance(value, str) and value == '':
             return None
