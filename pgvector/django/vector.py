@@ -33,9 +33,9 @@ class VectorField(Field):
             return value
         if isinstance(value, str):
             value = Vector.from_text(value)
-        if not isinstance(value, Vector):
+        elif not isinstance(value, Vector):
             value = Vector(value)
-        return value.to_list()
+        return value.to_list()  # type: ignore
 
     def get_prep_value(self, value: Any) -> str | None:
         return Vector._to_db(value)

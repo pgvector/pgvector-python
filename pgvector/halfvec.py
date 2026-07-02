@@ -78,7 +78,7 @@ class HalfVector:
 
         # fast path for high-level libraries
         if isinstance(value, list):
-            return f'[{",".join([str(float(v)) for v in value])}]'
+            return f'[{",".join([str(float(v)) for v in value])}]'  # type: ignore
 
         if not isinstance(value, cls):
             value = cls(value)  # type: ignore

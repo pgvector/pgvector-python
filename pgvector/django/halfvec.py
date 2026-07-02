@@ -33,9 +33,9 @@ class HalfVectorField(Field):
             return value
         if isinstance(value, str):
             value = HalfVector.from_text(value)
-        if not isinstance(value, HalfVector):
+        elif not isinstance(value, HalfVector):
             value = HalfVector(value)
-        return value.to_list()
+        return value.to_list()  # type: ignore
 
     def get_prep_value(self, value: Any) -> str | None:
         return HalfVector._to_db(value)
