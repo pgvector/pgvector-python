@@ -9,3 +9,6 @@ dev = [
     "pgvector",
     "psycopg[binary]"
 ]
+
+[tool.uv.sources]
+pgvector = { path = "../..", editable = true }

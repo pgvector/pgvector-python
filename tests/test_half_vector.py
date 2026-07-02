@@ -34,6 +34,9 @@ class TestHalfVector:
         assert HalfVector(arr).to_list() == [1, 2, 3]
         assert HalfVector(arr).to_numpy() is not arr
         assert HalfVector(arr).to_numpy().dtype == np.float16
+        # non-contiguous
+        assert HalfVector(np.flip(arr)).to_list() == [3, 2, 1]
+        assert HalfVector(np.flip(arr)).to_binary() == HalfVector([3, 2, 1]).to_binary()
 
     def test_int(self) -> None:
         with pytest.raises(ValueError) as error:

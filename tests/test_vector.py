@@ -34,6 +34,9 @@ class TestVector:
         assert Vector(arr).to_list() == [1, 2, 3]
         assert Vector(arr).to_numpy() is not arr
         assert Vector(arr).to_numpy().dtype == np.float32
+        # non-contiguous
+        assert Vector(np.flip(arr)).to_list() == [3, 2, 1]
+        assert Vector(np.flip(arr)).to_binary() == Vector([3, 2, 1]).to_binary()
 
     def test_int(self) -> None:
         with pytest.raises(ValueError) as error:
