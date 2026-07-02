@@ -96,7 +96,10 @@ class Vector:
         return value.to_binary()
 
     @classmethod
-    def _from_db(cls, value: str | Vector) -> list[float]:
+    def _from_db(cls, value: str | Vector | None) -> list[float] | None:
+        if value is None:
+            return value
+
         if isinstance(value, str):
             value = cls.from_text(value)
 
