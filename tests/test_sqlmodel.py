@@ -3,7 +3,6 @@ from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy.exc import StatementError
 from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text
-from typing import Any
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
@@ -14,10 +13,10 @@ class Item(SQLModel, table=True):
     __tablename__ = 'sqlmodel_item'  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
-    embedding: Any = Field(default=None, sa_type=VECTOR(3))  # type: ignore
-    half_embedding: Any = Field(default=None, sa_type=HALFVEC(3))  # type: ignore
-    binary_embedding: Any = Field(default=None, sa_type=BIT(3))  # type: ignore
-    sparse_embedding: Any = Field(default=None, sa_type=SPARSEVEC(3))  # type: ignore
+    embedding: Vector | list[float] | None = Field(default=None, sa_type=VECTOR(3))  # type: ignore
+    half_embedding: HalfVector | list[float] | None = Field(default=None, sa_type=HALFVEC(3))  # type: ignore
+    binary_embedding: str | None = Field(default=None, sa_type=BIT(3))  # type: ignore
+    sparse_embedding: SparseVector | list[float] | None = Field(default=None, sa_type=SPARSEVEC(3))  # type: ignore
 
 
 SQLModel.metadata.drop_all(engine)
