@@ -100,10 +100,3 @@ class Bit:
             raise ValueError('expected bit')
 
         return value.to_text()
-
-    @classmethod
-    def _to_db_binary(cls, value: Bit) -> bytes:
-        if not isinstance(value, Bit):
-            raise ValueError('expected bit')
-
-        return value.to_binary()
