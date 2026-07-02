@@ -28,7 +28,9 @@ class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
     def dump(self, obj: 'Vector | np.ndarray') -> Buffer | None:
-        return Vector._to_db_binary(obj)
+        if not isinstance(obj, Vector):
+            obj = Vector(obj)
+        return obj.to_binary()
 
 
 class VectorLoader(Loader):
