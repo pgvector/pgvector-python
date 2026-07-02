@@ -24,6 +24,7 @@ class Vector:
             if value.dtype != np.float32:
                 value = np.asarray(value, dtype=np.float32)
 
+            # tobytes() important for performance
             self._value = array.array('f', value.tobytes())
         else:
             raise ValueError('expected list or ndarray')
