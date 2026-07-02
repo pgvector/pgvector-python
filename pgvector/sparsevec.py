@@ -116,8 +116,8 @@ class SparseVector:
     @classmethod
     def from_text(cls, value: str) -> SparseVector:
         elements, dim = value.split('/', 2)
-        indices = []
-        values = []
+        indices: list[int] = []
+        values: list[float] = []
         # split on empty string returns single element list
         if len(elements) > 2:
             for e in elements[1:-1].split(','):
