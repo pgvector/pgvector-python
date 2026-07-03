@@ -25,7 +25,6 @@ class Bit:
                 value = ''.join([bit_value(v) for v in value])
 
             length = len(value)
-
             if length % 8 != 0:
                 value += '0' * (8 - (length % 8))
 
