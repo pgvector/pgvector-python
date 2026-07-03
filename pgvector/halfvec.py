@@ -57,7 +57,7 @@ class HalfVector:
         else:
             value = array.array('H', self._value)
             value.byteswap()
-        return struct.pack(f'>HH', len(value), 0) + memoryview(value)
+        return struct.pack('>HH', len(value), 0) + memoryview(value)
 
     @classmethod
     def from_text(cls, value: str) -> HalfVector:
