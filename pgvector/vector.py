@@ -64,17 +64,20 @@ class Vector:
     @classmethod
     def from_binary(cls, value: bytes) -> Vector:
         dim, unused = struct.unpack_from('>HH', value)
+        data = value[4:]
 
-        if len(value) != 4 + 4 * dim:
+        if len(data) != 4 * dim:
             raise ValueError('invalid length')
 
         if unused != 0:
             raise ValueError('expected unused to be 0')
 
-        vec = cls.__new__(cls)
-        vec._value = array.array('f', value[4:])
+        arr = array.array('f', data)
         if sys.byteorder != 'big':
-            vec._value.byteswap()
+            arr.byteswap()
+
+        vec = cls.__new__(cls)
+        vec._value = arr
         return vec
 
     @classmethod

@@ -66,17 +66,20 @@ class HalfVector:
     @classmethod
     def from_binary(cls, value: bytes) -> HalfVector:
         dim, unused = struct.unpack_from('>HH', value)
+        data = value[4:]
 
-        if len(value) != 4 + 2 * dim:
+        if len(data) != 2 * dim:
             raise ValueError('invalid length')
 
         if unused != 0:
             raise ValueError('expected unused to be 0')
 
-        vec = cls.__new__(cls)
-        vec._value = array.array('H', value[4:])
+        arr = array.array('H', data)
         if sys.byteorder != 'big':
-            vec._value.byteswap()
+            arr.byteswap()
+
+        vec = cls.__new__(cls)
+        vec._value = arr
         return vec
 
     @classmethod
