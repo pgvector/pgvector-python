@@ -71,7 +71,7 @@ class Bit:
 
     @classmethod
     def from_text(cls, value: str) -> Bit:
-        # cast to ensure always use str constructor
+        # cast to ensure always uses str constructor
         return cls(str(value))
 
     @classmethod
