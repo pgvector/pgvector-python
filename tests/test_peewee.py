@@ -18,6 +18,7 @@ class Item(BaseModel):
     half_embedding = HalfVectorField(dimensions=3, null=True)
     binary_embedding = FixedBitField(max_length=3, null=True)
     sparse_embedding = SparseVectorField(dimensions=3, null=True)
+    distance: float # for typing
 
     class Meta:  # type: ignore
         table_name = 'peewee_item'
@@ -26,7 +27,7 @@ class Item(BaseModel):
 Item.add_index('embedding vector_l2_ops', using='hnsw')
 
 db.connect()
-db.execute_sql('CREATE EXTENSION IF NOT EXISTS vector')
+db.execute_sql('CREATE EXTENSION IF NOT EXISTS vector')  # type: ignore
 db.drop_tables([Item])
 db.create_tables([Item])
 
@@ -197,9 +198,9 @@ class TestPeewee:
         assert sum == [5, 7, 9]
 
     def test_get_or_create(self) -> None:
-        Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})
-        Item.get_or_create(embedding=Vector([4, 5, 6]))
-        Item.get_or_create(embedding=Item.embedding.to_value([7, 8, 9]))
+        Item.get_or_create(id=1, defaults={'embedding': [1, 2, 3]})  # type: ignore
+        Item.get_or_create(embedding=Vector([4, 5, 6]))  # type: ignore
+        Item.get_or_create(embedding=Item.embedding.to_value([7, 8, 9]))  # type: ignore
 
     def test_vector_array(self) -> None:
         from playhouse.postgres_ext import PostgresqlExtDatabase, ArrayField
