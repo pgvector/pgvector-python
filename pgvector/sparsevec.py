@@ -1,6 +1,6 @@
 from __future__ import annotations
 from struct import pack, unpack_from
-from typing import TYPE_CHECKING, Any, overload
+from typing import TYPE_CHECKING, Final, overload
 from ._utils import is_sparse_array, ndarray
 
 if TYPE_CHECKING:
@@ -8,7 +8,11 @@ if TYPE_CHECKING:
     from scipy.sparse import sparray, spmatrix, coo_array, coo_matrix
 
 
-NO_DEFAULT = object()
+class Sentinel:
+    pass
+
+
+NO_DEFAULT: Final[Sentinel] = Sentinel()
 
 
 class SparseVector:
@@ -20,7 +24,7 @@ class SparseVector:
     def __init__(self, value: list[float] | ndarray | sparray | spmatrix, /) -> None:
         ...
 
-    def __init__(self, value: dict[int, float] | list[float] | ndarray | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
+    def __init__(self, value: dict[int, float] | list[float] | ndarray | sparray | spmatrix, dimensions: int | Sentinel = NO_DEFAULT, /) -> None:
         if is_sparse_array(value):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
