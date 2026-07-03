@@ -9,7 +9,7 @@ except ImportError:
 
 
 class Bit:
-    def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int], np.dtype[np.bool | np.uint8]]) -> None:
+    def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]]) -> None:
         if isinstance(value, bytes):
             self._length = 8 * len(value)
             self._data = value
@@ -44,7 +44,7 @@ class Bit:
                 raise ValueError('expected ndim to be 1')
 
             self._length = len(value)
-            self._data = np.packbits(value).tobytes()
+            self._data = np.packbits(value).tobytes()  # type: ignore
         else:
             raise ValueError('expected bytes, str, list, or ndarray')
 
@@ -60,7 +60,7 @@ class Bit:
         # TODO improve
         return [v != '0' for v in self.to_text()]
 
-    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.bool]]:
+    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.bool]]:
         return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._length).astype(bool)
 
     def to_text(self) -> str:

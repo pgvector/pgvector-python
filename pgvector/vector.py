@@ -11,7 +11,7 @@ except ImportError:
 
 
 class Vector:
-    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
+    def __init__(self, value: list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> None:
         if isinstance(value, list):
             try:
                 self._value = array.array('f', value)
@@ -41,7 +41,7 @@ class Vector:
     def to_list(self) -> list[float]:
         return self._value.tolist()
 
-    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float32]]:
+    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float32]]:
         return np.frombuffer(self._value, dtype=np.float32)
 
     def to_text(self) -> str:

@@ -11,7 +11,7 @@ except ImportError:
 
 
 class HalfVector:
-    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
+    def __init__(self, value: list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> None:
         if isinstance(value, list):
             dim = len(value)
             try:
@@ -43,7 +43,7 @@ class HalfVector:
         dim = len(self._value)
         return list(struct.unpack(f'{dim}e', self._value))
 
-    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float16]]:
+    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float16]]:
         return np.frombuffer(self._value, dtype=np.float16)
 
     def to_text(self) -> str:

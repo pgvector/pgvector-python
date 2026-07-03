@@ -22,10 +22,10 @@ class SparseVector:
         ...
 
     @overload
-    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix, /) -> None:
+    def __init__(self, value: list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]] | sparray | spmatrix, /) -> None:
         ...
 
-    def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
+    def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
         if SCIPY_AVAILABLE and isinstance(value, (sparray, spmatrix)):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
@@ -70,7 +70,7 @@ class SparseVector:
             vec[i] = v
         return vec
 
-    def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float32]]:
+    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float32]]:
         vec = np.repeat(0.0, self._dim).astype(np.float32)
         for i, v in zip(self._indices, self._values):
             vec[i] = v
