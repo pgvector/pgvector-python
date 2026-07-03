@@ -80,6 +80,10 @@ class HalfVector:
         return vec
 
     @classmethod
+    def _from_text(cls, value: str) -> list[float]:
+        return [float(v) for v in value[1:-1].split(',')]
+
+    @classmethod
     def _to_db(cls, value: object) -> str | None:
         if value is None:
             return value
@@ -102,7 +106,3 @@ class HalfVector:
             return value.to_list()
 
         return cls._from_text(value)
-
-    @classmethod
-    def _from_text(cls, value: str) -> list[float]:
-        return [float(v) for v in value[1:-1].split(',')]
