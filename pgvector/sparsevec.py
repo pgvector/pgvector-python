@@ -74,7 +74,7 @@ class SparseVector:
     def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float32]]:
         import numpy as np
 
-        vec = np.repeat(0.0, self._dim).astype(np.float32)
+        vec = np.zeros(self._dim, dtype=np.float32)
         for i, v in zip(self._indices, self._values):
             vec[i] = v
         return vec
