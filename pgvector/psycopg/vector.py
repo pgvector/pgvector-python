@@ -44,7 +44,7 @@ class VectorBinaryLoader(VectorLoader):
         return Vector.from_binary(data)
 
 
-def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:
+def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None, /) -> None:
     if info is None:
         raise psycopg.ProgrammingError('vector type not found in the database')
     info.register(context)

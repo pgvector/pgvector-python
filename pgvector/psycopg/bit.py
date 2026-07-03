@@ -21,7 +21,7 @@ class BitBinaryDumper(BitDumper):
         return obj.to_binary()
 
 
-def register_bit_info(context: BaseConnection[Any], info: TypeInfo | None) -> None:
+def register_bit_info(context: BaseConnection[Any], info: TypeInfo | None, /) -> None:
     assert info is not None
     info.register(context)
 

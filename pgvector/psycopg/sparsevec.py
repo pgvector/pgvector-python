@@ -37,7 +37,7 @@ class SparseVectorBinaryLoader(SparseVectorLoader):
         return SparseVector.from_binary(data)
 
 
-def register_sparsevec_info(context: BaseConnection[Any], info: TypeInfo) -> None:
+def register_sparsevec_info(context: BaseConnection[Any], info: TypeInfo, /) -> None:
     info.register(context)
 
     # add oid to anonymous class for set_types
