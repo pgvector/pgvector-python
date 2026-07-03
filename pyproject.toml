@@ -29,7 +29,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "SQLAlchemy[asyncio]>=2",
-    "sqlmodel>=0.0.12"
+    "sqlmodel"
 ]
 dev-optional = [
     "numpy",
