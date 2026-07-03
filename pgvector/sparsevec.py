@@ -149,11 +149,11 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: object) -> str | None:
+    def _to_db(cls, value: list[float] | Any | SparseVector | None) -> str | None:
         if value is None:
             return value
 
-        if not isinstance(value, cls):
+        if not isinstance(value, SparseVector):
             value = cls(value)
 
         return value.to_text()

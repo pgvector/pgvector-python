@@ -86,7 +86,7 @@ class HalfVector:
         return [float(v) for v in value[1:-1].split(',')]
 
     @classmethod
-    def _to_db(cls, value: object) -> str | None:
+    def _to_db(cls, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | HalfVector | None) -> str | None:
         if value is None:
             return value
 
@@ -94,8 +94,8 @@ class HalfVector:
         if isinstance(value, list):
             return f'[{",".join([str(float(v)) for v in value])}]'  # type: ignore
 
-        if not isinstance(value, cls):
-            value = cls(value)  # type: ignore
+        if not isinstance(value, HalfVector):
+            value = cls(value)
 
         return value.to_text()
 
