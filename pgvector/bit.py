@@ -11,7 +11,11 @@ class Bit:
     _length: int
     _data: bytes
 
-    def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]], /) -> None:
+    def __init__(
+        self,
+        value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]],
+        /
+    ) -> None:
         if isinstance(value, bytes):
             self._length = 8 * len(value)
             self._data = value
