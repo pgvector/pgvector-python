@@ -66,6 +66,7 @@ class TestHalfVector:
         assert vec.to_list() == [1.5, 2, 3]
         if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
+        assert vec.to_text() == '[1.5,2.0,3.0]'
 
     def test_from_binary(self) -> None:
         data = pack('>HH3e', 3, 0, 1.5, 2, 3)

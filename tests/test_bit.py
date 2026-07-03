@@ -88,6 +88,7 @@ class TestBit:
         assert vec.to_list() == [True, False, True]
         if NUMPY_AVAILABLE:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
+        assert vec.to_text() == '101'
 
     def test_from_binary(self) -> None:
         data = pack('>iB', 3, 5 << 5)
