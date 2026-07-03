@@ -19,7 +19,7 @@ def cast_halfvec(value: str | bytes | None, cur: cursor) -> HalfVector | None:
     return HalfVector.from_text(value)
 
 
-def register_halfvec_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
+def register_halfvec_info(oid: int, array_oid: int | None, scope: connection | cursor | None, /) -> None:
     halfvec = new_type((oid,), 'HALFVEC', cast_halfvec)
     register_type(halfvec, scope)
 

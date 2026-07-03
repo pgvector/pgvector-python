@@ -19,7 +19,7 @@ def cast_sparsevec(value: str | bytes | None, cur: cursor) -> SparseVector | Non
     return SparseVector.from_text(value)
 
 
-def register_sparsevec_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
+def register_sparsevec_info(oid: int, array_oid: int | None, scope: connection | cursor | None, /) -> None:
     sparsevec = new_type((oid,), 'SPARSEVEC', cast_sparsevec)
     register_type(sparsevec, scope)
 

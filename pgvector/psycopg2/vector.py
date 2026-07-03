@@ -23,7 +23,7 @@ def cast_vector(value: str | bytes | None, cur: cursor) -> Vector | None:
     return Vector.from_text(value)
 
 
-def register_vector_info(oid: int, array_oid: int | None, scope: connection | cursor | None) -> None:
+def register_vector_info(oid: int, array_oid: int | None, scope: connection | cursor | None, /) -> None:
     vector = new_type((oid,), 'VECTOR', cast_vector)
     register_type(vector, scope)
 
