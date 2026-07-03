@@ -5,6 +5,10 @@ if TYPE_CHECKING:
     import numpy as np
 
     ndarray: TypeAlias = np.ndarray[tuple[int, ...], np.dtype[np.floating]]
+else:
+    # any value works since not type checking
+    # TODO use Never when Python 3.10 no longer supported
+    ndarray = None
 
 
 def is_ndarray(value: object) -> bool:

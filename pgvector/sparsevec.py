@@ -1,12 +1,11 @@
 from __future__ import annotations
 from struct import pack, unpack_from
 from typing import TYPE_CHECKING, Any, overload
-from ._utils import is_sparse_array
+from ._utils import is_sparse_array, ndarray
 
 if TYPE_CHECKING:
     import numpy as np
     from scipy.sparse import sparray, spmatrix, coo_array, coo_matrix
-    from ._utils import ndarray
 
 
 NO_DEFAULT = object()

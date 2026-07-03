@@ -5,11 +5,9 @@ from psycopg.abc import Buffer
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from psycopg.types import TypeInfo
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from .. import Vector
-
-if TYPE_CHECKING:
-    from .._utils import ndarray
+from .._utils import ndarray
 
 
 class VectorDumper(Dumper):

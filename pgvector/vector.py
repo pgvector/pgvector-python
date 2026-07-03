@@ -3,11 +3,10 @@ import array
 import struct
 import sys
 from typing import TYPE_CHECKING
-from ._utils import is_ndarray
+from ._utils import is_ndarray, ndarray
 
 if TYPE_CHECKING:
     import numpy as np
-    from ._utils import ndarray
 
 
 class Vector:

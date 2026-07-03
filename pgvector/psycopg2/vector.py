@@ -1,10 +1,8 @@
 from __future__ import annotations
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from .. import Vector
-
-if TYPE_CHECKING:
-    from .._utils import ndarray
+from .._utils import ndarray
 
 
 class VectorAdapter:
