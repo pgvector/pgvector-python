@@ -41,7 +41,7 @@ class HalfVector:
 
     def to_list(self) -> list[float]:
         dim = len(self._value)
-        return list(struct.unpack(f'{dim}e', self._value.tobytes()))
+        return list(struct.unpack(f'{dim}e', self._value))
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.float16]]:
         return np.frombuffer(self._value, dtype=np.float16)
@@ -55,7 +55,7 @@ class HalfVector:
         else:
             value = array.array('H', self._value)
             value.byteswap()
-        return struct.pack(f'>HH', len(value), 0) + value.tobytes()
+        return struct.pack(f'>HH', len(value), 0) + memoryview(value)
 
     @classmethod
     def from_text(cls, value: str) -> HalfVector:

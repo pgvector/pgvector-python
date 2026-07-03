@@ -53,7 +53,7 @@ class Vector:
         else:
             value = array.array('f', self._value)
             value.byteswap()
-        return struct.pack(f'>HH', len(value), 0) + value.tobytes()
+        return struct.pack(f'>HH', len(value), 0) + memoryview(value)
 
     @classmethod
     def from_text(cls, value: str) -> Vector:
