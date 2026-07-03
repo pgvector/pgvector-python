@@ -1,6 +1,5 @@
 from __future__ import annotations
 from struct import pack, unpack_from
-from typing import cast
 
 try:
     import numpy as np
@@ -12,8 +11,8 @@ except ImportError:
 class Bit:
     def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int], np.dtype[np.bool | np.uint8]]) -> None:
         if isinstance(value, bytes):
-            length = 8 * len(value)
-            data = value
+            self._length = 8 * len(value)
+            self._data = value
         elif isinstance(value, (list, str)):
             if isinstance(value, list):
                 def bit_value(v: bool) -> str:
@@ -30,8 +29,9 @@ class Bit:
             if length % 8 != 0:
                 value += '0' * (8 - (length % 8))
 
+            self._length = length
             try:
-                data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
+                self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
             except ValueError:
                 raise ValueError('expected bit string')
         elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
@@ -44,37 +44,31 @@ class Bit:
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
-            length = len(value)
-            data = np.packbits(value).tobytes()
+            self._length = len(value)
+            self._data = np.packbits(value).tobytes()
         else:
             raise ValueError('expected bytes, str, list, or ndarray')
-
-        self._value = pack('>i', length) + data
 
     def __repr__(self) -> str:
         return f'Bit({self.to_text()})'
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
-            return self.to_binary() == other.to_binary()
+            return self._length == other._length and self._data == other._data
         return False
-
-    def _length(self) -> int:
-        length, = cast(tuple[int], unpack_from('>i', self._value))
-        return length
 
     def to_list(self) -> list[bool]:
         # TODO improve
         return [v != '0' for v in self.to_text()]
 
     def to_numpy(self) -> np.ndarray[tuple[int], np.dtype[np.bool]]:
-        return np.unpackbits(np.frombuffer(self._value[4:], dtype=np.uint8), count=self._length()).astype(bool)
+        return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._length).astype(bool)
 
     def to_text(self) -> str:
-        return ''.join(format(v, '08b') for v in self._value[4:])[:self._length()]
+        return ''.join(format(v, '08b') for v in self._data)[:self._length]
 
     def to_binary(self) -> bytes:
-        return self._value
+        return pack('>i', self._length) + self._data
 
     @classmethod
     def from_text(cls, value: str) -> Bit:
@@ -86,10 +80,12 @@ class Bit:
             raise ValueError('expected bytes')
 
         length, = unpack_from('>i', value)
+        data = value[4:]
 
-        if len(value) != 4 + (length + 7) // 8:
+        if len(data) != (length + 7) // 8:
             raise ValueError('invalid length')
 
         bit = cls.__new__(cls)
-        bit._value = value
+        bit._length = length
+        bit._data = data
         return bit
