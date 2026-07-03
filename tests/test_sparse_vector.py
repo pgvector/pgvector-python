@@ -27,7 +27,7 @@ class TestSparseVector:
         assert SparseVector([]).to_list() == []
 
     def test_list_str(self) -> None:
-        with pytest.raises(ValueError, match='could not convert string to float') as error:
+        with pytest.raises(ValueError, match='could not convert string to float'):
             SparseVector([1, 'two', 3])  # type: ignore
 
     def test_list_dimensions(self) -> None:
