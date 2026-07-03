@@ -17,14 +17,11 @@ class Bit:
             self._data = value
         elif isinstance(value, (list, str)):
             if isinstance(value, list):
-                def bit_value(v: bool) -> str:
-                    if v is True:
-                        return '1'
-                    if v is False:
-                        return '0'
+                bits = {True: '1', False: '0'}
+                try:
+                    value = ''.join([bits[v] for v in value])
+                except (KeyError, TypeError):
                     raise ValueError('expected list[bool]')
-
-                value = ''.join([bit_value(v) for v in value])
 
             length = len(value)
             if length % 8 != 0:
