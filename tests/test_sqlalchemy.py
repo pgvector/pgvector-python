@@ -468,8 +468,22 @@ class TestSqlalchemy:
             res = session.scalars(select(sum(Item.embedding))).one()
             assert res == [5, 7, 9]
 
-    def test_bad_type(self, engine: Engine) -> None:
+    def test_vector_bad_type(self, engine: Engine) -> None:
         item = Item(embedding=[1, 'two'])
+        with Session(engine) as session:
+            session.add(item)
+            with pytest.raises(StatementError, match='could not convert string to float'):
+                session.commit()
+
+    def test_halfvec_bad_type(self, engine: Engine) -> None:
+        item = Item(half_embedding=[1, 'two'])
+        with Session(engine) as session:
+            session.add(item)
+            with pytest.raises(StatementError, match='could not convert string to float'):
+                session.commit()
+
+    def test_sparsevec_bad_type(self, engine: Engine) -> None:
+        item = Item(sparse_embedding=[1, 'two'])
         with Session(engine) as session:
             session.add(item)
             with pytest.raises(StatementError, match='could not convert string to float'):
