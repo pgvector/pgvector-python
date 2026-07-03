@@ -7,6 +7,12 @@ try:
 except ImportError:
     pass
 
+try:
+    from scipy.sparse import sparray, spmatrix
+    SCIPY_AVAILABLE = True
+except ImportError:
+    SCIPY_AVAILABLE = False
+
 NO_DEFAULT = object()
 
 
@@ -16,15 +22,15 @@ class SparseVector:
         ...
 
     @overload
-    def __init__(self, value: list[float], /) -> None:
+    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]], /) -> None:
         ...
 
     @overload
-    def __init__(self, value: Any, /) -> None:
+    def __init__(self, value: sparray | spmatrix, /) -> None:
         ...
 
-    def __init__(self, value: dict[int, float] | list[float] | Any, dimensions: int | Any = NO_DEFAULT, /) -> None:
-        if value.__class__.__module__.startswith('scipy.sparse.'):
+    def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
+        if SCIPY_AVAILABLE and isinstance(value, (sparray, spmatrix)):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
 
@@ -33,12 +39,12 @@ class SparseVector:
             if dimensions is NO_DEFAULT:
                 raise ValueError('missing dimensions')
 
-            self._from_dict(value, dimensions)
+            self._from_dict(value, dimensions)  # type: ignore
         else:
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
 
-            self._from_dense(value)
+            self._from_dense(value)  # type: ignore
 
     def __repr__(self) -> str:
         elements = dict(zip(self._indices, self._values))
@@ -108,7 +114,7 @@ class SparseVector:
             self._indices = value.col.tolist()
         self._values = value.data.tolist()
 
-    def _from_dense(self, value: list[float]) -> None:
+    def _from_dense(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
         self._dim = len(value)
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
@@ -149,7 +155,7 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: list[float] | Any | SparseVector | None) -> str | None:
+    def _to_db(cls, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix | SparseVector | None) -> str | None:
         if value is None:
             return value
 

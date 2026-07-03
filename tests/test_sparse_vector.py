@@ -51,7 +51,7 @@ class TestSparseVector:
 
     def test_dict_no_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
-            SparseVector({0: 1, 2: 2, 4: 3})
+            SparseVector({0: 1, 2: 2, 4: 3})  # type: ignore
         assert str(error.value) == 'missing dimensions'
 
     @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
