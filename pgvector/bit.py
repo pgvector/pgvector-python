@@ -71,7 +71,7 @@ class Bit:
 
     @classmethod
     def from_text(cls, value: str) -> Bit:
-        return cls(str(value))
+        return cls(value)
 
     @classmethod
     def from_binary(cls, value: bytes | bytearray | memoryview) -> Bit:
