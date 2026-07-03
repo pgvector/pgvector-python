@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class HalfVector:
     _value: array[int]  # uses uint16 since no float16
 
-    def __init__(self, value: list[float] | ndarray) -> None:
+    def __init__(self, value: list[float] | ndarray, /) -> None:
         if isinstance(value, list):
             dim = len(value)
             try:
@@ -34,7 +34,7 @@ class HalfVector:
     def __repr__(self) -> str:
         return f'HalfVector({self.to_list()})'
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: object, /) -> bool:
         if isinstance(other, self.__class__):
             return self._value == other._value
         return False
@@ -62,11 +62,11 @@ class HalfVector:
         return struct.pack('>HH', len(value), 0) + memoryview(value)
 
     @classmethod
-    def from_text(cls, value: str) -> HalfVector:
+    def from_text(cls, value: str, /) -> HalfVector:
         return cls(cls._from_text(value))
 
     @classmethod
-    def from_binary(cls, value: bytes | bytearray | memoryview) -> HalfVector:
+    def from_binary(cls, value: bytes | bytearray | memoryview, /) -> HalfVector:
         dim, unused = struct.unpack_from('>HH', value)
         data = memoryview(value)[4:]
 
@@ -86,11 +86,11 @@ class HalfVector:
         return vec
 
     @classmethod
-    def _from_text(cls, value: str) -> list[float]:
+    def _from_text(cls, value: str, /) -> list[float]:
         return [float(v) for v in value[1:-1].split(',')]
 
     @classmethod
-    def _to_db(cls, value: list[float] | ndarray | HalfVector | None) -> str | None:
+    def _to_db(cls, value: list[float] | ndarray | HalfVector | None, /) -> str | None:
         if value is None:
             return value
 
@@ -104,7 +104,7 @@ class HalfVector:
         return value.to_text()
 
     @classmethod
-    def _from_db(cls, value: str | HalfVector | None) -> list[float] | None:
+    def _from_db(cls, value: str | HalfVector | None, /) -> list[float] | None:
         if value is None:
             return value
 

@@ -52,7 +52,7 @@ class SparseVector:
         elements = dict(zip(self._indices, self._values))
         return f'SparseVector({elements}, {self._dim})'
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: object, /) -> bool:
         if isinstance(other, self.__class__):
             return self._dim == other._dim and self._indices == other._indices and self._values == other._values
         return False
@@ -102,7 +102,7 @@ class SparseVector:
         self._indices = [int(v[0]) for v in elements]
         self._values = [float(v[1]) for v in elements]
 
-    def _from_sparse(self, arr: sparray | spmatrix) -> None:
+    def _from_sparse(self, arr: sparray | spmatrix, /) -> None:
         value: coo_array | coo_matrix = arr.tocoo(copy=False)  # type: ignore
 
         shape = cast(tuple[int], value.shape)
@@ -120,13 +120,13 @@ class SparseVector:
             self._indices = value.col.tolist()
         self._values = value.data.tolist()
 
-    def _from_dense(self, value: list[float] | ndarray) -> None:
+    def _from_dense(self, value: list[float] | ndarray, /) -> None:
         self._dim = len(value)
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
 
     @classmethod
-    def from_text(cls, value: str) -> SparseVector:
+    def from_text(cls, value: str, /) -> SparseVector:
         elements, dim = value.split('/', 2)
         indices: list[int] = []
         values: list[float] = []
@@ -139,7 +139,7 @@ class SparseVector:
         return cls._from_parts(int(dim), indices, values)
 
     @classmethod
-    def from_binary(cls, value: bytes | bytearray | memoryview) -> SparseVector:
+    def from_binary(cls, value: bytes | bytearray | memoryview, /) -> SparseVector:
         dim, nnz, unused = unpack_from('>iii', value)
 
         if len(value) != 12 + 8 * nnz:
@@ -153,7 +153,7 @@ class SparseVector:
         return cls._from_parts(dim, indices, values)
 
     @classmethod
-    def _from_parts(cls, dim: int, indices: list[int], values: list[float]) -> SparseVector:
+    def _from_parts(cls, dim: int, indices: list[int], values: list[float], /) -> SparseVector:
         vec = cls.__new__(cls)
         vec._dim = dim
         vec._indices = indices
@@ -161,7 +161,7 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: list[float] | ndarray | sparray | spmatrix | SparseVector | None) -> str | None:
+    def _to_db(cls, value: list[float] | ndarray | sparray | spmatrix | SparseVector | None, /) -> str | None:
         if value is None:
             return value
 
@@ -171,7 +171,7 @@ class SparseVector:
         return value.to_text()
 
     @classmethod
-    def _from_db(cls, value: str | SparseVector | None) -> SparseVector | None:
+    def _from_db(cls, value: str | SparseVector | None, /) -> SparseVector | None:
         if value is None or isinstance(value, SparseVector):
             return value
 

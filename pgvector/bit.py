@@ -11,7 +11,7 @@ class Bit:
     _length: int
     _data: bytes
 
-    def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]]) -> None:
+    def __init__(self, value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]], /) -> None:
         if isinstance(value, bytes):
             self._length = 8 * len(value)
             self._data = value
@@ -52,7 +52,7 @@ class Bit:
     def __repr__(self) -> str:
         return f'Bit({self.to_text()})'
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: object, /) -> bool:
         if isinstance(other, self.__class__):
             return self._length == other._length and self._data == other._data
         return False
@@ -73,12 +73,12 @@ class Bit:
         return pack('>i', self._length) + self._data
 
     @classmethod
-    def from_text(cls, value: str) -> Bit:
+    def from_text(cls, value: str, /) -> Bit:
         # cast to ensure always uses str constructor
         return cls(str(value))
 
     @classmethod
-    def from_binary(cls, value: bytes | bytearray | memoryview) -> Bit:
+    def from_binary(cls, value: bytes | bytearray | memoryview, /) -> Bit:
         length, = unpack_from('>i', value)
         data = memoryview(value)[4:].tobytes()
 
