@@ -1,13 +1,12 @@
 from __future__ import annotations
 import psycopg
 from psycopg import BaseConnection
+from psycopg.abc import Buffer
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from psycopg.types import TypeInfo
-from typing import TYPE_CHECKING, Any, TypeAlias
+from typing import TYPE_CHECKING, Any
 from .. import Vector
-
-Buffer: TypeAlias = bytes | bytearray | memoryview
 
 if TYPE_CHECKING:
     from .._utils import ndarray

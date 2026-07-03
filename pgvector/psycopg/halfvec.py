@@ -1,11 +1,10 @@
 from psycopg import BaseConnection
+from psycopg.abc import Buffer
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from psycopg.types import TypeInfo
-from typing import Any, TypeAlias
+from typing import Any
 from .. import HalfVector
-
-Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class HalfVectorDumper(Dumper):

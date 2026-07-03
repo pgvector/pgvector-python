@@ -1,11 +1,10 @@
 from psycopg import BaseConnection
-from psycopg.types import TypeInfo
+from psycopg.abc import Buffer
 from psycopg.adapt import Dumper
 from psycopg.pq import Format
-from typing import Any, TypeAlias
+from psycopg.types import TypeInfo
+from typing import Any
 from .. import Bit
-
-Buffer: TypeAlias = bytes | bytearray | memoryview
 
 
 class BitDumper(Dumper):
