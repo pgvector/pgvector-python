@@ -38,7 +38,7 @@ class VectorLoader(Loader):
 
     def load(self, data: Buffer) -> Vector | None:
         if isinstance(data, memoryview):
-            data = bytes(data)
+            data = data.tobytes()
         return Vector.from_text(data.decode('utf8'))
 
 

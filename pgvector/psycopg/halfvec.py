@@ -27,7 +27,7 @@ class HalfVectorLoader(Loader):
 
     def load(self, data: Buffer) -> HalfVector | None:
         if isinstance(data, memoryview):
-            data = bytes(data)
+            data = data.tobytes()
         return HalfVector.from_text(data.decode('utf8'))
 
 

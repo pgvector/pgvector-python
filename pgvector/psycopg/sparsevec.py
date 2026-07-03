@@ -27,7 +27,7 @@ class SparseVectorLoader(Loader):
 
     def load(self, data: Buffer) -> SparseVector | None:
         if isinstance(data, memoryview):
-            data = bytes(data)
+            data = data.tobytes()
         return SparseVector.from_text(data.decode('utf8'))
 
 
