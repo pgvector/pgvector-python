@@ -2,12 +2,7 @@ from getpass import getuser
 from pgvector import HalfVector, SparseVector, Vector
 from pgvector.pg8000 import register_vector
 from pg8000.native import Connection
-
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
+from .conftest import numpy as np
 
 conn = Connection(getuser(), database='pgvector_python_test')
 
@@ -24,7 +19,7 @@ class TestPg8000:
 
     def test_vector(self) -> None:
         embedding = Vector([1.5, 2, 3])
-        embedding2 = np.array([4.5, 5, 6]) if NUMPY_AVAILABLE else Vector([4.5, 5, 6])
+        embedding2 = np.array([4.5, 5, 6]) if np is not None else Vector([4.5, 5, 6])
         embedding3 = None
         conn.run('INSERT INTO pg8000_items (embedding) VALUES (:embedding), (:embedding2), (:embedding3)', embedding=embedding, embedding2=embedding2, embedding3=embedding3)
 

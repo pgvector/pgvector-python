@@ -2,12 +2,7 @@ from pgvector import Bit
 import pytest
 import random
 from struct import pack
-
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
+from .conftest import numpy as np
 
 
 class TestBit:
@@ -41,26 +36,34 @@ class TestBit:
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
         assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         arr = np.array([True, False, True])
         assert Bit(arr).to_list() == [True, False, True]
         assert np.array_equal(Bit(arr).to_numpy(), arr)
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_unpackbits(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         arr = np.unpackbits(np.array([254, 7, 0], dtype=np.uint8))
         assert Bit(arr).to_text() == '111111100000011100000000'
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint8(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         arr = np.array([254, 7, 0], dtype=np.uint8)
         with pytest.raises(ValueError) as error:
             Bit(arr)
         assert str(error.value) == 'expected elements to be boolean'
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray_uint16(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         arr = np.array([254, 7, 0], dtype=np.uint16)
         with pytest.raises(ValueError) as error:
             Bit(arr)  # type: ignore
@@ -86,7 +89,7 @@ class TestBit:
     def test_from_text(self) -> None:
         vec = Bit.from_text('101')
         assert vec.to_list() == [True, False, True]
-        if NUMPY_AVAILABLE:
+        if np is not None:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
         assert vec.to_text() == '101'
 
@@ -94,6 +97,6 @@ class TestBit:
         data = pack('>iB', 3, 5 << 5)
         vec = Bit.from_binary(data)
         assert vec.to_list() == [True, False, True]
-        if NUMPY_AVAILABLE:
+        if np is not None:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
         assert vec.to_binary() == data

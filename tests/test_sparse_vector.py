@@ -1,25 +1,19 @@
 from pgvector import SparseVector
 import pytest
 from struct import pack
+from .conftest import numpy as np
 
 try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
+    from scipy import sparse
 except ImportError:
-    NUMPY_AVAILABLE = False
-
-try:
-    from scipy.sparse import coo_array, coo_matrix, csr_array, csr_matrix
-    SCIPY_AVAILABLE = True
-except ImportError:
-    SCIPY_AVAILABLE = False
+    sparse = None  # type: ignore
 
 
 class TestSparseVector:
     def test_list(self) -> None:
         vec = SparseVector([1, 0, 2, 0, 3, 0])
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
-        if NUMPY_AVAILABLE:
+        if np is not None:
             assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
         assert vec.indices() == [0, 2, 4]
 
@@ -35,8 +29,10 @@ class TestSparseVector:
             SparseVector([1, 0, 2, 0, 3, 0], 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_ndarray(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         vec = SparseVector(np.array([1, 0, 2, 0, 3, 0]))
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
@@ -54,43 +50,55 @@ class TestSparseVector:
             SparseVector({0: 1, 2: 2, 4: 3})  # type: ignore
         assert str(error.value) == 'missing dimensions'
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_coo_array(self) -> None:
-        arr = coo_array(np.array([1, 0, 2, 0, 3, 0]))
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        arr = sparse.coo_array(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_coo_array_dimensions(self) -> None:
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
         with pytest.raises(ValueError) as error:
-            SparseVector(coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # type: ignore
+            SparseVector(sparse.coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_coo_matrix(self) -> None:
-        mat = coo_matrix(np.array([1, 0, 2, 0, 3, 0]))
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        mat = sparse.coo_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_dok_array(self) -> None:
-        arr = coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        arr = sparse.coo_array(np.array([1, 0, 2, 0, 3, 0])).todok()
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_csr_array(self) -> None:
-        arr = csr_array(np.array([[1, 0, 2, 0, 3, 0]]))
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        arr = sparse.csr_array(np.array([[1, 0, 2, 0, 3, 0]]))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    @pytest.mark.skipif(not SCIPY_AVAILABLE, reason='SciPy required')
     def test_csr_matrix(self) -> None:
-        mat = csr_matrix(np.array([1, 0, 2, 0, 3, 0]))
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        mat = sparse.csr_matrix(np.array([1, 0, 2, 0, 3, 0]))
         vec = SparseVector(mat)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
@@ -114,8 +122,10 @@ class TestSparseVector:
     def test_values(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]).values() == [1, 2, 3]
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE or not SCIPY_AVAILABLE, reason='NumPy and SciPy required')
     def test_to_coo(self) -> None:
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
         assert np.array_equal(SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray(), [[1, 0, 2, 0, 3, 0]])
 
     def test_zero_vector_text(self) -> None:
@@ -128,7 +138,7 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert vec.values() == [1.5, 2, 3]
         assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        if NUMPY_AVAILABLE:
+        if np is not None:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_text() == '{1:1.5,3:2.0,5:3.0}/6'
 
@@ -139,6 +149,6 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert vec.values() == [1.5, 2, 3]
         assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        if NUMPY_AVAILABLE:
+        if np is not None:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_binary() == data

@@ -5,12 +5,7 @@ from psycopg import Connection, AsyncConnection
 from psycopg_pool import ConnectionPool, AsyncConnectionPool
 import pytest
 from typing import Any
-
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
+from .conftest import numpy as np
 
 conn = psycopg.connect(dbname='pgvector_python_test', autocommit=True)
 
@@ -49,27 +44,35 @@ class TestPsycopg:
         res = next(conn.execute('SELECT %b::vector::text', (embedding,)))[0]
         assert res == '[1.5,2,3]'
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_binary_format(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %b::vector', (embedding,), binary=True))[0]
         assert res == Vector(embedding)
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_text_format(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         embedding = np.array([1.5, 2, 3])
         res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]
         assert res == Vector(embedding)
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_binary_format_non_contiguous(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = next(conn.execute('SELECT %b::vector', (embedding,)))[0]
         assert res == Vector([3, 2, 1.5])
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_vector_numpy_text_format_non_contiguous(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         embedding = np.flipud(np.array([1.5, 2, 3]))
         assert not embedding.data.contiguous
         res = next(conn.execute('SELECT %t::vector', (embedding,)))[0]

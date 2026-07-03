@@ -10,12 +10,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, Session
 from sqlalchemy.sql import func
 from typing import Any
-
-try:
-    import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
+from .conftest import numpy as np
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
@@ -496,16 +491,20 @@ class TestSqlalchemy:
             with pytest.raises(StatementError, match='expected 3 dimensions, not 2'):
                 session.commit()
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_ndim(self, engine: Engine) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         item = Item(embedding=np.array([[1, 2, 3]]))
         with Session(engine) as session:
             session.add(item)
             with pytest.raises(StatementError, match='expected ndim to be 1'):
                 session.commit()
 
-    @pytest.mark.skipif(not NUMPY_AVAILABLE, reason='NumPy required')
     def test_bad_dtype(self, engine: Engine) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
         item = Item(embedding=np.array(['one', 'two', 'three']))
         with Session(engine) as session:
             session.add(item)
@@ -693,7 +692,7 @@ class TestSqlalchemyAsyncArray:
                 item = await session.get_one(Item, 1)
                 assert item.embeddings == [[1, 2, 3], [4, 5, 6]]
 
-                if NUMPY_AVAILABLE:
+                if np is not None:
                     session.add(Item(id=2, embeddings=[np.array([1, 2, 3]), np.array([4, 5, 6])]))
                     item = await session.get_one(Item, 2)
                     assert item.embeddings == [[1, 2, 3], [4, 5, 6]]
