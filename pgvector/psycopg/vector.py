@@ -1,3 +1,4 @@
+from __future__ import annotations
 import psycopg
 from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper
@@ -18,7 +19,7 @@ except ImportError:
 class VectorDumper(Dumper):
     format = Format.TEXT
 
-    def dump(self, obj: 'Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]') -> Buffer | None:
+    def dump(self, obj: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_text().encode('utf8')
@@ -27,7 +28,7 @@ class VectorDumper(Dumper):
 class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
-    def dump(self, obj: 'Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]') -> Buffer | None:
+    def dump(self, obj: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_binary()

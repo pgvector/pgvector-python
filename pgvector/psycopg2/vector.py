@@ -1,3 +1,4 @@
+from __future__ import annotations
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
 from typing import Any
 from .. import Vector
@@ -10,7 +11,7 @@ except ImportError:
 
 
 class VectorAdapter:
-    def __init__(self, value: 'Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]') -> None:
+    def __init__(self, value: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> None:
         if not isinstance(value, Vector):
             value = Vector(value)
         self._value = value
