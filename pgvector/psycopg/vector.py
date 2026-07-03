@@ -18,7 +18,7 @@ except ImportError:
 class VectorDumper(Dumper):
     format = Format.TEXT
 
-    def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
+    def dump(self, obj: 'Vector | np.ndarray') -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_text().encode('utf8')
@@ -27,7 +27,7 @@ class VectorDumper(Dumper):
 class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
-    def dump(self, obj: Vector | np.ndarray) -> Buffer | None:
+    def dump(self, obj: 'Vector | np.ndarray') -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_binary()
