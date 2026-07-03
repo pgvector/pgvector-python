@@ -100,7 +100,7 @@ class SparseVector:
         self._values = [float(v[1]) for v in elements]
 
     def _from_sparse(self, arr: sparray | spmatrix) -> None:
-        value: coo_array | coo_matrix = arr.tocoo()  # type: ignore
+        value: coo_array | coo_matrix = arr.tocoo(copy=False)  # type: ignore
 
         shape = cast(tuple[int], value.shape)
         if len(shape) == 1:
