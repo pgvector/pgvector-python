@@ -3,7 +3,7 @@ from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 from pydantic import ConfigDict
 import pytest
 from sqlalchemy.exc import StatementError
-from sqlmodel import Field, Index, Session, SQLModel, create_engine, delete, select, text
+from sqlmodel import Field, Index, Session, SQLModel, col, create_engine, delete, select, text
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
@@ -26,7 +26,7 @@ SQLModel.metadata.create_all(engine)
 
 index = Index(
     'sqlmodel_index',
-    Item.embedding,  # type: ignore
+    col(Item.embedding),  # col() for typing
     postgresql_using='hnsw',
     postgresql_with={'m': 16, 'ef_construction': 64},
     postgresql_ops={'embedding': 'vector_l2_ops'}
