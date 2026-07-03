@@ -1,4 +1,4 @@
-## 1.0.0 (unreleased)
+## 0.5.0 (unreleased)
 
 - Added experimental support for type hints
 - Changed `vector` and `halfvec` types to return list for Django, SQLAlchemy, SQLModel, and Peewee
