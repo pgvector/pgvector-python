@@ -59,7 +59,7 @@ class Vector:
 
     @classmethod
     def from_text(cls, value: str) -> Vector:
-        return cls(cls._list_from_text(value))
+        return cls(cls._from_text(value))
 
     @classmethod
     def from_binary(cls, value: bytes) -> Vector:
@@ -99,8 +99,8 @@ class Vector:
         if isinstance(value, Vector):
             return value.to_list()
 
-        return cls._list_from_text(value)
+        return cls._from_text(value)
 
     @classmethod
-    def _list_from_text(cls, value: str) -> list[float]:
+    def _from_text(cls, value: str) -> list[float]:
         return [float(v) for v in value[1:-1].split(',')]
