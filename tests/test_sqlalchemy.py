@@ -638,6 +638,7 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
+                # https://github.com/MagicStack/py-pgproto/pull/32
                 embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'  # type: ignore
                 session.add(Item(id=1, binary_embedding=embedding))
                 item = await session.get_one(Item, 1)

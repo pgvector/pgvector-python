@@ -65,6 +65,7 @@ class TestAsyncpg:
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding bit(3))')
 
+        # https://github.com/MagicStack/py-pgproto/pull/32
         embedding = asyncpg.BitString('101')  # type: ignore
         embedding2 = None
         await conn.execute('INSERT INTO asyncpg_items (embedding) VALUES ($1), ($2)', embedding, embedding2)
@@ -112,15 +113,13 @@ class TestAsyncpg:
         embeddings2 = [[1.5, 2, 3], [4.5, 5, 6]]
         await conn.execute('INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])', embeddings2[0], embeddings2[1])
 
-        if np is not None:
-            embeddings3 = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])]
-            await conn.execute('INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])', embeddings3[0], embeddings3[1])
+        embeddings3 = [np.array([1.5, 2, 3]), np.array([4.5, 5, 6])] if np is not None else [[1.5, 2, 3], [4.5, 5, 6]]
+        await conn.execute('INSERT INTO asyncpg_items (embeddings) VALUES (ARRAY[$1, $2]::vector[])', embeddings3[0], embeddings3[1])
 
         res = await conn.fetch('SELECT * FROM asyncpg_items ORDER BY id')
         assert res[0]['embeddings'] == embeddings
         assert res[1]['embeddings'] == [Vector(e) for e in embeddings2]
-        if np is not None:
-            assert res[2]['embeddings'] == [Vector(e) for e in embeddings3]  # type: ignore
+        assert res[2]['embeddings'] == [Vector(e) for e in embeddings3]
 
         await conn.close()
 
