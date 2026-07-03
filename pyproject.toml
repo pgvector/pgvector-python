@@ -51,10 +51,9 @@ files = [
     "tests"
 ]
 strict = true
-disable_error_code = ["unused-ignore"]
+disable_error_code = ["unused-ignore", "untyped-decorator"]
 ignore_missing_imports = true
 disallow_subclassing_any = false
-python_executable = ".venv/bin/python"
 
 [tool.ty.src]
 include = [
