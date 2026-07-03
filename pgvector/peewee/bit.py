@@ -12,11 +12,11 @@ class FixedBitField(Field):
     def get_modifiers(self) -> list[int] | None:
         return [self.max_length] if self.max_length else None
 
-    def _distance(self, op: str, vector: object) -> Expression:
+    def _distance(self, op: str, vector: object, /) -> Expression:
         return Expression(lhs=self, op=op, rhs=self.to_value(vector))
 
-    def hamming_distance(self, vector: object) -> Expression:
+    def hamming_distance(self, vector: object, /) -> Expression:
         return self._distance('<~>', vector)
 
-    def jaccard_distance(self, vector: object) -> Expression:
+    def jaccard_distance(self, vector: object, /) -> Expression:
         return self._distance('<%%>', vector)

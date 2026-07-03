@@ -15,10 +15,10 @@ class BIT(TypeDecorator[Any]):
         return value
 
     class Comparator(TypeDecorator.Comparator[Any]):
-        def hamming_distance(self, other: object) -> Operators:
+        def hamming_distance(self, other: object, /) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 
-        def jaccard_distance(self, other: object) -> Operators:
+        def jaccard_distance(self, other: object, /) -> Operators:
             return self.op('<%>', return_type=Float)(other)
 
     comparator_factory = Comparator  # type: ignore

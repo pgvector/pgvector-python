@@ -7,7 +7,7 @@ from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
 
 
-def register_vector(context: Connection[Any]) -> None:
+def register_vector(context: Connection[Any], /) -> None:
     info = TypeInfo.fetch(context, 'vector')
     register_vector_info(context, info)
 
@@ -23,7 +23,7 @@ def register_vector(context: Connection[Any]) -> None:
         register_sparsevec_info(context, info)
 
 
-async def register_vector_async(context: AsyncConnection[Any]) -> None:
+async def register_vector_async(context: AsyncConnection[Any], /) -> None:
     info = await TypeInfo.fetch(context, 'vector')
     register_vector_info(context, info)
 
