@@ -93,10 +93,3 @@ class Bit:
         bit = cls.__new__(cls)
         bit._value = value
         return bit
-
-    @classmethod
-    def _to_db(cls, value: Bit) -> str:
-        if not isinstance(value, Bit):
-            raise ValueError('expected bit')
-
-        return value.to_text()
