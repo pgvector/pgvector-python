@@ -2,7 +2,7 @@ from asyncpg import Connection
 from .. import Vector, HalfVector, SparseVector
 
 
-async def register_vector(conn: Connection, /, schema: str = 'public') -> None:
+async def register_vector(conn: Connection, /, *, schema: str = 'public') -> None:
     await conn.set_type_codec(
         'vector',
         schema=schema,
