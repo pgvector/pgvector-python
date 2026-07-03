@@ -57,9 +57,9 @@ class Bit:
         return f'Bit({self.to_text()})'
 
     def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, self.__class__):
-            return self._length == other._length and self._data == other._data
-        return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        return self._length == other._length and self._data == other._data
 
     def to_list(self) -> list[bool]:
         # TODO improve

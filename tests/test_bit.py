@@ -85,6 +85,7 @@ class TestBit:
     def test_equality(self) -> None:
         assert Bit([True, False, True]) == Bit([True, False, True])
         assert Bit([True, False, True]) != Bit([True, False, False])
+        assert Bit([True, False, True]) != 1
 
     def test_from_text(self) -> None:
         vec = Bit.from_text('101')

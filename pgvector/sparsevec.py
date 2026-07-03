@@ -53,9 +53,9 @@ class SparseVector:
         return f'SparseVector({elements}, {self._dim})'
 
     def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, self.__class__):
-            return self._dim == other._dim and self._indices == other._indices and self._values == other._values
-        return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        return self._dim == other._dim and self._indices == other._indices and self._values == other._values
 
     def dimensions(self) -> int:
         return self._dim

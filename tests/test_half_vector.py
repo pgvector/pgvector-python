@@ -54,6 +54,7 @@ class TestHalfVector:
     def test_equality(self) -> None:
         assert HalfVector([1, 2, 3]) == HalfVector([1, 2, 3])
         assert HalfVector([1, 2, 3]) != HalfVector([1, 2, 4])
+        assert HalfVector([1, 2, 3]) != 1
 
     def test_dimensions(self) -> None:
         assert HalfVector([1, 2, 3]).dimensions() == 3
