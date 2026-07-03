@@ -71,7 +71,8 @@ class Bit:
 
     @classmethod
     def from_text(cls, value: str) -> Bit:
-        return cls(value)
+        # cast to ensure always use str constructor
+        return cls(str(value))
 
     @classmethod
     def from_binary(cls, value: bytes | bytearray | memoryview) -> Bit:
