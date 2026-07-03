@@ -108,7 +108,6 @@ class HalfVector:
         if value is None:
             return value
 
-        # Handle conversion from low-level driver
         if isinstance(value, HalfVector):
             return value.to_list()
 

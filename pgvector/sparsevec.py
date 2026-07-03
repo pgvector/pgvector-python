@@ -170,7 +170,6 @@ class SparseVector:
 
     @classmethod
     def _from_db(cls, value: str | SparseVector | None) -> SparseVector | None:
-        # Handle conversion from low-level driver
         if value is None or isinstance(value, SparseVector):
             return value
 

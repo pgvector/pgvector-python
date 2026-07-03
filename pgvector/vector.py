@@ -106,7 +106,6 @@ class Vector:
         if value is None:
             return value
 
-        # Handle conversion from low-level driver
         if isinstance(value, Vector):
             return value.to_list()
 
