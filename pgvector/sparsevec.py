@@ -6,6 +6,7 @@ from ._utils import is_sparse_array
 if TYPE_CHECKING:
     import numpy as np
     from scipy.sparse import sparray, spmatrix, coo_array, coo_matrix
+    from ._utils import ndarray
 
 
 NO_DEFAULT = object()
@@ -17,10 +18,10 @@ class SparseVector:
         ...
 
     @overload
-    def __init__(self, value: list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]] | sparray | spmatrix, /) -> None:
+    def __init__(self, value: list[float] | ndarray | sparray | spmatrix, /) -> None:
         ...
 
-    def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
+    def __init__(self, value: dict[int, float] | list[float] | ndarray | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
         if is_sparse_array(value):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
@@ -107,7 +108,7 @@ class SparseVector:
             self._indices = value.col.tolist()
         self._values = value.data.tolist()
 
-    def _from_dense(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]]) -> None:
+    def _from_dense(self, value: list[float] | ndarray) -> None:
         self._dim = len(value)
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
@@ -148,7 +149,7 @@ class SparseVector:
         return vec
 
     @classmethod
-    def _to_db(cls, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix | SparseVector | None) -> str | None:
+    def _to_db(cls, value: list[float] | ndarray | sparray | spmatrix | SparseVector | None) -> str | None:
         if value is None:
             return value
 

@@ -10,13 +10,13 @@ from .. import Vector
 Buffer: TypeAlias = bytes | bytearray | memoryview
 
 if TYPE_CHECKING:
-    import numpy as np
+    from .._utils import ndarray
 
 
 class VectorDumper(Dumper):
     format = Format.TEXT
 
-    def dump(self, obj: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> Buffer | None:
+    def dump(self, obj: Vector | ndarray) -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_text().encode('utf8')
@@ -25,7 +25,7 @@ class VectorDumper(Dumper):
 class VectorBinaryDumper(VectorDumper):
     format = Format.BINARY
 
-    def dump(self, obj: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> Buffer | None:
+    def dump(self, obj: Vector | ndarray) -> Buffer | None:
         if not isinstance(obj, Vector):
             obj = Vector(obj)
         return obj.to_binary()

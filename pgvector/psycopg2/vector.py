@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING, Any
 from .. import Vector
 
 if TYPE_CHECKING:
-    import numpy as np
+    from .._utils import ndarray
 
 
 class VectorAdapter:
-    def __init__(self, value: Vector | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> None:
+    def __init__(self, value: Vector | ndarray) -> None:
         if not isinstance(value, Vector):
             value = Vector(value)
         self._value = value

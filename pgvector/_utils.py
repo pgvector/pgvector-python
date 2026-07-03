@@ -1,4 +1,10 @@
 import sys
+from typing import TYPE_CHECKING, TypeAlias
+
+if TYPE_CHECKING:
+    import numpy as np
+
+    ndarray: TypeAlias = np.ndarray[tuple[int, ...], np.dtype[np.floating]]
 
 
 def is_ndarray(value: object) -> bool:

@@ -7,10 +7,11 @@ from ._utils import is_ndarray
 
 if TYPE_CHECKING:
     import numpy as np
+    from ._utils import ndarray
 
 
 class HalfVector:
-    def __init__(self, value: list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]]) -> None:
+    def __init__(self, value: list[float] | ndarray) -> None:
         if isinstance(value, list):
             dim = len(value)
             try:
@@ -88,7 +89,7 @@ class HalfVector:
         return [float(v) for v in value[1:-1].split(',')]
 
     @classmethod
-    def _to_db(cls, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | HalfVector | None) -> str | None:
+    def _to_db(cls, value: list[float] | ndarray | HalfVector | None) -> str | None:
         if value is None:
             return value
 
