@@ -3,7 +3,7 @@ from getpass import getuser
 from pgvector import SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
-from sqlalchemy import create_engine, event, insert, inspect, select, text, MetaData, Table, Column, Index, Integer, ARRAY, Engine
+from sqlalchemy import create_engine, event, insert, inspect, literal, select, text, MetaData, Table, Column, Index, Integer, ARRAY, Engine
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 from sqlalchemy.ext.automap import automap_base
@@ -556,7 +556,7 @@ class TestSqlalchemy:
             session.add(Item(id=3, embedding=[1, 2, 3]))
             session.commit()
 
-            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))  # type: ignore
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast(literal([3, -1, 2], VECTOR), VECTOR(3))))
             items = session.query(Item).order_by(distance).all()
             assert [v.id for v in items] == [2, 3, 1]
 
@@ -571,7 +571,7 @@ class TestSqlalchemy:
             session.add(Item(id=3, embedding=[1, 2, 3]))
             session.commit()
 
-            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast([3, -1, 2], VECTOR(3))))  # type: ignore
+            distance = func.cast(func.binary_quantize(Item.embedding), BIT(3)).hamming_distance(func.binary_quantize(func.cast(literal([3, -1, 2], VECTOR), VECTOR(3))))
             subquery = session.query(Item).order_by(distance).limit(20).subquery()
             items = session.query(subquery).order_by(subquery.c.embedding.cosine_distance([3, -1, 2])).limit(5).all()
             assert [v.id for v in items] == [2, 3, 1]
