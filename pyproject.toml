@@ -35,6 +35,11 @@ dev-optional = [
     "numpy",
     "scipy"
 ]
+typing = [
+    "mypy",
+    "ty",
+    {include-group = "dev-optional"}
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

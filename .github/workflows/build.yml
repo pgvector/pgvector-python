@@ -27,3 +27,7 @@ jobs:
 
       - run: pip install --group dev-optional
       - run: pytest
+
+      - run: pip install --group typing
+      - run: mypy
+      - run: ty check
