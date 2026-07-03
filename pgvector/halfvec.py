@@ -94,13 +94,6 @@ class HalfVector:
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value: object) -> bytes:
-        if not isinstance(value, cls):
-            value = cls(value)  # type: ignore
-
-        return value.to_binary()
-
-    @classmethod
     def _from_db(cls, value: str | HalfVector | None) -> list[float] | None:
         if value is None:
             return value

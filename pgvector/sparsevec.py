@@ -159,13 +159,6 @@ class SparseVector:
         return value.to_text()
 
     @classmethod
-    def _to_db_binary(cls, value: object) -> bytes:
-        if not isinstance(value, cls):
-            value = cls(value)
-
-        return value.to_binary()
-
-    @classmethod
     def _from_db(cls, value: str | SparseVector | None) -> SparseVector | None:
         if value is None or isinstance(value, SparseVector):
             return value
