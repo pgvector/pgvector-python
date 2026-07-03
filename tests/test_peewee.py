@@ -18,7 +18,7 @@ class Item(BaseModel):
     half_embedding = HalfVectorField(dimensions=3, null=True)
     binary_embedding = FixedBitField(max_length=3, null=True)
     sparse_embedding = SparseVectorField(dimensions=3, null=True)
-    distance: float # for typing
+    distance: float  # for typing
 
     class Meta:  # type: ignore
         table_name = 'peewee_item'
