@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class HalfVector:
-    _value: array[int]
+    _value: array[int]  # uses uint16 since no float16
 
     def __init__(self, value: list[float] | ndarray) -> None:
         if isinstance(value, list):
