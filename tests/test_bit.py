@@ -1,6 +1,7 @@
 from pgvector import Bit
 import pytest
 import random
+from struct import pack
 
 try:
     import numpy as np
@@ -81,3 +82,17 @@ class TestBit:
     def test_equality(self) -> None:
         assert Bit([True, False, True]) == Bit([True, False, True])
         assert Bit([True, False, True]) != Bit([True, False, False])
+
+    def test_from_text(self) -> None:
+        vec = Bit.from_text('101')
+        assert vec.to_list() == [True, False, True]
+        if NUMPY_AVAILABLE:
+            assert np.array_equal(vec.to_numpy(), [True, False, True])
+
+    def test_from_binary(self) -> None:
+        data = pack('>iB', 3, 5 << 5)
+        vec = Bit.from_binary(data)
+        assert vec.to_list() == [True, False, True]
+        if NUMPY_AVAILABLE:
+            assert np.array_equal(vec.to_numpy(), [True, False, True])
+        assert vec.to_binary() == data
