@@ -1,17 +1,12 @@
 from __future__ import annotations
 from struct import pack, unpack_from
-from typing import Any, overload
+from typing import TYPE_CHECKING, Any, overload
+from ._utils import is_sparse_array
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-except ImportError:
-    pass
-
-try:
     from scipy.sparse import sparray, spmatrix, coo_array, coo_matrix
-    SCIPY_AVAILABLE = True
-except ImportError:
-    SCIPY_AVAILABLE = False
+
 
 NO_DEFAULT = object()
 
@@ -26,7 +21,7 @@ class SparseVector:
         ...
 
     def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int, ...], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
-        if SCIPY_AVAILABLE and isinstance(value, (sparray, spmatrix)):
+        if is_sparse_array(value):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
 
@@ -61,6 +56,8 @@ class SparseVector:
         return self._values
 
     def to_coo(self) -> coo_array:
+        from scipy.sparse import coo_array
+
         coords = ([0] * len(self._indices), self._indices)
         return coo_array((self._values, coords), shape=(1, self._dim))
 
@@ -71,6 +68,8 @@ class SparseVector:
         return vec
 
     def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float32]]:
+        import numpy as np
+
         vec = np.repeat(0.0, self._dim).astype(np.float32)
         for i, v in zip(self._indices, self._values):
             vec[i] = v

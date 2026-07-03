@@ -2,12 +2,11 @@ from __future__ import annotations
 import array
 import struct
 import sys
+from typing import TYPE_CHECKING
+from ._utils import is_ndarray
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
 
 
 class Vector:
@@ -17,7 +16,9 @@ class Vector:
                 self._value = array.array('f', value)
             except TypeError:
                 raise ValueError('expected list[float]')
-        elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
+        elif is_ndarray(value):
+            import numpy as np
+
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
@@ -42,6 +43,7 @@ class Vector:
         return self._value.tolist()
 
     def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.float32]]:
+        import numpy as np
         return np.frombuffer(self._value, dtype=np.float32)
 
     def to_text(self) -> str:

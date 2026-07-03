@@ -1,13 +1,10 @@
 from __future__ import annotations
 from psycopg2.extensions import adapt, connection, cursor, new_array_type, new_type, register_adapter, register_type
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from .. import Vector
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
 
 
 class VectorAdapter:
@@ -38,5 +35,8 @@ def register_vector_info(oid: int, array_oid: int | None, scope: connection | cu
 
     register_adapter(Vector, VectorAdapter)
 
-    if NUMPY_AVAILABLE:
+    try:
+        import numpy as np
         register_adapter(np.ndarray, VectorAdapter)
+    except ImportError:
+        pass

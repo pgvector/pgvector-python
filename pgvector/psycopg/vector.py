@@ -4,16 +4,13 @@ from psycopg import BaseConnection
 from psycopg.adapt import Loader, Dumper
 from psycopg.pq import Format
 from psycopg.types import TypeInfo
-from typing import Any, TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias
 from .. import Vector
 
 Buffer: TypeAlias = bytes | bytearray | memoryview
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
 
 
 class VectorDumper(Dumper):
@@ -62,9 +59,7 @@ def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None) ->
     adapters = context.adapters
     adapters.register_dumper(Vector, text_dumper)
     adapters.register_dumper(Vector, binary_dumper)
+    adapters.register_dumper('numpy.ndarray', text_dumper)
+    adapters.register_dumper('numpy.ndarray', binary_dumper)
     adapters.register_loader(info.oid, VectorLoader)
     adapters.register_loader(info.oid, VectorBinaryLoader)
-
-    if NUMPY_AVAILABLE:
-        adapters.register_dumper(np.ndarray, text_dumper)
-        adapters.register_dumper(np.ndarray, binary_dumper)

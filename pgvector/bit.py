@@ -1,11 +1,10 @@
 from __future__ import annotations
 from struct import pack, unpack_from
+from typing import TYPE_CHECKING
+from ._utils import is_ndarray
 
-try:
+if TYPE_CHECKING:
     import numpy as np
-    NUMPY_AVAILABLE = True
-except ImportError:
-    NUMPY_AVAILABLE = False
 
 
 class Bit:
@@ -33,7 +32,9 @@ class Bit:
                 self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
             except ValueError:
                 raise ValueError('expected bit string')
-        elif NUMPY_AVAILABLE and isinstance(value, np.ndarray):
+        elif is_ndarray(value):
+            import numpy as np
+
             if value.dtype != np.bool:
                 # skip error for result of np.unpackbits
                 if value.dtype != np.uint8 or np.any(value > 1):
@@ -61,6 +62,8 @@ class Bit:
         return [v != '0' for v in self.to_text()]
 
     def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.bool]]:
+        import numpy as np
+
         return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._length).astype(bool)
 
     def to_text(self) -> str:
