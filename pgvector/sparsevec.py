@@ -51,7 +51,7 @@ class SparseVector:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
-            return self.dimensions() == other.dimensions() and self.indices() == other.indices() and self.values() == other.values()
+            return self._dim == other._dim and self._indices == other._indices and self._values == other._values
         return False
 
     def dimensions(self) -> int:
