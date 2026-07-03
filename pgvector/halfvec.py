@@ -108,10 +108,11 @@ class HalfVector:
         if value is None:
             return value
 
-        if isinstance(value, str):
-            return cls._list_from_text(value)
+        # Handle conversion from low-level driver
+        if isinstance(value, HalfVector):
+            return value.to_list()
 
-        return value.to_list()
+        return cls._list_from_text(value)
 
     @classmethod
     def _list_from_text(cls, value: str) -> list[float]:
