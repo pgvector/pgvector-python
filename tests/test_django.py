@@ -211,7 +211,7 @@ class TestDjango:
 
     def test_halfvec(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         assert item.half_embedding == [1, 2, 3]
 
     def test_halfvec_l2_distance(self) -> None:
@@ -244,7 +244,7 @@ class TestDjango:
 
     def test_bit(self) -> None:
         Item(id=1, binary_embedding='101').save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         assert item.binary_embedding == '101'
 
     def test_bit_hamming_distance(self) -> None:
@@ -263,7 +263,7 @@ class TestDjango:
 
     def test_sparsevec(self) -> None:
         Item(id=1, sparse_embedding=SparseVector([1, 2, 3])).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         assert item.sparse_embedding == SparseVector([1, 2, 3])
 
     def test_sparsevec_l2_distance(self) -> None:
@@ -334,7 +334,7 @@ class TestDjango:
 
     def test_serialization(self) -> None:
         create_items()
-        items = Item.objects.all()  # type: ignore
+        items = Item.objects.all()
         for format in ['json', 'xml']:
             data = serializers.serialize(format, items)
             with mock.patch('django.core.serializers.python.apps.get_model') as get_model:
@@ -349,26 +349,26 @@ class TestDjango:
 
     def test_vector_form_instance(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = VectorForm(instance=item)
         assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()  # type: ignore
 
     def test_vector_form_save(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = VectorForm(instance=item, data={'embedding': '[4, 5, 6]'})
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).embedding == [4, 5, 6]  # type: ignore
+        assert Item.objects.get(pk=1).embedding == [4, 5, 6]
 
     def test_vector_form_save_missing(self) -> None:
         Item(id=1).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = VectorForm(instance=item, data={'embedding': ''})
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).embedding is None  # type: ignore
+        assert Item.objects.get(pk=1).embedding is None
 
     def test_halfvec_form(self) -> None:
         form = HalfVectorForm(data={'half_embedding': '[1, 2, 3]'})
@@ -377,26 +377,26 @@ class TestDjango:
 
     def test_halfvec_form_instance(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = HalfVectorForm(instance=item)
         assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()  # type: ignore
 
     def test_halfvec_form_save(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = HalfVectorForm(instance=item, data={'half_embedding': '[4, 5, 6]'})
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).half_embedding == [4, 5, 6]  # type: ignore
+        assert Item.objects.get(pk=1).half_embedding == [4, 5, 6]
 
     def test_halfvec_form_save_missing(self) -> None:
         Item(id=1).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = HalfVectorForm(instance=item, data={'half_embedding': ''})
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).half_embedding is None  # type: ignore
+        assert Item.objects.get(pk=1).half_embedding is None
 
     def test_bit_form(self) -> None:
         form = BitForm(data={'binary_embedding': '101'})
@@ -405,26 +405,26 @@ class TestDjango:
 
     def test_bit_form_instance(self) -> None:
         Item(id=1, binary_embedding='101').save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = BitForm(instance=item)
         assert 'value="101"' in form.as_div()  # type: ignore
 
     def test_bit_form_save(self) -> None:
         Item(id=1, binary_embedding='101').save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = BitForm(instance=item, data={'binary_embedding': '010'})
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert '010' == Item.objects.get(pk=1).binary_embedding  # type: ignore
+        assert '010' == Item.objects.get(pk=1).binary_embedding
 
     def test_bit_form_save_missing(self) -> None:
         Item(id=1).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = BitForm(instance=item, data={'binary_embedding': ''})
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).binary_embedding is None  # type: ignore
+        assert Item.objects.get(pk=1).binary_embedding is None
 
     def test_sparsevec_form(self) -> None:
         form = SparseVectorForm(data={'sparse_embedding': '{1:1,2:2,3:3}/3'})
@@ -433,41 +433,41 @@ class TestDjango:
 
     def test_sparsevec_form_instance(self) -> None:
         Item(id=1, sparse_embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = SparseVectorForm(instance=item)
         # TODO improve
         assert 'value="{1:1.0,2:2.0,3:3.0}/3"' in form.as_div()  # type: ignore
 
     def test_sparsevec_form_save(self) -> None:
         Item(id=1, sparse_embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = SparseVectorForm(instance=item, data={'sparse_embedding': '{1:4,2:5,3:6}/3'})
         assert form.has_changed()
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).sparse_embedding == SparseVector([4, 5, 6])  # type: ignore
+        assert Item.objects.get(pk=1).sparse_embedding == SparseVector([4, 5, 6])
 
     def test_sparesevec_form_save_missing(self) -> None:
         Item(id=1).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         form = SparseVectorForm(instance=item, data={'sparse_embedding': ''})
         assert form.is_valid()
         assert form.save()
-        assert Item.objects.get(pk=1).sparse_embedding is None  # type: ignore
+        assert Item.objects.get(pk=1).sparse_embedding is None
 
     def test_clean(self) -> None:
         item = Item(id=1, embedding=[1, 2, 3], half_embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector([1, 2, 3]))
         item.full_clean()
 
     def test_get_or_create(self) -> None:
-        Item.objects.get_or_create(embedding=[1, 2, 3])  # type: ignore
+        Item.objects.get_or_create(embedding=[1, 2, 3])
 
     def test_missing(self) -> None:
         Item().save()
-        assert Item.objects.first().embedding is None  # type: ignore
-        assert Item.objects.first().half_embedding is None  # type: ignore
-        assert Item.objects.first().binary_embedding is None  # type: ignore
-        assert Item.objects.first().sparse_embedding is None  # type: ignore
+        assert Item.objects.first().embedding is None
+        assert Item.objects.first().half_embedding is None
+        assert Item.objects.first().binary_embedding is None
+        assert Item.objects.first().sparse_embedding is None
 
     def test_vector_array(self) -> None:
         Item(id=1, embeddings=[[1, 2, 3], [4, 5, 6]]).save()
@@ -477,7 +477,7 @@ class TestDjango:
             register_vector(cursor.connection)
 
             # this fails if the driver does not cast arrays
-            item = Item.objects.get(pk=1)  # type: ignore
+            item = Item.objects.get(pk=1)
             assert item.embeddings == [[1, 2, 3], [4, 5, 6]]
 
     def test_double_array(self) -> None:
@@ -485,7 +485,7 @@ class TestDjango:
         Item(id=2, double_embedding=[2, 2, 2]).save()
         Item(id=3, double_embedding=[1, 1, 2]).save()
         distance = L2Distance(Cast('double_embedding', VectorField()), [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
         assert items[1].double_embedding == [1, 1, 2]
@@ -495,7 +495,7 @@ class TestDjango:
         Item(id=2, numeric_embedding=[2, 2, 2]).save()
         Item(id=3, numeric_embedding=[1, 1, 2]).save()
         distance = L2Distance(Cast('numeric_embedding', VectorField()), [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
         assert items[1].numeric_embedding == [1, 1, 2]
@@ -503,6 +503,6 @@ class TestDjango:
     def test_half_precision(self) -> None:
         create_items()
         distance = L2Distance(Cast('embedding', HalfVectorField(dimensions=3)), [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
