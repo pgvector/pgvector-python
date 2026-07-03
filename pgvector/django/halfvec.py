@@ -4,7 +4,7 @@ from typing import Any
 from .. import HalfVector
 
 
-# https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
+# https://docs.djangoproject.com/en/6.0/howto/custom-model-fields/
 class HalfVectorField(Field):
     description = 'Half vector'
     empty_strings_allowed = False

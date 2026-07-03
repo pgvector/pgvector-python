@@ -3,7 +3,7 @@ from django.db.models import Field
 from typing import Any
 
 
-# https://docs.djangoproject.com/en/5.0/howto/custom-model-fields/
+# https://docs.djangoproject.com/en/6.0/howto/custom-model-fields/
 class BitField(Field):
     description = 'Bit string'
 
