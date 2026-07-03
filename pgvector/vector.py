@@ -21,11 +21,9 @@ class Vector:
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
-            if value.dtype != np.float32:
-                value = np.asarray(value, dtype=np.float32)
-
-            # tobytes() important for performance
-            self._value = array.array('f', value.tobytes())
+            arr = array.array('f')
+            arr.frombytes(value.astype(np.float32, order='C', copy=False).data.cast('B'))
+            self._value = arr
         else:
             raise ValueError('expected list or ndarray')
 

@@ -22,11 +22,9 @@ class HalfVector:
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
-            if value.dtype != np.float16:
-                value = np.asarray(value, dtype=np.float16)
-
-            # tobytes() important for performance
-            self._value = array.array('H', value.tobytes())
+            arr = array.array('H')
+            arr.frombytes(value.astype(np.float16, order='C', copy=False).data.cast('B'))
+            self._value = arr
         else:
             raise ValueError('expected list or ndarray')
 
