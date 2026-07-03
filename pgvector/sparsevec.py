@@ -127,7 +127,7 @@ class SparseVector:
         return cls._from_parts(int(dim), indices, values)
 
     @classmethod
-    def from_binary(cls, value: bytes) -> SparseVector:
+    def from_binary(cls, value: bytes | bytearray | memoryview) -> SparseVector:
         dim, nnz, unused = unpack_from('>iii', value)
 
         if len(value) != 12 + 8 * nnz:

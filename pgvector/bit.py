@@ -74,12 +74,9 @@ class Bit:
         return cls(str(value))
 
     @classmethod
-    def from_binary(cls, value: bytes) -> Bit:
-        if not isinstance(value, bytes):
-            raise ValueError('expected bytes')
-
+    def from_binary(cls, value: bytes | bytearray | memoryview) -> Bit:
         length, = unpack_from('>i', value)
-        data = value[4:]
+        data = memoryview(value)[4:].tobytes()
 
         if len(data) != (length + 7) // 8:
             raise ValueError('invalid length')

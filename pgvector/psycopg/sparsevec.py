@@ -35,8 +35,6 @@ class SparseVectorBinaryLoader(SparseVectorLoader):
     format = Format.BINARY
 
     def load(self, data: Buffer) -> SparseVector | None:
-        if isinstance(data, (bytearray, memoryview)):
-            data = bytes(data)
         return SparseVector.from_binary(data)
 
 

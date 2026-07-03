@@ -46,8 +46,6 @@ class VectorBinaryLoader(VectorLoader):
     format = Format.BINARY
 
     def load(self, data: Buffer) -> Vector | None:
-        if isinstance(data, (bytearray, memoryview)):
-            data = bytes(data)
         return Vector.from_binary(data)
 
 

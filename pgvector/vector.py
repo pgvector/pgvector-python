@@ -62,9 +62,9 @@ class Vector:
         return cls(cls._from_text(value))
 
     @classmethod
-    def from_binary(cls, value: bytes) -> Vector:
+    def from_binary(cls, value: bytes | bytearray | memoryview) -> Vector:
         dim, unused = struct.unpack_from('>HH', value)
-        data = value[4:]
+        data = memoryview(value)[4:]
 
         if len(data) != 4 * dim:
             raise ValueError('invalid length')
@@ -72,7 +72,8 @@ class Vector:
         if unused != 0:
             raise ValueError('expected unused to be 0')
 
-        arr = array.array('f', data)
+        arr = array.array('f')
+        arr.frombytes(data)
         if sys.byteorder != 'big':
             arr.byteswap()
 

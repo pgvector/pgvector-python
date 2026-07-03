@@ -35,8 +35,6 @@ class HalfVectorBinaryLoader(HalfVectorLoader):
     format = Format.BINARY
 
     def load(self, data: Buffer) -> HalfVector | None:
-        if isinstance(data, (bytearray, memoryview)):
-            data = bytes(data)
         return HalfVector.from_binary(data)
 
 
