@@ -1,5 +1,5 @@
 from __future__ import annotations
-import array
+from array import array
 import struct
 import sys
 from typing import TYPE_CHECKING
@@ -10,10 +10,12 @@ if TYPE_CHECKING:
 
 
 class Vector:
+    _value: array[float]
+
     def __init__(self, value: list[float] | ndarray) -> None:
         if isinstance(value, list):
             try:
-                self._value = array.array('f', value)
+                self._value = array('f', value)
             except TypeError:
                 raise ValueError('expected list[float]')
         elif is_ndarray(value):
@@ -22,7 +24,7 @@ class Vector:
             if value.ndim != 1:
                 raise ValueError('expected ndim to be 1')
 
-            arr = array.array('f')
+            arr = array('f')
             arr.frombytes(value.astype(np.float32, order='C', copy=False).data.cast('B'))
             self._value = arr
         else:
@@ -53,7 +55,7 @@ class Vector:
         if sys.byteorder == 'big':
             value = self._value
         else:
-            value = array.array('f', self._value)
+            value = array('f', self._value)
             value.byteswap()
         return struct.pack('>HH', len(value), 0) + memoryview(value)
 
@@ -72,7 +74,7 @@ class Vector:
         if unused != 0:
             raise ValueError('expected unused to be 0')
 
-        arr = array.array('f')
+        arr = array('f')
         arr.frombytes(data)
         if sys.byteorder != 'big':
             arr.byteswap()

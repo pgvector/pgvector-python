@@ -16,6 +16,10 @@ NO_DEFAULT: Final[Sentinel] = Sentinel()
 
 
 class SparseVector:
+    _dim: int
+    _indices: list[int]
+    _values: list[float]
+
     @overload
     def __init__(self, value: dict[int, float], dimensions: int, /) -> None:
         ...
