@@ -86,7 +86,7 @@ class Vector:
         if value is None:
             return value
 
-        # fast path for high-level libraries
+        # fewer allocations for lists
         if isinstance(value, list):
             return f'[{",".join([str(float(v)) for v in value])}]'  # type: ignore
 
