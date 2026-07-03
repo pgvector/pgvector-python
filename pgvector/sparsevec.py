@@ -1,6 +1,6 @@
 from __future__ import annotations
 from struct import pack, unpack_from
-from typing import TYPE_CHECKING, Final, overload
+from typing import TYPE_CHECKING, Final, cast, overload
 from ._utils import is_sparse_array, ndarray
 
 if TYPE_CHECKING:
@@ -98,10 +98,11 @@ class SparseVector:
     def _from_sparse(self, arr: sparray | spmatrix) -> None:
         value: coo_array | coo_matrix = arr.tocoo()  # type: ignore
 
-        if value.ndim == 1:
-            self._dim = value.shape[0]  # type: ignore
-        elif value.ndim == 2 and value.shape[0] == 1:  # type: ignore
-            self._dim = value.shape[1]  # type: ignore
+        shape = cast(tuple[int], value.shape)
+        if len(shape) == 1:
+            self._dim = shape[0]
+        elif len(shape) == 2 and shape[0] == 1:
+            self._dim = shape[1]
         else:
             raise ValueError('expected ndim to be 1')
 
