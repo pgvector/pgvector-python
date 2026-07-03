@@ -21,14 +21,17 @@ class SparseVector:
     _values: list[float]
 
     @overload
-    def __init__(self, value: dict[int, float], dimensions: int, /) -> None:
-        ...
+    def __init__(self, value: dict[int, float], dimensions: int, /) -> None: ...
 
     @overload
-    def __init__(self, value: list[float] | ndarray | sparray | spmatrix, /) -> None:
-        ...
+    def __init__(self, value: list[float] | ndarray | sparray | spmatrix, /) -> None: ...
 
-    def __init__(self, value: dict[int, float] | list[float] | ndarray | sparray | spmatrix, dimensions: int | Sentinel = NO_DEFAULT, /) -> None:
+    def __init__(
+        self,
+        value: dict[int, float] | list[float] | ndarray | sparray | spmatrix,
+        dimensions: int | Sentinel = NO_DEFAULT,
+        /
+    ) -> None:
         if is_sparse_array(value):
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
