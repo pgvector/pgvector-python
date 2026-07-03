@@ -468,6 +468,13 @@ class TestSqlalchemy:
             res = session.scalars(select(sum(Item.embedding))).one()
             assert res == [5, 7, 9]
 
+    def test_bad_type(self, engine: Engine) -> None:
+        item = Item(embedding=[1, 'two'])
+        with Session(engine) as session:
+            session.add(item)
+            with pytest.raises(StatementError, match='could not convert string to float'):
+                session.commit()
+
     def test_bad_dimensions(self, engine: Engine) -> None:
         item = Item(embedding=[1, 2])
         with Session(engine) as session:
