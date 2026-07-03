@@ -22,11 +22,7 @@ class SparseVector:
         ...
 
     @overload
-    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]], /) -> None:
-        ...
-
-    @overload
-    def __init__(self, value: sparray | spmatrix, /) -> None:
+    def __init__(self, value: list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix, /) -> None:
         ...
 
     def __init__(self, value: dict[int, float] | list[float] | np.ndarray[tuple[int], np.dtype[np.floating]] | sparray | spmatrix, dimensions: int | Any = NO_DEFAULT, /) -> None:
