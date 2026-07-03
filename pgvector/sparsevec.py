@@ -80,7 +80,8 @@ class SparseVector:
         return vec
 
     def to_text(self) -> str:
-        return '{' + ','.join([f'{int(i) + 1}:{float(v)}' for i, v in zip(self._indices, self._values)]) + '}/' + str(int(self._dim))
+        elements = ','.join([f'{int(i) + 1}:{float(v)}' for i, v in zip(self._indices, self._values)])
+        return f'{{{elements}}}/{int(self._dim)}'
 
     def to_binary(self) -> bytes:
         nnz = len(self._indices)
