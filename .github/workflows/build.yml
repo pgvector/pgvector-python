@@ -8,7 +8,7 @@ jobs:
       matrix:
         python: [3.14, "3.10"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
@@ -19,7 +19,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.8.2 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.8.4 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
