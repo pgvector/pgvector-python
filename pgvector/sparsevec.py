@@ -138,7 +138,7 @@ class SparseVector:
             raise ValueError('expected unused to be 0')
 
         indices = list(unpack_from(f'>{nnz}i', data))
-        values = list(unpack_from(f'>{nnz}f', data[nnz * 4:]))
+        values = list(unpack_from(f'>{nnz}f', data, nnz * 4))
         return cls._from_parts(dim, indices, values)
 
     @classmethod
