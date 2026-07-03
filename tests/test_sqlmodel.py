@@ -7,6 +7,9 @@ from sqlmodel import Field, Index, Session, SQLModel, col, create_engine, delete
 
 engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 with Session(engine) as session:
+    # typing issue
+    # https://github.com/fastapi/sqlmodel/issues/909
+    # https://github.com/fastapi/sqlmodel/pull/1657
     session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))  # type: ignore
 
 
