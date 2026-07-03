@@ -58,6 +58,8 @@ class Item(models.Model):
     double_embedding = ArrayField(FloatField(), null=True, blank=True)
     numeric_embedding = ArrayField(DecimalField(max_digits=20, decimal_places=10), null=True, blank=True)
 
+    objects: models.Manager  # for typing
+
     class Meta:
         app_label = 'django_app'
         indexes = [
@@ -159,51 +161,51 @@ class SparseVectorForm(ModelForm):
 
 class TestDjango:
     def setup_method(self) -> None:
-        Item.objects.all().delete()  # type: ignore
+        Item.objects.all().delete()
 
     def test_vector(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
-        item = Item.objects.get(pk=1)  # type: ignore
+        item = Item.objects.get(pk=1)
         assert item.embedding == [1, 2, 3]
 
     def test_vector_l2_distance(self) -> None:
         create_items()
         distance = L2Distance('embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_vector_l2_distance_list(self) -> None:
         create_items()
         distance = L2Distance('embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_vector_l2_distance_none(self) -> None:
         create_items()
         distance = L2Distance('embedding', None)
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.distance for v in items] == [None, None, None]
 
     def test_vector_max_inner_product(self) -> None:
         create_items()
         distance = MaxInnerProduct('embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_vector_cosine_distance(self) -> None:
         create_items()
         distance = CosineDistance('embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
     def test_vector_l1_distance(self) -> None:
         create_items()
         distance = L1Distance('embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
@@ -215,28 +217,28 @@ class TestDjango:
     def test_halfvec_l2_distance(self) -> None:
         create_items()
         distance = L2Distance('half_embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_halfvec_max_inner_product(self) -> None:
         create_items()
         distance = MaxInnerProduct('half_embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_halfvec_cosine_distance(self) -> None:
         create_items()
         distance = CosineDistance('half_embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
     def test_halfvec_l1_distance(self) -> None:
         create_items()
         distance = L1Distance('half_embedding', [1, 1, 1])
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
@@ -248,14 +250,14 @@ class TestDjango:
     def test_bit_hamming_distance(self) -> None:
         create_items()
         distance = HammingDistance('binary_embedding', '101')
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [0, 1, 2]
 
     def test_bit_jaccard_distance(self) -> None:
         create_items()
         distance = JaccardDistance('binary_embedding', '101')
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         # assert [v.distance for v in items] == [0, 1/3, 1]
 
@@ -267,67 +269,67 @@ class TestDjango:
     def test_sparsevec_l2_distance(self) -> None:
         create_items()
         distance = L2Distance('sparse_embedding', SparseVector([1, 1, 1]))
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, sqrt(3)]
 
     def test_sparsevec_max_inner_product(self) -> None:
         create_items()
         distance = MaxInnerProduct('sparse_embedding', SparseVector([1, 1, 1]))
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [2, 3, 1]
         assert [v.distance for v in items] == [-6, -4, -3]
 
     def test_sparsevec_cosine_distance(self) -> None:
         create_items()
         distance = CosineDistance('sparse_embedding', SparseVector([1, 1, 1]))
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 2, 3]
         assert [v.distance for v in items] == [0, 0, 0.05719095841793653]
 
     def test_sparsevec_l1_distance(self) -> None:
         create_items()
         distance = L1Distance('sparse_embedding', SparseVector([1, 1, 1]))
-        items = Item.objects.annotate(distance=distance).order_by(distance)  # type: ignore
+        items = Item.objects.annotate(distance=distance).order_by(distance)
         assert [v.id for v in items] == [1, 3, 2]
         assert [v.distance for v in items] == [0, 1, 3]
 
     def test_filter(self) -> None:
         create_items()
         distance = L2Distance('embedding', [1, 1, 1])
-        items = Item.objects.alias(distance=distance).filter(distance__lt=1)  # type: ignore
+        items = Item.objects.alias(distance=distance).filter(distance__lt=1)
         assert [v.id for v in items] == [1]
 
     def test_vector_avg(self) -> None:
-        avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']  # type: ignore
+        avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
         assert avg is None
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
-        avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']  # type: ignore
+        avg = Item.objects.aggregate(Avg('embedding'))['embedding__avg']
         assert avg == [2.5, 3.5, 4.5]
 
     def test_vector_sum(self) -> None:
-        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']  # type: ignore
+        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
         assert sum is None
         Item(embedding=[1, 2, 3]).save()
         Item(embedding=[4, 5, 6]).save()
-        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']  # type: ignore
+        sum = Item.objects.aggregate(Sum('embedding'))['embedding__sum']
         assert sum == [5, 7, 9]
 
     def test_halfvec_avg(self) -> None:
-        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']  # type: ignore
+        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
         assert avg is None
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
-        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']  # type: ignore
+        avg = Item.objects.aggregate(Avg('half_embedding'))['half_embedding__avg']
         assert avg == [2.5, 3.5, 4.5]
 
     def test_halfvec_sum(self) -> None:
-        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']  # type: ignore
+        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
         assert sum is None
         Item(half_embedding=[1, 2, 3]).save()
         Item(half_embedding=[4, 5, 6]).save()
-        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']  # type: ignore
+        sum = Item.objects.aggregate(Sum('half_embedding'))['half_embedding__sum']
         assert sum == [5, 7, 9]
 
     def test_serialization(self) -> None:
