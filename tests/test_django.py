@@ -345,13 +345,13 @@ class TestDjango:
     def test_vector_form(self) -> None:
         form = VectorForm(data={'embedding': '[1, 2, 3]'})
         assert form.is_valid()
-        assert 'value="[1, 2, 3]"' in form.as_div()  # type: ignore
+        assert 'value="[1, 2, 3]"' in str(form.as_div())
 
     def test_vector_form_instance(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
         form = VectorForm(instance=item)
-        assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()  # type: ignore
+        assert 'value="[1.0, 2.0, 3.0]"' in str(form.as_div())
 
     def test_vector_form_save(self) -> None:
         Item(id=1, embedding=[1, 2, 3]).save()
@@ -373,13 +373,13 @@ class TestDjango:
     def test_halfvec_form(self) -> None:
         form = HalfVectorForm(data={'half_embedding': '[1, 2, 3]'})
         assert form.is_valid()
-        assert 'value="[1, 2, 3]"' in form.as_div()  # type: ignore
+        assert 'value="[1, 2, 3]"' in str(form.as_div())
 
     def test_halfvec_form_instance(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
         form = HalfVectorForm(instance=item)
-        assert 'value="[1.0, 2.0, 3.0]"' in form.as_div()  # type: ignore
+        assert 'value="[1.0, 2.0, 3.0]"' in str(form.as_div())
 
     def test_halfvec_form_save(self) -> None:
         Item(id=1, half_embedding=[1, 2, 3]).save()
@@ -401,13 +401,13 @@ class TestDjango:
     def test_bit_form(self) -> None:
         form = BitForm(data={'binary_embedding': '101'})
         assert form.is_valid()
-        assert 'value="101"' in form.as_div()  # type: ignore
+        assert 'value="101"' in str(form.as_div())
 
     def test_bit_form_instance(self) -> None:
         Item(id=1, binary_embedding='101').save()
         item = Item.objects.get(pk=1)
         form = BitForm(instance=item)
-        assert 'value="101"' in form.as_div()  # type: ignore
+        assert 'value="101"' in str(form.as_div())
 
     def test_bit_form_save(self) -> None:
         Item(id=1, binary_embedding='101').save()
@@ -429,14 +429,14 @@ class TestDjango:
     def test_sparsevec_form(self) -> None:
         form = SparseVectorForm(data={'sparse_embedding': '{1:1,2:2,3:3}/3'})
         assert form.is_valid()
-        assert 'value="{1:1,2:2,3:3}/3"' in form.as_div()  # type: ignore
+        assert 'value="{1:1,2:2,3:3}/3"' in str(form.as_div())
 
     def test_sparsevec_form_instance(self) -> None:
         Item(id=1, sparse_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
         form = SparseVectorForm(instance=item)
         # TODO improve
-        assert 'value="{1:1.0,2:2.0,3:3.0}/3"' in form.as_div()  # type: ignore
+        assert 'value="{1:1.0,2:2.0,3:3.0}/3"' in str(form.as_div())
 
     def test_sparsevec_form_save(self) -> None:
         Item(id=1, sparse_embedding=[1, 2, 3]).save()
