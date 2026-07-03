@@ -8,7 +8,7 @@ except ImportError:
     pass
 
 try:
-    from scipy.sparse import sparray, spmatrix
+    from scipy.sparse import sparray, spmatrix, coo_array, coo_matrix
     SCIPY_AVAILABLE = True
 except ImportError:
     SCIPY_AVAILABLE = False
@@ -34,7 +34,7 @@ class SparseVector:
             if dimensions is not NO_DEFAULT:
                 raise ValueError('extra argument')
 
-            self._from_sparse(value)
+            self._from_sparse(value)  # type: ignore
         elif isinstance(value, dict):
             if dimensions is NO_DEFAULT:
                 raise ValueError('missing dimensions')
@@ -97,13 +97,13 @@ class SparseVector:
         self._indices = [int(v[0]) for v in elements]
         self._values = [float(v[1]) for v in elements]
 
-    def _from_sparse(self, value: Any) -> None:
-        value = value.tocoo()
+    def _from_sparse(self, arr: sparray | spmatrix) -> None:
+        value: coo_array | coo_matrix = arr.tocoo()  # type: ignore
 
         if value.ndim == 1:
-            self._dim = value.shape[0]
-        elif value.ndim == 2 and value.shape[0] == 1:
-            self._dim = value.shape[1]
+            self._dim = value.shape[0]  # type: ignore
+        elif value.ndim == 2 and value.shape[0] == 1:  # type: ignore
+            self._dim = value.shape[1]  # type: ignore
         else:
             raise ValueError('expected ndim to be 1')
 
