@@ -105,7 +105,7 @@ class SparseVector:
     def _from_sparse(self, arr: sparray | spmatrix, /) -> None:
         value: coo_array | coo_matrix = arr.tocoo(copy=False)  # type: ignore
 
-        shape = cast(tuple[int], value.shape)
+        shape = cast(tuple[int, ...], value.shape)
         if len(shape) == 1:
             self._dim = shape[0]
         elif len(shape) == 2 and shape[0] == 1:
