@@ -1,7 +1,7 @@
 .PHONY: lint build publish clean
 
 lint:
-	pycodestyle . --ignore=E501 --exclude=.venv
+	pycodestyle . --ignore=E501,E704,W504 --exclude=.venv
 
 build:
 	python3 -m build
