@@ -31,14 +31,13 @@ dev = [
     "SQLAlchemy[asyncio]>=2",
     "sqlmodel"
 ]
-dev-optional = [
-    "numpy",
-    "scipy"
-]
+numpy = ["numpy"]
+scipy = ["scipy"]
 typing = [
     "mypy",
     "ty",
-    {include-group = "dev-optional"}
+    "numpy",
+    "scipy"
 ]
 
 [tool.pytest.ini_options]
