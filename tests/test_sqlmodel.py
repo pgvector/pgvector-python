@@ -18,7 +18,7 @@ class Item(SQLModel, table=True):
     model_config = ConfigDict(arbitrary_types_allowed=True)  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
-    # typing issues
+    # typing issue
     # https://github.com/fastapi/sqlmodel/discussions/1228
     # https://github.com/fastapi/sqlmodel/pull/1345
     embedding: list[float] | None = Field(default=None, sa_type=VECTOR(3))  # type: ignore

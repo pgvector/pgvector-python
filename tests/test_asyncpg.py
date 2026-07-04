@@ -65,6 +65,7 @@ class TestAsyncpg:
         await conn.execute('DROP TABLE IF EXISTS asyncpg_items')
         await conn.execute('CREATE TABLE asyncpg_items (id bigserial PRIMARY KEY, embedding bit(3))')
 
+        # typing issue
         # https://github.com/MagicStack/py-pgproto/pull/32
         embedding = asyncpg.BitString('101')  # type: ignore
         embedding2 = None
