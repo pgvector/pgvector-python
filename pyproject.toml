@@ -76,8 +76,6 @@ reportUnknownArgumentType = "none"
 reportUnknownLambdaType = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
-venv = ".venv"
-venvPath = "."
 
 [tool.pyrefly]
 project-includes = [
