@@ -76,7 +76,6 @@ reportUnknownArgumentType = "none"
 reportUnknownLambdaType = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
-reportUnnecessaryIsInstance = "none"
 venv = ".venv"
 venvPath = "."
 
