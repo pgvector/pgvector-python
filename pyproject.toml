@@ -71,7 +71,6 @@ include = [
 ]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = "none"
-reportPossiblyUnboundVariable = "none"
 reportPrivateUsage = "none"
 reportUnknownArgumentType = "none"
 reportUnknownLambdaType = "none"
