@@ -58,6 +58,7 @@ class TestSparseVector:
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
+        assert isinstance(vec.values()[0], float)
 
     def test_coo_array_dimensions(self) -> None:
         if np is None or sparse is None:

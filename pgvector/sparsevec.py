@@ -118,7 +118,7 @@ class SparseVector:
             self._indices = value.coords[-1].tolist()
         else:
             self._indices = value.col.tolist()
-        self._values = value.data.tolist()
+        self._values = [float(v) for v in value.data]
 
     def _from_dense(self, value: list[float] | ndarray, /) -> None:
         self._dim = len(value)
