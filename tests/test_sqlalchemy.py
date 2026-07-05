@@ -176,13 +176,9 @@ class TestSqlalchemy:
             session.add(item3)
             session.commit()
 
-        stmt = select(Item)
+        stmt = select(Item).order_by(Item.id)
         with Session(engine) as session:
             items = [v[0] for v in session.execute(stmt).all()]
-            # TODO improve
-            assert items[0].id % 3 == 1
-            assert items[1].id % 3 == 2
-            assert items[2].id % 3 == 0
             assert items[0].embedding == [1.5, 2, 3]
             assert items[1].embedding == [4, 5, 6]
             assert items[2].embedding is None
