@@ -706,6 +706,32 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 ## Reference
 
+### Vectors
+
+Create a vector from a list
+
+```python
+vec = Vector([1, 2, 3])
+```
+
+Or a NumPy array
+
+```python
+vec = Vector(np.array([1, 2, 3]))
+```
+
+Get a list
+
+```python
+lst = vec.to_list()
+```
+
+Get a NumPy array
+
+```python
+arr = vec.to_numpy()
+```
+
 ### Half Vectors
 
 Create a half vector from a list
