@@ -1,4 +1,5 @@
 import numpy as np
+from pgvector import Vector
 from pgvector.psycopg import register_vector
 import psycopg
 
@@ -38,7 +39,7 @@ with conn.cursor().copy('COPY items (embedding, category_id) FROM STDIN WITH (FO
     copy.set_types(['vector', 'bigint'])
 
     for i in range(rows):
-        copy.write_row([embeddings[i], categories[i]])
+        copy.write_row([Vector(embeddings[i]), categories[i]])
 
 print('Creating index in parallel')
 conn.execute('CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)')
