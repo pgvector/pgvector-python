@@ -362,7 +362,7 @@ Add a vector column
 from pgvector.sqlalchemy import VECTOR
 
 class Item(SQLModel, table=True):
-    embedding: Any = Field(sa_type=VECTOR(3))
+    embedding: list[float] = Field(sa_type=VECTOR(3))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
