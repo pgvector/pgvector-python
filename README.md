@@ -310,7 +310,7 @@ from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import ARRAY
 
 class Item(Base):
-    embeddings = mapped_column(ARRAY(VECTOR(3)))
+    embeddings = mapped_column(ARRAY(VECTOR(3), dimensions=1))
 ```
 
 And register the types with the underlying driver
