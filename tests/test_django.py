@@ -435,7 +435,6 @@ class TestDjango:
         Item(id=1, sparse_embedding=[1, 2, 3]).save()
         item = Item.objects.get(pk=1)
         form = SparseVectorForm(instance=item)
-        # TODO improve
         assert 'value="{1:1.0,2:2.0,3:3.0}/3"' in str(form.as_div())
 
     def test_sparsevec_form_save(self) -> None:
