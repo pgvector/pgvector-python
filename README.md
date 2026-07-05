@@ -180,7 +180,7 @@ Add a vector column
 from pgvector.sqlalchemy import VECTOR
 
 class Item(Base):
-    embedding = mapped_column(VECTOR(3))
+    embedding: Mapped[list[float]] = mapped_column(VECTOR(3))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
@@ -310,7 +310,7 @@ from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import ARRAY
 
 class Item(Base):
-    embeddings = mapped_column(ARRAY(VECTOR(3), dimensions=1))
+    embeddings: Mapped[list[list[float]]] = mapped_column(ARRAY(VECTOR(3), dimensions=1))
 ```
 
 And register the types with the underlying driver
