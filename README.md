@@ -473,7 +473,9 @@ conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))
 Insert a vector
 
 ```python
-embedding = np.array([1, 2, 3])
+from pgvector import Vector
+
+embedding = Vector([1, 2, 3])
 conn.execute('INSERT INTO items (embedding) VALUES (%s)', (embedding,))
 ```
 
@@ -519,7 +521,9 @@ cur.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))'
 Insert a vector
 
 ```python
-embedding = np.array([1, 2, 3])
+from pgvector import Vector
+
+embedding = Vector([1, 2, 3])
 cur.execute('INSERT INTO items (embedding) VALUES (%s)', (embedding,))
 ```
 
@@ -574,7 +578,9 @@ await conn.execute('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vect
 Insert a vector
 
 ```python
-embedding = np.array([1, 2, 3])
+from pgvector import Vector
+
+embedding = Vector([1, 2, 3])
 await conn.execute('INSERT INTO items (embedding) VALUES ($1)', embedding)
 ```
 
@@ -619,7 +625,9 @@ conn.run('CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))')
 Insert a vector
 
 ```python
-embedding = np.array([1, 2, 3])
+from pgvector import Vector
+
+embedding = Vector([1, 2, 3])
 conn.run('INSERT INTO items (embedding) VALUES (:embedding)', embedding=embedding)
 ```
 
