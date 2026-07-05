@@ -2,7 +2,7 @@ from lightfm import LightFM
 from lightfm.datasets import fetch_movielens
 from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import create_engine, insert, select, text, Float, Integer, String
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, Session
 
 engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
 with engine.connect() as conn:
@@ -17,17 +17,17 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'user'
 
-    id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(VECTOR(20))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    factors: Mapped[list[float]] = mapped_column(VECTOR(20))
 
 
 class Item(Base):
     __tablename__ = 'item'
 
-    id = mapped_column(Integer, primary_key=True)
-    title = mapped_column(String)
-    factors = mapped_column(VECTOR(20))
-    bias = mapped_column(Float)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String)
+    factors: Mapped[list[float]] = mapped_column(VECTOR(20))
+    bias: Mapped[float] = mapped_column(Float)
 
 
 Base.metadata.drop_all(engine)

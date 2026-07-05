@@ -1,6 +1,6 @@
 from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import create_engine, insert, select, text, Integer
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Session
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, Session
 from surprise import Dataset, SVD
 
 engine = create_engine('postgresql+psycopg://localhost/pgvector_example')
@@ -16,15 +16,15 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'user'
 
-    id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(VECTOR(20))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    factors: Mapped[list[float]] = mapped_column(VECTOR(20))
 
 
 class Item(Base):
     __tablename__ = 'item'
 
-    id = mapped_column(Integer, primary_key=True)
-    factors = mapped_column(VECTOR(20))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    factors: Mapped[list[float]] = mapped_column(VECTOR(20))
 
 
 Base.metadata.drop_all(engine)

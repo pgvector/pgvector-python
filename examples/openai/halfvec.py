@@ -1,5 +1,6 @@
 from openai import OpenAI
-from pgvector.psycopg import register_vector, HalfVector
+from pgvector import HalfVector
+from pgvector.psycopg import register_vector
 import psycopg
 
 conn = psycopg.connect(dbname='pgvector_example', autocommit=True)
