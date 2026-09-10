@@ -353,7 +353,8 @@ def connect(dbapi_connection, connection_record):
 Enable the extension
 
 ```python
-session.exec(text('CREATE EXTENSION IF NOT EXISTS vector'))
+with engine.begin() as conn:
+    conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
 ```
 
 Add a vector column
@@ -362,7 +363,7 @@ Add a vector column
 from pgvector.sqlalchemy import VECTOR
 
 class Item(SQLModel, table=True):
-    embedding: list[float] = Field(sa_type=VECTOR(3))
+    embedding: list[float] = Field(sa_column=Column(VECTOR(3)))
 ```
 
 Also supports `HALFVEC`, `BIT`, and `SPARSEVEC`
