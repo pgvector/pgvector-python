@@ -361,6 +361,7 @@ Add a vector column
 
 ```python
 from pgvector.sqlalchemy import VECTOR
+from sqlalchemy import Column
 
 class Item(SQLModel, table=True):
     embedding: list[float] = Field(sa_column=Column(VECTOR(3)))
