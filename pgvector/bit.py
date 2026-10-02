@@ -13,7 +13,7 @@ class Bit:
 
     def __init__(
         self,
-        value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool | np.uint8]],
+        value: bytes | str | list[bool] | np.ndarray[tuple[int, ...], np.dtype[np.bool_ | np.uint8]],
         /
     ) -> None:
         if isinstance(value, bytes):
@@ -65,7 +65,7 @@ class Bit:
         # TODO improve
         return [v != '0' for v in self.to_text()]
 
-    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.bool]]:
+    def to_numpy(self) -> np.ndarray[tuple[int, ...], np.dtype[np.bool_]]:
         import numpy as np
 
         return np.unpackbits(np.frombuffer(self._data, dtype=np.uint8), count=self._length).astype(bool)
