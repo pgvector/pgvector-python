@@ -39,7 +39,7 @@ class Bit:
         elif is_ndarray(value):
             import numpy as np
 
-            if value.dtype != np.bool:
+            if value.dtype != np.bool_:
                 # skip error for result of np.unpackbits
                 if value.dtype != np.uint8 or np.any(value > 1):
                     raise ValueError('expected elements to be boolean')
