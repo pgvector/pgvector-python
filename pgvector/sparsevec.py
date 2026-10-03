@@ -115,10 +115,14 @@ class SparseVector:
 
         if hasattr(value, 'coords'):
             # scipy 1.13+
-            self._indices = value.coords[-1].tolist()
+            indices = value.coords[-1].tolist()
         else:
-            self._indices = value.col.tolist()
-        self._values = [float(v) for v in value.data]
+            indices = value.col.tolist()
+
+        elements = sorted(zip(indices, value.data))
+
+        self._indices = [v[0] for v in elements]
+        self._values = [float(v[1]) for v in elements]
 
     def _from_dense(self, value: list[float] | ndarray, /) -> None:
         self._dim = len(value)
