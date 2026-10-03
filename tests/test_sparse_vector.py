@@ -60,6 +60,17 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert isinstance(vec.values()[0], float)
 
+    def test_coo_array_unordered(self) -> None:
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        arr = sparse.coo_array(([3, 1, 2], ([4, 0, 2],)), shape=(6,))
+        vec = SparseVector(arr)
+        assert vec.indices() == [0, 2, 4]
+        assert vec.values() == [1, 2, 3]
+        assert vec.to_text() == '{1:1.0,3:2.0,5:3.0}/6'
+        assert vec.to_binary() == pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1, 2, 3)
+
     def test_coo_array_dimensions(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
