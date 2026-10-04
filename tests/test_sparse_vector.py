@@ -54,7 +54,7 @@ class TestSparseVector:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
-        arr = sparse.coo_array(([3, 1, 2], ([4, 0, 2],)), shape=(6,))
+        arr = sparse.coo_array(([2, 3, 1, 0], ([2, 4, 0, 3],)), shape=(6,))
         vec = SparseVector(arr)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]

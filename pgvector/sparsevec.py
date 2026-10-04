@@ -119,14 +119,14 @@ class SparseVector:
         else:
             indices = value.col.tolist()
 
-        # spipy 1.12+
-        if hasattr(value, 'has_canonical_format') and value.has_canonical_format:
-            self._indices = indices
-            self._values = [float(v) for v in value.data]
-        else:
-            elements = sorted(zip(indices, value.data))
-            self._indices = [v[0] for v in elements]
-            self._values = [float(v[1]) for v in elements]
+        elements = [v for v in zip(indices, value.data) if v[1] != 0]
+
+        # has_canonical_format added in spipy 1.12+
+        if not hasattr(value, 'has_canonical_format') or not value.has_canonical_format:
+            elements.sort()
+
+        self._indices = [v[0] for v in elements]
+        self._values = [float(v[1]) for v in elements]
 
     def _from_dense(self, value: list[float] | ndarray, /) -> None:
         self._dim = len(value)
