@@ -119,7 +119,7 @@ class SparseVector:
         else:
             indices = value.col.tolist()
 
-        elements = [v for v in zip(indices, value.data) if v[1] != 0]
+        elements = [(i, v) for i, v in zip(indices, value.data) if v != 0]
 
         # has_canonical_format added in scipy 1.12+
         if not hasattr(value, 'has_canonical_format') or not value.has_canonical_format:
