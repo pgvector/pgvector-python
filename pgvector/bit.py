@@ -26,16 +26,15 @@ class Bit:
                     value = ''.join([bits[v] for v in value])
                 except (KeyError, TypeError):
                     raise ValueError('expected list[bool]')
+            elif not set(value).issubset({'0', '1'}):
+                raise ValueError('expected bit string')
 
             length = len(value)
             if length % 8 != 0:
                 value += '0' * (8 - (length % 8))
 
             self._length = length
-            try:
-                self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
-            except ValueError:
-                raise ValueError('expected bit string')
+            self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
         elif is_ndarray(value):
             import numpy as np
 
