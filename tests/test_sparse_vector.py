@@ -60,6 +60,16 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert isinstance(vec.values()[0], float)
 
+    def test_coo_array_duplicates(self) -> None:
+        if np is None or sparse is None:
+            pytest.skip('NumPy and SciPy required')
+
+        arr = sparse.coo_array(([1, 2], ([1, 1],)), shape=(3,))
+        assert arr.todense().tolist() == [0, 3, 0]
+        vec = SparseVector(arr)
+        assert vec.to_list() == [0, 3, 0]
+        assert vec.indices() == [1]
+
     def test_coo_array_dimensions(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')

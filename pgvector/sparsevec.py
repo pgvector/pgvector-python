@@ -105,6 +105,11 @@ class SparseVector:
     def _from_sparse(self, arr: sparray | spmatrix, /) -> None:
         value: coo_array | coo_matrix = arr.tocoo(copy=False)  # type: ignore
 
+        # has_canonical_format added in scipy 1.12+
+        if not hasattr(value, 'has_canonical_format') or not value.has_canonical_format:
+            value = value.copy()
+            value.sum_duplicates()
+
         shape = cast(tuple[int, ...], value.shape)
         if len(shape) == 1:
             self._dim = shape[0]
