@@ -121,7 +121,7 @@ class SparseVector:
 
         elements = [v for v in zip(indices, value.data) if v[1] != 0]
 
-        # has_canonical_format added in spipy 1.12+
+        # has_canonical_format added in scipy 1.12+
         if not hasattr(value, 'has_canonical_format') or not value.has_canonical_format:
             elements.sort()
 
