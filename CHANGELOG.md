@@ -1,6 +1,6 @@
 ## 0.5.1 (unreleased)
 
-- Fixed error with unordered SciPy sparse arrays
+- Fixed error with non-canonical SciPy sparse arrays
 - Fixed error with `Bit` constructor for NumPy 1.24-1.26
 
 ## 0.5.0 (2026-07-06)
