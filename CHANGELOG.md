@@ -1,4 +1,4 @@
-## 0.5.1 (unreleased)
+## 0.5.1 (2026-10-08)
 
 - Fixed error with non-canonical SciPy sparse arrays
 - Fixed error with SciPy sparse arrays with explicit zeros
