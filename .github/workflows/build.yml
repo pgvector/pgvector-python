@@ -6,10 +6,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [3.14, "3.10"]
+        python: [3.15, "3.10"]
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - run: pip install --group dev
@@ -19,7 +19,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.8.4 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.8.7 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
