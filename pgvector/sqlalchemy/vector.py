@@ -35,7 +35,7 @@ class VECTOR(UserDefinedType[Any]):
             return Vector._from_db(value)
         return process
 
-    class Comparator(TypeEngine.Comparator[Any]):
+    class Comparator(TypeEngine.Comparator[Any]):  # type: ignore
         def l2_distance(self, other: object, /) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
