@@ -12,6 +12,12 @@ from sqlalchemy.sql import func
 from typing import Any
 from .conftest import numpy as np
 
+try:
+    from sqlalchemy.dialects.postgresql import BitString
+    sqlalchemy_version = 2.1
+except ImportError:
+    sqlalchemy_version = 2
+
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 
@@ -420,7 +426,7 @@ class TestSqlalchemy:
     def test_select_orm(self, engine: Engine) -> None:
         with Session(engine) as session:
             session.add(Item(embedding=[2, 3, 3]))
-            items = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()
+            items = session.scalars(select(Item.embedding.l2_distance([1, 1, 1]))).all()  # type: ignore
             assert items == [3]
 
     def test_avg(self, engine: Engine) -> None:
@@ -634,9 +640,15 @@ class TestSqlalchemyAsync:
 
         async with async_session() as session:
             async with session.begin():
-                # typing issue
-                # https://github.com/MagicStack/py-pgproto/pull/32
-                embedding = asyncpg.BitString('101') if engine == asyncpg_engine else '101'  # type: ignore
+                embedding: Any
+                if sqlalchemy_version >= 2.1:
+                    embedding = BitString('101')
+                elif engine == asyncpg_engine:
+                    # typing issue
+                    # https://github.com/MagicStack/py-pgproto/pull/32
+                    embedding = asyncpg.BitString('101')  # type: ignore
+                else:
+                    embedding = '101'
                 session.add(Item(id=1, binary_embedding=embedding))
                 item = await session.get_one(Item, 1)
                 assert item.binary_embedding == embedding
