@@ -14,11 +14,9 @@ class BIT(TypeDecorator[Any]):
             return asyncpg.BitString(value)  # type: ignore
         return value
 
-    class Comparator(TypeDecorator.Comparator[Any]):
+    class comparator_factory(TypeDecorator.Comparator[Any]):
         def hamming_distance(self, other: object, /) -> Operators:
             return self.op('<~>', return_type=Float)(other)
 
         def jaccard_distance(self, other: object, /) -> Operators:
             return self.op('<%>', return_type=Float)(other)
-
-    comparator_factory = Comparator  # type: ignore
