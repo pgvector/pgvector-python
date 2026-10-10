@@ -35,7 +35,7 @@ class HALFVEC(UserDefinedType[Any]):
             return HalfVector._from_db(value)
         return process
 
-    class comparator_factory(TypeEngine.Comparator[Any]):
+    class Comparator(TypeEngine.Comparator[Any]):
         def l2_distance(self, other: object, /) -> Operators:
             return self.op('<->', return_type=Float)(other)
 
@@ -47,6 +47,8 @@ class HALFVEC(UserDefinedType[Any]):
 
         def l1_distance(self, other: object, /) -> Operators:
             return self.op('<+>', return_type=Float)(other)
+
+    comparator_factory = Comparator
 
 
 # for reflection
