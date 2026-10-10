@@ -4,6 +4,7 @@ from pgvector import SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, literal, select, text, MetaData, Table, Column, Index, Integer, ARRAY, Engine
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.exc import StatementError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 from sqlalchemy.ext.automap import automap_base
@@ -12,11 +13,7 @@ from sqlalchemy.sql import func
 from typing import Any
 from .conftest import numpy as np
 
-try:
-    from sqlalchemy.dialects.postgresql import BitString
-    sqlalchemy_version = 2.1
-except ImportError:
-    sqlalchemy_version = 2
+sqlalchemy_version = 2.1 if hasattr(postgresql, 'BitString') else 2
 
 psycopg2_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
 psycopg2_type_engine = create_engine('postgresql+psycopg2://localhost/pgvector_python_test')
@@ -642,7 +639,7 @@ class TestSqlalchemyAsync:
             async with session.begin():
                 embedding: Any
                 if sqlalchemy_version >= 2.1:
-                    embedding = BitString('101')
+                    embedding = postgresql.BitString('101')  # type: ignore
                 elif engine == asyncpg_engine:
                     # typing issue
                     # https://github.com/MagicStack/py-pgproto/pull/32
