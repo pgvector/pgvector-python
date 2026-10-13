@@ -56,6 +56,27 @@ class TestHalfVector:
         assert HalfVector([1, 2, 3]) != HalfVector([1, 2, 4])
         assert HalfVector([1, 2, 3]) != 1
 
+    @pytest.mark.parametrize('positive, negative', [
+        ([0.0], [-0.0]),
+        ([0.0, 1.5, -2.0], [-0.0, 1.5, -2.0]),
+        ([1e-8, 1.5], [-1e-8, 1.5]),
+    ])
+    def test_equality_signed_zero(self, positive: list[float], negative: list[float]) -> None:
+        left = HalfVector(positive)
+        right = HalfVector(negative)
+        assert left == right
+        assert right == left
+        # Numeric equality must not normalize the stored sign bit.
+        assert left.to_binary() != right.to_binary()
+
+    def test_equality_signed_zero_from_binary(self) -> None:
+        left = HalfVector.from_binary(pack('>HH2e', 2, 0, 0.0, 1.5))
+        right = HalfVector.from_binary(pack('>HH2e', 2, 0, -0.0, 1.5))
+        assert left == right
+
+    def test_equality_signed_zero_from_text(self) -> None:
+        assert HalfVector.from_text('[0.0,1.5]') == HalfVector.from_text('[-0.0,1.5]')
+
     def test_dimensions(self) -> None:
         assert HalfVector([1, 2, 3]).dimensions() == 3
 
