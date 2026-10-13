@@ -1,3 +1,7 @@
+## 0.5.2 (unreleased)
+
+- Fixed equality for `HalfVector` with signed zeros
+
 ## 0.5.1 (2026-10-08)
 
 - Fixed error with non-canonical SciPy sparse arrays

@@ -37,7 +37,7 @@ class HalfVector:
     def __eq__(self, other: object, /) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
-        return self._value == other._value
+        return self.to_list() == other.to_list()
 
     def dimensions(self) -> int:
         return len(self._value)

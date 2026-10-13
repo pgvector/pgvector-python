@@ -55,6 +55,7 @@ class TestVector:
         assert Vector([1, 2, 3]) == Vector([1, 2, 3])
         assert Vector([1, 2, 3]) != Vector([1, 2, 4])
         assert Vector([1, 2, 3]) != 1
+        assert Vector([0.0]) == Vector([-0.0])
 
     def test_dimensions(self) -> None:
         assert Vector([1, 2, 3]).dimensions() == 3
