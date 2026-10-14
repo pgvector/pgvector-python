@@ -1,5 +1,6 @@
 ## 0.5.2 (unreleased)
 
+- Fixed error with empty `Bit` values
 - Fixed equality for `HalfVector` with signed zeros
 
 ## 0.5.1 (2026-10-08)

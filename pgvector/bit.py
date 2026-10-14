@@ -34,7 +34,11 @@ class Bit:
                 value += '0' * (8 - (length % 8))
 
             self._length = length
-            self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
+            # int('', 2) raises, but a zero-length bit string is valid
+            if length == 0:
+                self._data = b''
+            else:
+                self._data = int(value, 2).to_bytes(len(value) // 8, byteorder='big')
         elif is_ndarray(value):
             import numpy as np
 

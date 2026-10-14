@@ -36,6 +36,22 @@ class TestBit:
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
         assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
 
+    def test_empty(self) -> None:
+        bit = Bit(b'')
+        assert bit.to_list() == []
+        assert bit.to_text() == ''
+        assert bit.to_binary() == pack('>i', 0)
+        assert Bit('') == bit
+        assert Bit([]) == bit
+        assert Bit.from_text('') == bit
+        assert Bit.from_text(bit.to_text()) == bit
+        assert Bit.from_binary(bit.to_binary()) == bit
+        assert bit != Bit('0')
+        assert bit != Bit(b'\x00')
+        if np is not None:
+            assert np.array_equal(bit.to_numpy(), np.array([], dtype=bool))
+            assert Bit(np.array([], dtype=bool)) == bit
+
     def test_ndarray(self) -> None:
         if np is None:
             pytest.skip('NumPy required')
