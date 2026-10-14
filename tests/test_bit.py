@@ -27,6 +27,9 @@ class TestBit:
     def test_str(self) -> None:
         assert Bit('101').to_list() == [True, False, True]
 
+    def test_str_empty(self) -> None:
+        assert Bit('').to_list() == []
+
     def test_str_two(self) -> None:
         with pytest.raises(ValueError) as error:
             Bit('201')
