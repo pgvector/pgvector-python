@@ -9,6 +9,9 @@ class TestBit:
     def test_list(self) -> None:
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
+    def test_list_empty(self) -> None:
+        assert Bit([]).to_list() == []
+
     def test_list_none(self) -> None:
         with pytest.raises(ValueError) as error:
             Bit([True, None, True])  # type: ignore
@@ -38,6 +41,9 @@ class TestBit:
     def test_bytes(self) -> None:
         assert Bit(b'\xff\x00\xf0').to_text() == '111111110000000011110000'
         assert Bit(b'\xfe\x07\x00').to_text() == '111111100000011100000000'
+
+    def test_bytes_empty(self) -> None:
+        assert Bit(b'').to_text() == ''
 
     def test_ndarray(self) -> None:
         if np is None:
