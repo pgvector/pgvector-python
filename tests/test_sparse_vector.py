@@ -55,6 +55,11 @@ class TestSparseVector:
     #     with pytest.raises(ValueError, match='sparsevec index out of bounds'):
     #         SparseVector({3: 1}, 3)
 
+    # TODO uncomment in 0.6.0
+    # def test_dict_negative_dimensions(self) -> None:
+    #     with pytest.raises(ValueError, match='sparsevec cannot have negative dimensions'):
+    #         SparseVector({}, -1)
+
     def test_dict_no_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector({0: 1, 2: 2, 4: 3})  # type: ignore

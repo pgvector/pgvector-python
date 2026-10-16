@@ -141,6 +141,9 @@ class SparseVector:
         self._values = [float(value[i]) for i in self._indices]
 
     def _validate(self):
+        if self._dim < 0:
+            raise ValueError('sparsevec cannot have negative dimensions')
+
         if any(i < 0 or i >= self._dim for i in self._indices):
             raise ValueError('sparsevec index out of bounds')
 
