@@ -45,6 +45,11 @@ class TestSparseVector:
     def test_dict_empty(self) -> None:
         assert SparseVector({}, 0).to_list() == []
 
+    @pytest.mark.parametrize('index', [-1, 3])
+    def test_dict_index_out_of_bounds(self, index: int) -> None:
+        with pytest.raises(ValueError, match='sparsevec index out of bounds'):
+            SparseVector({index: 1}, 3)
+
     def test_dict_no_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector({0: 1, 2: 2, 4: 3})  # type: ignore

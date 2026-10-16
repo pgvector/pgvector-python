@@ -100,6 +100,8 @@ class SparseVector:
 
         self._dim = int(dim)
         self._indices = [int(v[0]) for v in elements]
+        if any(i < 0 or i >= self._dim for i in self._indices):
+            raise ValueError('sparsevec index out of bounds')
         self._values = [float(v[1]) for v in elements]
 
     def _from_sparse(self, arr: sparray | spmatrix, /) -> None:
