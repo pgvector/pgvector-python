@@ -101,6 +101,8 @@ class SparseVector:
         self._dim = int(dim)
         self._indices = [int(v[0]) for v in elements]
         self._values = [float(v[1]) for v in elements]
+        # TODO uncomment in 0.6.0
+        # self._validate()
 
     def _from_sparse(self, arr: sparray | spmatrix, /) -> None:
         value: coo_array | coo_matrix = arr.tocoo(copy=False)  # type: ignore
@@ -138,6 +140,10 @@ class SparseVector:
         self._indices = [i for i, v in enumerate(value) if v != 0]
         self._values = [float(value[i]) for i in self._indices]
 
+    def _validate(self):
+        if any(i < 0 or i >= self._dim for i in self._indices):
+            raise ValueError('sparsevec index out of bounds')
+
     @classmethod
     def from_text(cls, value: str, /) -> SparseVector:
         elements, dim = value.split('/', 2)
@@ -171,6 +177,8 @@ class SparseVector:
         vec._dim = dim
         vec._indices = indices
         vec._values = values
+        # TODO uncomment in 0.6.0
+        # vec._validate()
         return vec
 
     @classmethod
