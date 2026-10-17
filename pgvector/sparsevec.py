@@ -147,6 +147,11 @@ class SparseVector:
         if any(i < 0 or i >= self._dim for i in self._indices):
             raise ValueError('sparsevec index out of bounds')
 
+    def _validate_sorted(self) -> None:
+        for i in range(len(self._indices) - 1):
+            if self._indices[i] >= self._indices[i + 1]:
+                raise ValueError('sparsevec indices must be in ascending order')
+
     @classmethod
     def from_text(cls, value: str, /) -> SparseVector:
         elements, dim = value.split('/', 2)
@@ -182,6 +187,7 @@ class SparseVector:
         vec._values = values
         # TODO uncomment in 0.6.0
         # vec._validate()
+        # vec._validate_sorted()
         return vec
 
     @classmethod

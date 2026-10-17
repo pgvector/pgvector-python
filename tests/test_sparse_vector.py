@@ -169,6 +169,16 @@ class TestSparseVector:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_text() == '{1:1.5,3:2.0,5:3.0}/6'
 
+    # TODO uncomment in 0.6.0
+    # def test_from_text_unsorted(self) -> None:
+    #     with pytest.raises(ValueError, match='sparsevec indices must be in ascending order'):
+    #         SparseVector.from_text('{2:1,1:1}/3')
+
+    # TODO uncomment in 0.6.0
+    # def test_from_text_duplicate(self) -> None:
+    #     with pytest.raises(ValueError, match='sparsevec indices must be in ascending order'):
+    #         SparseVector.from_text('{2:1,2:1}/3')
+
     def test_from_binary(self) -> None:
         data = pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
         vec = SparseVector.from_binary(data)
