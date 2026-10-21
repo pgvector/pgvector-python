@@ -53,10 +53,10 @@ def register_sparsevec_info(context: BaseConnection[Any], info: TypeInfo, /) -> 
 
 
 @cache
-def sparsevec_text_dumper(oid: int):
+def sparsevec_text_dumper(oid: int) -> type[SparseVectorDumper]:
     return type('', (SparseVectorDumper,), {'oid': oid})
 
 
 @cache
-def sparsevec_binary_dumper(oid: int):
+def sparsevec_binary_dumper(oid: int) -> type[SparseVectorBinaryDumper]:
     return type('', (SparseVectorBinaryDumper,), {'oid': oid})

@@ -36,10 +36,10 @@ def register_bit_info(context: BaseConnection[Any], info: TypeInfo | None, /) ->
 
 
 @cache
-def bit_text_dumper(oid: int):
+def bit_text_dumper(oid: int) -> type[BitDumper]:
     return type('', (BitDumper,), {'oid': oid})
 
 
 @cache
-def bit_binary_dumper(oid: int):
+def bit_binary_dumper(oid: int) -> type[BitBinaryDumper]:
     return type('', (BitBinaryDumper,), {'oid': oid})

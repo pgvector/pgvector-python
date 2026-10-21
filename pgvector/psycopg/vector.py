@@ -64,10 +64,10 @@ def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None, /)
 
 
 @cache
-def vector_text_dumper(oid: int):
+def vector_text_dumper(oid: int) -> type[VectorDumper]:
     return type('', (VectorDumper,), {'oid': oid})
 
 
 @cache
-def vector_binary_dumper(oid: int):
+def vector_binary_dumper(oid: int) -> type[VectorBinaryDumper]:
     return type('', (VectorBinaryDumper,), {'oid': oid})

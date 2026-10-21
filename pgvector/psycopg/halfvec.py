@@ -53,10 +53,10 @@ def register_halfvec_info(context: BaseConnection[Any], info: TypeInfo, /) -> No
 
 
 @cache
-def halfvec_text_dumper(oid: int):
+def halfvec_text_dumper(oid: int) -> type[HalfVectorDumper]:
     return type('', (HalfVectorDumper,), {'oid': oid})
 
 
 @cache
-def halfvec_binary_dumper(oid: int):
+def halfvec_binary_dumper(oid: int) -> type[HalfVectorBinaryDumper]:
     return type('', (HalfVectorBinaryDumper,), {'oid': oid})
