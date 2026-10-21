@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extensions import connection, cursor
+from .bit import register_bit_info
 from .halfvec import register_halfvec_info
 from .sparsevec import register_sparsevec_info
 from .vector import register_vector_info
@@ -19,6 +20,8 @@ def register_vector(conn_or_curs: connection | cursor, /, *, globally: bool = Fa
         raise psycopg2.ProgrammingError('vector type not found in the database')
 
     register_vector_info(type_info['vector'], type_info['_vector'] if arrays else None, scope)
+
+    register_bit_info()
 
     if 'halfvec' in type_info:
         register_halfvec_info(type_info['halfvec'], type_info['_halfvec'] if arrays else None, scope)

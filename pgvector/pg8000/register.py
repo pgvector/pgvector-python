@@ -1,6 +1,6 @@
 from pg8000.native import Connection
 from typing import cast
-from .. import Vector, HalfVector, SparseVector
+from .. import Bit, Vector, HalfVector, SparseVector
 
 
 def register_vector(conn: Connection, /) -> None:
@@ -13,6 +13,8 @@ def register_vector(conn: Connection, /) -> None:
 
     conn.register_out_adapter(Vector, lambda v: v.to_text())
     conn.register_in_adapter(type_info['vector'], Vector.from_text)
+
+    conn.register_out_adapter(Bit, lambda v: v.to_text())
 
     try:
         import numpy as np
