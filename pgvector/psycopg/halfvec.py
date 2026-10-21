@@ -1,3 +1,4 @@
+from functools import cache
 from psycopg import BaseConnection
 from psycopg.abc import Buffer
 from psycopg.adapt import Loader, Dumper
@@ -41,11 +42,21 @@ def register_halfvec_info(context: BaseConnection[Any], info: TypeInfo, /) -> No
     info.register(context)
 
     # add oid to anonymous class for set_types
-    text_dumper = type('', (HalfVectorDumper,), {'oid': info.oid})
-    binary_dumper = type('', (HalfVectorBinaryDumper,), {'oid': info.oid})
+    text_dumper = halfvec_text_dumper(info.oid)
+    binary_dumper = halfvec_binary_dumper(info.oid)
 
     adapters = context.adapters
     adapters.register_dumper(HalfVector, text_dumper)
     adapters.register_dumper(HalfVector, binary_dumper)
     adapters.register_loader(info.oid, HalfVectorLoader)
     adapters.register_loader(info.oid, HalfVectorBinaryLoader)
+
+
+@cache
+def halfvec_text_dumper(oid: int):
+    return type('', (HalfVectorDumper,), {'oid': oid})
+
+
+@cache
+def halfvec_binary_dumper(oid: int):
+    return type('', (HalfVectorBinaryDumper,), {'oid': oid})

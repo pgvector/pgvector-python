@@ -1,3 +1,4 @@
+from functools import cache
 from psycopg import BaseConnection
 from psycopg.abc import Buffer
 from psycopg.adapt import Loader, Dumper
@@ -41,11 +42,21 @@ def register_sparsevec_info(context: BaseConnection[Any], info: TypeInfo, /) -> 
     info.register(context)
 
     # add oid to anonymous class for set_types
-    text_dumper = type('', (SparseVectorDumper,), {'oid': info.oid})
-    binary_dumper = type('', (SparseVectorBinaryDumper,), {'oid': info.oid})
+    text_dumper = sparsevec_text_dumper(info.oid)
+    binary_dumper = sparsevec_binary_dumper(info.oid)
 
     adapters = context.adapters
     adapters.register_dumper(SparseVector, text_dumper)
     adapters.register_dumper(SparseVector, binary_dumper)
     adapters.register_loader(info.oid, SparseVectorLoader)
     adapters.register_loader(info.oid, SparseVectorBinaryLoader)
+
+
+@cache
+def sparsevec_text_dumper(oid: int):
+    return type('', (SparseVectorDumper,), {'oid': oid})
+
+
+@cache
+def sparsevec_binary_dumper(oid: int):
+    return type('', (SparseVectorBinaryDumper,), {'oid': oid})

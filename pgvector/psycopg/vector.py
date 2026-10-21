@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import cache
 import psycopg
 from psycopg import BaseConnection
 from psycopg.abc import Buffer
@@ -50,8 +51,8 @@ def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None, /)
     info.register(context)
 
     # add oid to anonymous class for set_types
-    text_dumper = type('', (VectorDumper,), {'oid': info.oid})
-    binary_dumper = type('', (VectorBinaryDumper,), {'oid': info.oid})
+    text_dumper = vector_text_dumper(info.oid)
+    binary_dumper = vector_binary_dumper(info.oid)
 
     adapters = context.adapters
     adapters.register_dumper(Vector, text_dumper)
@@ -60,3 +61,13 @@ def register_vector_info(context: BaseConnection[Any], info: TypeInfo | None, /)
     adapters.register_dumper('numpy.ndarray', binary_dumper)
     adapters.register_loader(info.oid, VectorLoader)
     adapters.register_loader(info.oid, VectorBinaryLoader)
+
+
+@cache
+def vector_text_dumper(oid: int):
+    return type('', (VectorDumper,), {'oid': oid})
+
+
+@cache
+def vector_binary_dumper(oid: int):
+    return type('', (VectorBinaryDumper,), {'oid': oid})

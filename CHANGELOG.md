@@ -1,5 +1,6 @@
 ## 0.5.2 (unreleased)
 
+- Fixed memory leak with `register_vector` and `register_vector_async` for Psycopg 3
 - Fixed error with `Bit` constructor and empty strings
 - Fixed equality for `HalfVector` with signed zeros
 
