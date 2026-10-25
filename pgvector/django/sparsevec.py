@@ -41,14 +41,14 @@ class SparseVectorField(Field):
 
     def _validate_dimensions(self, value: Any) -> None:
         try:
-            dimensions = SparseVector._from_db(SparseVector._to_db(value)).dimensions()  # type: ignore[union-attr]
+            vector = SparseVector._from_db(SparseVector._to_db(value))
         except (TypeError, ValueError):
             raise exceptions.ValidationError('Enter a valid sparse vector.', code='invalid')
-        if self.dimensions is not None and dimensions != self.dimensions:
+        if self.dimensions is not None and vector is not None and vector.dimensions() != self.dimensions:
             raise exceptions.ValidationError(
                 'Expected %(expected)d dimensions, not %(actual)d.',
                 code='dimensions',
-                params={'expected': self.dimensions, 'actual': dimensions}
+                params={'expected': self.dimensions, 'actual': vector.dimensions()}
             )
 
     def get_prep_value(self, value: Any) -> str | None:
