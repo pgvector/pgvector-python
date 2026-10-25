@@ -1,5 +1,7 @@
 from django import forms
+from django.core import exceptions
 from django.db.models import Field
+from django.utils.functional import cached_property
 from typing import Any
 from .. import Vector
 
@@ -30,7 +32,26 @@ class VectorField(Field):
     def to_python(self, value: Any) -> list[float] | None:
         if isinstance(value, list):
             return value
-        return Vector._from_db(value)
+        try:
+            return Vector._from_db(value)
+        except ValueError:
+            raise exceptions.ValidationError('Enter a valid vector.', code='invalid')
+
+    @cached_property
+    def validators(self) -> list[Any]:
+        return [*super().validators, self._validate_dimensions]
+
+    def _validate_dimensions(self, value: Any) -> None:
+        try:
+            dimensions = len(Vector._from_db(Vector._to_db(value)))  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            raise exceptions.ValidationError('Enter a valid vector.', code='invalid')
+        if self.dimensions is not None and dimensions != self.dimensions:
+            raise exceptions.ValidationError(
+                'Expected %(expected)d dimensions, not %(actual)d.',
+                code='dimensions',
+                params={'expected': self.dimensions, 'actual': dimensions}
+            )
 
     def get_prep_value(self, value: Any) -> str | None:
         return Vector._to_db(value)
