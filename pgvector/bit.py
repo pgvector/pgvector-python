@@ -88,7 +88,7 @@ class Bit:
         length, = unpack_from('>i', value)
         data = memoryview(value)[4:].tobytes()
 
-        if len(data) != (length + 7) // 8:
+        if length < 0 or len(data) != (length + 7) // 8:
             raise ValueError('invalid length')
 
         bit = cls.__new__(cls)

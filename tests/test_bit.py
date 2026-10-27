@@ -110,3 +110,8 @@ class TestBit:
         if np is not None:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
         assert vec.to_binary() == data
+
+    def test_from_binary_negative_length(self) -> None:
+        with pytest.raises(ValueError) as error:
+            Bit.from_binary(pack('>i', -1))
+        assert str(error.value) == 'invalid length'
