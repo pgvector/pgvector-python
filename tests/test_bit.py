@@ -6,6 +6,16 @@ from .conftest import numpy as np
 
 
 class TestBit:
+    @pytest.mark.parametrize('length', [-1, -2, -7, -8])
+    def test_from_binary_negative_length(self, length: int) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            Bit.from_binary(pack('>i', length))
+
+    @pytest.mark.parametrize('length', [0, 1, 7, 8, 9])
+    def test_from_binary_length_boundaries(self, length: int) -> None:
+        bit = Bit('1' * length)
+        assert Bit.from_binary(bit.to_binary()) == bit
+
     def test_list(self) -> None:
         assert Bit([True, False, True]).to_list() == [True, False, True]
 
