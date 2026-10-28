@@ -1,6 +1,6 @@
 from pgvector import Vector
 import pytest
-from struct import pack
+import struct
 from .conftest import numpy as np
 
 
@@ -68,9 +68,22 @@ class TestVector:
         assert vec.to_text() == '[1.5,2.0,3.0]'
 
     def test_from_binary(self) -> None:
-        data = pack('>HH3f', 3, 0, 1.5, 2, 3)
+        data = struct.pack('>hh3f', 3, 0, 1.5, 2, 3)
         vec = Vector.from_binary(data)
         assert vec.to_list() == [1.5, 2, 3]
         if np is not None:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
         assert vec.to_binary() == data
+
+    def test_from_binary_zero_length(self) -> None:
+        # TODO change to ValueError('invalid length') in 0.6.0
+        with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
+            Vector.from_binary(b'')
+
+    def test_from_binary_negative_dimensions(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            Vector.from_binary(struct.pack('>hh', -1, 0))
+
+    def test_from_binary_non_zero_unused(self) -> None:
+        with pytest.raises(ValueError, match='expected unused to be 0'):
+            Vector.from_binary(struct.pack('>hh', 0, 1))

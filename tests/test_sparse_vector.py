@@ -1,6 +1,6 @@
 from pgvector import SparseVector
 import pytest
-from struct import pack
+import struct
 from .conftest import numpy as np
 
 try:
@@ -180,7 +180,7 @@ class TestSparseVector:
     #         SparseVector.from_text('{2:1,2:1}/3')
 
     def test_from_binary(self) -> None:
-        data = pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
+        data = struct.pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
         vec = SparseVector.from_binary(data)
         assert vec.dimensions() == 6
         assert vec.indices() == [0, 2, 4]
@@ -189,3 +189,16 @@ class TestSparseVector:
         if np is not None:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_binary() == data
+
+    def test_from_binary_zero_length(self) -> None:
+        # TODO change to ValueError('invalid length') in 0.6.0
+        with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 12 bytes'):
+            SparseVector.from_binary(b'')
+
+    def test_from_binary_negative_nnz(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            SparseVector.from_binary(struct.pack('>iii', 0, -1, 0))
+
+    def test_from_binary_non_zero_unused(self) -> None:
+        with pytest.raises(ValueError, match='expected unused to be 0'):
+            SparseVector.from_binary(struct.pack('>iii', 0, 0, 1))

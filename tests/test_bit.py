@@ -1,7 +1,7 @@
 from pgvector import Bit
 import pytest
 import random
-from struct import pack
+import struct
 from .conftest import numpy as np
 
 
@@ -104,14 +104,22 @@ class TestBit:
         assert vec.to_text() == '101'
 
     def test_from_binary(self) -> None:
-        data = pack('>iB', 3, 5 << 5)
+        data = struct.pack('>iB', 3, 5 << 5)
         vec = Bit.from_binary(data)
         assert vec.to_list() == [True, False, True]
         if np is not None:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
         assert vec.to_binary() == data
 
+    def test_from_binary_zero_length(self) -> None:
+        # TODO change to ValueError('invalid length') in 0.6.0
+        with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
+            Bit.from_binary(b'')
+
     def test_from_binary_negative_length(self) -> None:
-        with pytest.raises(ValueError) as error:
-            Bit.from_binary(pack('>i', -1))
-        assert str(error.value) == 'invalid length'
+        with pytest.raises(ValueError, match='invalid length'):
+            Bit.from_binary(struct.pack('>i', -1))
+
+    def test_from_binary_invalid_length(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            Bit.from_binary(struct.pack('>i', 1))
