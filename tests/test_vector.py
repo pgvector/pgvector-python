@@ -68,9 +68,7 @@ class TestVector:
         assert vec.to_text() == '[1.5,2.0,3.0]'
 
     def test_from_text_zero_dimensions(self) -> None:
-        # TODO no error
-        with pytest.raises(ValueError, match='could not convert string to float'):
-            Vector.from_text('[]')
+        assert Vector.from_text('[]') == Vector([])
 
     def test_from_text_open_bracket(self) -> None:
         # TODO raise ValueError in 0.6.0

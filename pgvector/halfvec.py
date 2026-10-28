@@ -88,6 +88,8 @@ class HalfVector:
 
     @classmethod
     def _from_text(cls, value: str, /) -> list[float]:
+        if len(value) == 2:
+            return []
         return [float(v) for v in value[1:-1].split(',')]
 
     @classmethod
