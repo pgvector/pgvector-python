@@ -97,11 +97,7 @@ class TestBit:
         assert Bit([True, False, True]) != 1
 
     def test_from_text(self) -> None:
-        vec = Bit.from_text('101')
-        assert vec.to_list() == [True, False, True]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [True, False, True])
-        assert vec.to_text() == '101'
+        assert Bit.from_text('101') == Bit('101')
 
     def test_from_text_zero_length(self) -> None:
         assert Bit.from_text('') == Bit([])
@@ -111,12 +107,7 @@ class TestBit:
             Bit.from_text('2')
 
     def test_from_binary(self) -> None:
-        data = struct.pack('>iB', 3, 5 << 5)
-        vec = Bit.from_binary(data)
-        assert vec.to_list() == [True, False, True]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [True, False, True])
-        assert vec.to_binary() == data
+        assert Bit.from_binary(struct.pack('>iB', 3, 5 << 5)) == Bit('101')
 
     def test_from_binary_zero_length(self) -> None:
         # TODO change to ValueError('invalid length') in 0.6.0
