@@ -80,9 +80,13 @@ class TestHalfVector:
         with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
             HalfVector.from_binary(b'')
 
-    def test_from_binary_invalid_dimensions(self) -> None:
+    def test_from_binary_low_dimensions(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
-            HalfVector.from_binary(struct.pack('>hh', 1, 0))
+            HalfVector.from_binary(struct.pack('>hhee', 1, 0, 1, 2))
+
+    def test_from_binary_high_dimensions(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            HalfVector.from_binary(struct.pack('>hhee', 3, 0, 1, 2))
 
     def test_from_binary_negative_dimensions(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
