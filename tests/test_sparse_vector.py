@@ -155,9 +155,22 @@ class TestSparseVector:
 
         assert np.array_equal(SparseVector([1, 0, 2, 0, 3, 0]).to_coo().toarray(), [[1, 0, 2, 0, 3, 0]])
 
-    def test_zero_vector_text(self) -> None:
-        vec = SparseVector({}, 3)
-        assert vec.to_list() == SparseVector.from_text(vec.to_text()).to_list()
+    def test_to_list(self) -> None:
+        assert SparseVector({2: 2, 4: 3, 0: 1.5, 3: 0}, 6).to_list() == [1.5, 0, 2, 0, 3, 0]
+
+    def test_to_numpy(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = SparseVector({2: 2, 4: 3, 0: 1.5, 3: 0}, 6).to_numpy()
+        assert np.array_equal(arr, np.array([1.5, 0, 2, 0, 3, 0]))
+        assert arr.dtype == np.float32
+
+    def test_to_text(self) -> None:
+        assert SparseVector({2: 2, 4: 3, 0: 1.5, 3: 0}, 6).to_text() == '{1:1.5,3:2.0,5:3.0}/6'
+
+    def test_to_binary(self) -> None:
+        assert SparseVector({2: 2, 4: 3, 0: 1.5, 3: 0}, 6).to_binary() == struct.pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
 
     def test_from_text(self) -> None:
         assert SparseVector.from_text('{1:1.5,3:2,5:3}/6') == SparseVector([1.5, 0, 2, 0, 3, 0])

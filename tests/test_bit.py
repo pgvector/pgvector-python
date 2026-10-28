@@ -96,6 +96,23 @@ class TestBit:
         assert Bit([True, False, True]) != Bit([True, False, False])
         assert Bit([True, False, True]) != 1
 
+    def test_to_list(self) -> None:
+        assert Bit('101').to_list() == [True, False, True]
+
+    def test_to_numpy(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = Bit('101').to_numpy()
+        assert np.array_equal(arr, np.array([True, False, True]))
+        assert arr.dtype == np.bool_
+
+    def test_to_text(self) -> None:
+        assert Bit('101').to_text() == '101'
+
+    def test_to_binary(self) -> None:
+        assert Bit('101').to_binary() == struct.pack('>iB', 3, 5 << 5)
+
     def test_from_text(self) -> None:
         assert Bit.from_text('101') == Bit('101')
 

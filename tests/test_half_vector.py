@@ -60,6 +60,23 @@ class TestHalfVector:
     def test_dimensions(self) -> None:
         assert HalfVector([1, 2, 3]).dimensions() == 3
 
+    def test_to_list(self) -> None:
+        assert HalfVector([1.5, 2, 3]).to_list() == [1.5, 2, 3]
+
+    def test_to_numpy(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = HalfVector([1.5, 2, 3]).to_numpy()
+        assert np.array_equal(arr, np.array([1.5, 2, 3]))
+        assert arr.dtype == np.float16
+
+    def test_to_text(self) -> None:
+        assert HalfVector([1.5, 2, 3]).to_text() == '[1.5,2.0,3.0]'
+
+    def test_to_binary(self) -> None:
+        assert HalfVector([1.5, 2, 3]).to_binary() == struct.pack('>hh3e', 3, 0, 1.5, 2, 3)
+
     def test_from_text(self) -> None:
         assert HalfVector.from_text('[1.5,2,3]') == HalfVector([1.5, 2, 3])
 

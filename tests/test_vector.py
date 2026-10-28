@@ -60,6 +60,23 @@ class TestVector:
     def test_dimensions(self) -> None:
         assert Vector([1, 2, 3]).dimensions() == 3
 
+    def test_to_list(self) -> None:
+        assert Vector([1.5, 2, 3]).to_list() == [1.5, 2, 3]
+
+    def test_to_numpy(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = Vector([1.5, 2, 3]).to_numpy()
+        assert np.array_equal(arr, np.array([1.5, 2, 3]))
+        assert arr.dtype == np.float32
+
+    def test_to_text(self) -> None:
+        assert Vector([1.5, 2, 3]).to_text() == '[1.5,2.0,3.0]'
+
+    def test_to_binary(self) -> None:
+        assert Vector([1.5, 2, 3]).to_binary() == struct.pack('>hh3f', 3, 0, 1.5, 2, 3)
+
     def test_from_text(self) -> None:
         assert Vector.from_text('[1.5,2,3]') == Vector([1.5, 2, 3])
 
