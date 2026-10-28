@@ -5,25 +5,25 @@ from .conftest import numpy as np
 
 
 class TestVector:
-    def test_list(self) -> None:
+    def test_init_list(self) -> None:
         arr = [1.0, 2.0, 3.0]
         assert Vector(arr).to_list() == arr
         assert Vector(arr).to_list() is not arr
 
-    def test_list_empty(self) -> None:
+    def test_init_list_empty(self) -> None:
         assert Vector([]).to_list() == []
 
-    def test_list_str(self) -> None:
+    def test_init_list_str(self) -> None:
         with pytest.raises(ValueError) as error:
             Vector([1, 'two', 3])  # type: ignore
         assert str(error.value) == 'expected list[float]'
 
-    def test_list_list(self) -> None:
+    def test_init_list_list(self) -> None:
         with pytest.raises(ValueError) as error:
             Vector([[1, 2], [3, 4]])  # type: ignore
         assert str(error.value) == 'expected list[float]'
 
-    def test_ndarray(self) -> None:
+    def test_init_ndarray(self) -> None:
         if np is None:
             pytest.skip('NumPy required')
 
@@ -42,7 +42,7 @@ class TestVector:
             Vector(np.array(['one', 'two', 'three']))
         assert 'could not convert string to float' in str(error.value)
 
-    def test_int(self) -> None:
+    def test_init_int(self) -> None:
         with pytest.raises(ValueError) as error:
             Vector(1)  # type: ignore
         assert str(error.value) == 'expected list or ndarray'
@@ -51,7 +51,7 @@ class TestVector:
         assert repr(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
         assert str(Vector([1, 2, 3])) == 'Vector([1.0, 2.0, 3.0])'
 
-    def test_equality(self) -> None:
+    def test_eq(self) -> None:
         assert Vector([1, 2, 3]) == Vector([1, 2, 3])
         assert Vector([1, 2, 3]) != Vector([1, 2, 4])
         assert Vector([1, 2, 3]) != 1

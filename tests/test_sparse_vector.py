@@ -10,26 +10,26 @@ except ImportError:
 
 
 class TestSparseVector:
-    def test_list(self) -> None:
+    def test_init_list(self) -> None:
         vec = SparseVector([1, 0, 2, 0, 3, 0])
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         if np is not None:
             assert np.array_equal(vec.to_numpy(), [1, 0, 2, 0, 3, 0])
         assert vec.indices() == [0, 2, 4]
 
-    def test_list_empty(self) -> None:
+    def test_init_list_empty(self) -> None:
         assert SparseVector([]).to_list() == []
 
-    def test_list_str(self) -> None:
+    def test_init_list_str(self) -> None:
         with pytest.raises(ValueError, match='could not convert string to float'):
             SparseVector([1, 'two', 3])  # type: ignore
 
-    def test_list_dimensions(self) -> None:
+    def test_init_list_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector([1, 0, 2, 0, 3, 0], 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
-    def test_ndarray(self) -> None:
+    def test_init_ndarray(self) -> None:
         if np is None:
             pytest.skip('NumPy required')
 
@@ -37,12 +37,12 @@ class TestSparseVector:
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_dict(self) -> None:
+    def test_init_dict(self) -> None:
         vec = SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_dict_empty(self) -> None:
+    def test_init_dict_empty(self) -> None:
         assert SparseVector({}, 0).to_list() == []
 
     # TODO uncomment in 0.6.0
@@ -60,12 +60,12 @@ class TestSparseVector:
     #     with pytest.raises(ValueError, match='sparsevec cannot have negative dimensions'):
     #         SparseVector({}, -1)
 
-    def test_dict_no_dimensions(self) -> None:
+    def test_init_dict_no_dimensions(self) -> None:
         with pytest.raises(ValueError) as error:
             SparseVector({0: 1, 2: 2, 4: 3})  # type: ignore
         assert str(error.value) == 'missing dimensions'
 
-    def test_coo_array(self) -> None:
+    def test_init_coo_array(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -75,7 +75,7 @@ class TestSparseVector:
         assert vec.indices() == [0, 2, 4]
         assert isinstance(vec.values()[0], float)
 
-    def test_coo_array_duplicates(self) -> None:
+    def test_init_coo_array_duplicates(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -85,7 +85,7 @@ class TestSparseVector:
         assert vec.to_list() == [0, 3, 0]
         assert vec.indices() == [1]
 
-    def test_coo_array_dimensions(self) -> None:
+    def test_init_coo_array_dimensions(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -93,7 +93,7 @@ class TestSparseVector:
             SparseVector(sparse.coo_array(np.array([1, 0, 2, 0, 3, 0])), 6)  # type: ignore
         assert str(error.value) == 'extra argument'
 
-    def test_coo_matrix(self) -> None:
+    def test_init_coo_matrix(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -102,7 +102,7 @@ class TestSparseVector:
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_dok_array(self) -> None:
+    def test_init_dok_array(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -111,7 +111,7 @@ class TestSparseVector:
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_csr_array(self) -> None:
+    def test_init_csr_array(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -120,7 +120,7 @@ class TestSparseVector:
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
-    def test_csr_matrix(self) -> None:
+    def test_init_csr_matrix(self) -> None:
         if np is None or sparse is None:
             pytest.skip('NumPy and SciPy required')
 
@@ -133,7 +133,7 @@ class TestSparseVector:
         assert repr(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
         assert str(SparseVector([1, 0, 2, 0, 3, 0])) == 'SparseVector({0: 1.0, 2: 2.0, 4: 3.0}, 6)'
 
-    def test_equality(self) -> None:
+    def test_eq(self) -> None:
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector([1, 0, 2, 0, 3, 0])
         assert SparseVector([1, 0, 2, 0, 3, 0]) != SparseVector([1, 0, 2, 0, 3, 1])
         assert SparseVector([1, 0, 2, 0, 3, 0]) == SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
