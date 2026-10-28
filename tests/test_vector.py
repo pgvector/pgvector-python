@@ -121,13 +121,13 @@ class TestVector:
         with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
             Vector.from_binary(b'')
 
-    def test_from_binary_extra_data(self) -> None:
-        with pytest.raises(ValueError, match='invalid length'):
-            Vector.from_binary(struct.pack('>hhff', 1, 0, 1, 2))
-
     def test_from_binary_missing_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
-            Vector.from_binary(struct.pack('>hhff', 3, 0, 1, 2))
+            Vector.from_binary(struct.pack('>hhf', 2, 0, 1))
+
+    def test_from_binary_extra_data(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            Vector.from_binary(struct.pack('>hhfff', 2, 0, 1, 2, 3))
 
     def test_from_binary_negative_dimensions(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):

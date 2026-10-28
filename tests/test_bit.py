@@ -131,13 +131,13 @@ class TestBit:
         with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
             Bit.from_binary(b'')
 
-    def test_from_binary_extra_data(self) -> None:
-        with pytest.raises(ValueError, match='invalid length'):
-            Bit.from_binary(struct.pack('>iBB', 8, 0, 0))
-
     def test_from_binary_missing_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
-            Bit.from_binary(struct.pack('>iBB', 17, 0, 0))
+            Bit.from_binary(struct.pack('>iB', 9, 0))
+
+    def test_from_binary_extra_data(self) -> None:
+        with pytest.raises(ValueError, match='invalid length'):
+            Bit.from_binary(struct.pack('>iBBB', 16, 0, 0, 0))
 
     def test_from_binary_negative_length(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
