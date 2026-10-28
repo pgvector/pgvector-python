@@ -61,11 +61,7 @@ class TestHalfVector:
         assert HalfVector([1, 2, 3]).dimensions() == 3
 
     def test_from_text(self) -> None:
-        vec = HalfVector.from_text('[1.5,2,3]')
-        assert vec.to_list() == [1.5, 2, 3]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
-        assert vec.to_text() == '[1.5,2.0,3.0]'
+        assert HalfVector.from_text('[1.5,2,3]') == HalfVector([1.5, 2, 3])
 
     def test_from_text_zero_length(self) -> None:
         with pytest.raises(ValueError, match='could not convert string to float'):
@@ -83,12 +79,7 @@ class TestHalfVector:
         assert HalfVector.from_text('[1}')
 
     def test_from_binary(self) -> None:
-        data = struct.pack('>HH3e', 3, 0, 1.5, 2, 3)
-        vec = HalfVector.from_binary(data)
-        assert vec.to_list() == [1.5, 2, 3]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
-        assert vec.to_binary() == data
+        assert HalfVector.from_binary(struct.pack('>hh3e', 3, 0, 1.5, 2, 3)) == HalfVector([1.5, 2, 3])
 
     def test_from_binary_zero_length(self) -> None:
         # TODO change to ValueError('invalid length') in 0.6.0

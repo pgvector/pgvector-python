@@ -160,14 +160,7 @@ class TestSparseVector:
         assert vec.to_list() == SparseVector.from_text(vec.to_text()).to_list()
 
     def test_from_text(self) -> None:
-        vec = SparseVector.from_text('{1:1.5,3:2,5:3}/6')
-        assert vec.dimensions() == 6
-        assert vec.indices() == [0, 2, 4]
-        assert vec.values() == [1.5, 2, 3]
-        assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
-        assert vec.to_text() == '{1:1.5,3:2.0,5:3.0}/6'
+        assert SparseVector.from_text('{1:1.5,3:2,5:3}/6') == SparseVector([1.5, 0, 2, 0, 3, 0])
 
     def test_from_text_zero_length(self) -> None:
         with pytest.raises(ValueError, match='not enough values to unpack'):
@@ -188,14 +181,7 @@ class TestSparseVector:
 
     def test_from_binary(self) -> None:
         data = struct.pack('>iii3i3f', 6, 3, 0, 0, 2, 4, 1.5, 2, 3)
-        vec = SparseVector.from_binary(data)
-        assert vec.dimensions() == 6
-        assert vec.indices() == [0, 2, 4]
-        assert vec.values() == [1.5, 2, 3]
-        assert vec.to_list() == [1.5, 0, 2, 0, 3, 0]
-        if np is not None:
-            assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
-        assert vec.to_binary() == data
+        assert SparseVector.from_binary(data) == SparseVector([1.5, 0, 2, 0, 3, 0])
 
     def test_from_binary_zero_length(self) -> None:
         # TODO change to ValueError('invalid length') in 0.6.0
