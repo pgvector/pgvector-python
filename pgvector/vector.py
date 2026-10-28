@@ -57,6 +57,7 @@ class Vector:
         else:
             value = array('f', self._value)
             value.byteswap()
+        # TODO change to >hh in 0.6.0
         return struct.pack('>HH', len(value), 0) + memoryview(value)
 
     @classmethod
@@ -65,7 +66,7 @@ class Vector:
 
     @classmethod
     def from_binary(cls, value: bytes | bytearray | memoryview, /) -> Vector:
-        dim, unused = struct.unpack_from('>HH', value)
+        dim, unused = struct.unpack_from('>hh', value)
         data = memoryview(value)[4:]
 
         if len(data) != 4 * dim:
