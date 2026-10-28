@@ -1,5 +1,6 @@
 import django
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import OpClass
 from django.core import serializers
@@ -11,6 +12,7 @@ from django.forms import ModelForm
 from math import sqrt
 import os
 import pgvector.django
+import pytest
 from pgvector import SparseVector
 from pgvector.django import VectorExtension, VectorField, HalfVectorField, BitField, SparseVectorField, IvfflatIndex, HnswIndex, L2Distance, MaxInnerProduct, CosineDistance, L1Distance, HammingDistance, JaccardDistance
 from unittest import mock
@@ -457,6 +459,55 @@ class TestDjango:
     def test_clean(self) -> None:
         item = Item(id=1, embedding=[1, 2, 3], half_embedding=[1, 2, 3], binary_embedding='101', sparse_embedding=SparseVector([1, 2, 3]))
         item.full_clean()
+
+    def test_clean_invalid(self) -> None:
+        item = Item(id=1, embedding=[1, 2, 'x'], half_embedding=[1, 2, 'x'])
+        with pytest.raises(ValidationError) as error:
+            item.full_clean()
+        assert error.value.message_dict == {
+            'embedding': ['Enter a valid vector.'],
+            'half_embedding': ['Enter a valid half vector.']
+        }
+
+    def test_clean_dimensions(self) -> None:
+        item = Item(id=1, embedding=[1, 2], half_embedding=[1, 2], sparse_embedding=SparseVector([1, 2]))
+        with pytest.raises(ValidationError) as error:
+            item.full_clean()
+        assert error.value.message_dict == {
+            'embedding': ['Expected 3 dimensions, not 2.'],
+            'half_embedding': ['Expected 3 dimensions, not 2.'],
+            'sparse_embedding': ['Expected 3 dimensions, not 2.']
+        }
+
+    def test_vector_form_invalid(self) -> None:
+        form = VectorForm(data={'embedding': '[1, 2, x]'})
+        assert not form.is_valid()
+        assert form.errors == {'embedding': ['Enter a valid vector.']}
+
+    def test_vector_form_dimensions(self) -> None:
+        form = VectorForm(data={'embedding': '[1, 2]'})
+        assert not form.is_valid()
+        assert form.errors == {'embedding': ['Expected 3 dimensions, not 2.']}
+
+    def test_halfvec_form_invalid(self) -> None:
+        form = HalfVectorForm(data={'half_embedding': '[1, 2, x]'})
+        assert not form.is_valid()
+        assert form.errors == {'half_embedding': ['Enter a valid half vector.']}
+
+    def test_halfvec_form_dimensions(self) -> None:
+        form = HalfVectorForm(data={'half_embedding': '[1, 2]'})
+        assert not form.is_valid()
+        assert form.errors == {'half_embedding': ['Expected 3 dimensions, not 2.']}
+
+    def test_sparsevec_form_invalid(self) -> None:
+        form = SparseVectorForm(data={'sparse_embedding': '{1:x}/3'})
+        assert not form.is_valid()
+        assert form.errors == {'sparse_embedding': ['Enter a valid sparse vector.']}
+
+    def test_sparsevec_form_dimensions(self) -> None:
+        form = SparseVectorForm(data={'sparse_embedding': '{1:1,2:2}/2'})
+        assert not form.is_valid()
+        assert form.errors == {'sparse_embedding': ['Expected 3 dimensions, not 2.']}
 
     def test_get_or_create(self) -> None:
         Item.objects.get_or_create(embedding=[1, 2, 3])

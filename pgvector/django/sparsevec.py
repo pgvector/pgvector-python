@@ -1,5 +1,7 @@
 from django import forms
+from django.core import exceptions
 from django.db.models import Field
+from django.utils.functional import cached_property
 from typing import Any
 from .. import SparseVector
 
@@ -28,7 +30,26 @@ class SparseVectorField(Field):
         return SparseVector._from_db(value)
 
     def to_python(self, value: Any) -> SparseVector | None:
-        return SparseVector._from_db(value)
+        try:
+            return SparseVector._from_db(value)
+        except ValueError:
+            raise exceptions.ValidationError('Enter a valid sparse vector.', code='invalid')
+
+    @cached_property
+    def validators(self) -> list[Any]:
+        return [*super().validators, self._validate_dimensions]
+
+    def _validate_dimensions(self, value: Any) -> None:
+        try:
+            vector = SparseVector._from_db(SparseVector._to_db(value))
+        except (TypeError, ValueError):
+            raise exceptions.ValidationError('Enter a valid sparse vector.', code='invalid')
+        if self.dimensions is not None and vector is not None and vector.dimensions() != self.dimensions:
+            raise exceptions.ValidationError(
+                'Expected %(expected)d dimensions, not %(actual)d.',
+                code='dimensions',
+                params={'expected': self.dimensions, 'actual': vector.dimensions()}
+            )
 
     def get_prep_value(self, value: Any) -> str | None:
         return SparseVector._to_db(value)
