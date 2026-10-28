@@ -169,6 +169,14 @@ class TestSparseVector:
     def test_from_text_zero_dimensions(self) -> None:
         assert SparseVector.from_text('{}/0') == SparseVector([])
 
+    def test_from_text_non_number_index(self) -> None:
+        with pytest.raises(ValueError, match='invalid literal for int'):
+            assert SparseVector.from_text('{a:1}/1')
+
+    def test_from_text_non_number_value(self) -> None:
+        with pytest.raises(ValueError, match='could not convert string to float'):
+            assert SparseVector.from_text('{1:a}/1')
+
     # TODO uncomment in 0.6.0
     # def test_from_text_unsorted(self) -> None:
     #     with pytest.raises(ValueError, match='sparsevec indices must be in ascending order'):

@@ -78,6 +78,10 @@ class TestHalfVector:
         # TODO raise ValueError in 0.6.0
         assert HalfVector.from_text('[1}')
 
+    def test_from_text_non_number(self) -> None:
+        with pytest.raises(ValueError, match='could not convert string to float'):
+            assert HalfVector.from_text('[a]')
+
     def test_from_binary(self) -> None:
         assert HalfVector.from_binary(struct.pack('>hh3e', 3, 0, 1.5, 2, 3)) == HalfVector([1.5, 2, 3])
 
