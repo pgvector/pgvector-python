@@ -67,6 +67,10 @@ class TestVector:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
         assert vec.to_text() == '[1.5,2.0,3.0]'
 
+    def test_from_text_zero_length(self) -> None:
+        with pytest.raises(ValueError, match='could not convert string to float'):
+            Vector.from_text('')
+
     def test_from_text_zero_dimensions(self) -> None:
         assert Vector.from_text('[]') == Vector([])
 

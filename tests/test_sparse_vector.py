@@ -169,6 +169,10 @@ class TestSparseVector:
             assert np.array_equal(vec.to_numpy(), [1.5, 0, 2, 0, 3, 0])
         assert vec.to_text() == '{1:1.5,3:2.0,5:3.0}/6'
 
+    def test_from_text_zero_length(self) -> None:
+        with pytest.raises(ValueError, match='not enough values to unpack'):
+            SparseVector.from_text('')
+
     def test_from_text_zero_dimensions(self) -> None:
         assert SparseVector.from_text('{}/0') == SparseVector([])
 
