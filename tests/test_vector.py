@@ -31,12 +31,26 @@ class TestVector:
         assert Vector(arr).to_list() == [1, 2, 3]
         assert Vector(arr).to_numpy() is not arr
         assert Vector(arr).to_numpy().dtype == np.float32
-        # non-contiguous
+
+    def test_init_ndarray_non_contiguous(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = np.array([1, 2, 3], dtype=np.float32)
         assert Vector(np.flip(arr)).to_list() == [3, 2, 1]
         assert Vector(np.flip(arr)).to_binary() == Vector([3, 2, 1]).to_binary()
-        # big endian
+
+    def test_init_ndarray_big_endian(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = np.array([1, 2, 3], dtype=np.float32)
         assert Vector(arr.astype('>f4')).to_list() == [1, 2, 3]
         assert Vector(arr.astype('>f4')).to_binary() == Vector([1, 2, 3]).to_binary()
+
+    def test_init_ndarray_str(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
 
         with pytest.raises(ValueError) as error:
             Vector(np.array(['one', 'two', 'three']))

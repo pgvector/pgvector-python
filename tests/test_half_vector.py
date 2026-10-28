@@ -31,12 +31,26 @@ class TestHalfVector:
         assert HalfVector(arr).to_list() == [1, 2, 3]
         assert HalfVector(arr).to_numpy() is not arr
         assert HalfVector(arr).to_numpy().dtype == np.float16
-        # non-contiguous
+
+    def test_init_ndarray_non_contiguous(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = np.array([1, 2, 3], dtype=np.float16)
         assert HalfVector(np.flip(arr)).to_list() == [3, 2, 1]
         assert HalfVector(np.flip(arr)).to_binary() == HalfVector([3, 2, 1]).to_binary()
-        # big endian
+
+    def test_init_ndarray_big_endian(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        arr = np.array([1, 2, 3], dtype=np.float16)
         assert HalfVector(arr.astype('>f2')).to_list() == [1, 2, 3]
         assert HalfVector(arr.astype('>f2')).to_binary() == HalfVector([1, 2, 3]).to_binary()
+
+    def test_init_ndarray_str(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
 
         with pytest.raises(ValueError) as error:
             HalfVector(np.array(['one', 'two', 'three']))
