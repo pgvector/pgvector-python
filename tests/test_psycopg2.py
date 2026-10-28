@@ -1,4 +1,4 @@
-from pgvector import HalfVector, SparseVector, Vector
+from pgvector import Bit, HalfVector, SparseVector, Vector
 from pgvector.psycopg2 import register_vector
 import psycopg2
 from psycopg2.extras import DictCursor, RealDictCursor, NamedTupleCursor
@@ -59,6 +59,15 @@ class TestPsycopg2:
         cur.execute('SELECT binary_embedding FROM psycopg2_items ORDER BY id')
         res = cur.fetchall()
         assert res[0][0] == embedding
+        assert res[1][0] is None
+
+    def test_bit_class(self) -> None:
+        embedding = Bit([True, False, True])
+        cur.execute('INSERT INTO psycopg2_items (binary_embedding) VALUES (%s), (NULL)', (embedding,))
+
+        cur.execute('SELECT binary_embedding FROM psycopg2_items ORDER BY id')
+        res = cur.fetchall()
+        assert res[0][0] == '101'
         assert res[1][0] is None
 
     def test_sparsevec(self) -> None:
