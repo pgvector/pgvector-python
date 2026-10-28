@@ -106,6 +106,10 @@ class TestBit:
     def test_from_text_zero_length(self) -> None:
         assert Bit.from_text('') == Bit([])
 
+    def test_from_text_invalid_character(self) -> None:
+        with pytest.raises(ValueError, match='expected bit string'):
+            Bit.from_text('2')
+
     def test_from_binary(self) -> None:
         data = struct.pack('>iB', 3, 5 << 5)
         vec = Bit.from_binary(data)
