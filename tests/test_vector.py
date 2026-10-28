@@ -121,11 +121,11 @@ class TestVector:
         with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 4 bytes'):
             Vector.from_binary(b'')
 
-    def test_from_binary_low_dimensions(self) -> None:
+    def test_from_binary_extra_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
             Vector.from_binary(struct.pack('>hhff', 1, 0, 1, 2))
 
-    def test_from_binary_high_dimensions(self) -> None:
+    def test_from_binary_missing_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
             Vector.from_binary(struct.pack('>hhff', 3, 0, 1, 2))
 

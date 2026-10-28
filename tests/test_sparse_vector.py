@@ -209,11 +209,11 @@ class TestSparseVector:
         with pytest.raises(struct.error, match='unpack_from requires a buffer of at least 12 bytes'):
             SparseVector.from_binary(b'')
 
-    def test_from_binary_low_nnz(self) -> None:
+    def test_from_binary_extra_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
             SparseVector.from_binary(struct.pack('>iii2i2f', 3, 1, 0, 0, 1, 1, 2))
 
-    def test_from_binary_high_nnz(self) -> None:
+    def test_from_binary_missing_data(self) -> None:
         with pytest.raises(ValueError, match='invalid length'):
             SparseVector.from_binary(struct.pack('>iii2i2f', 3, 3, 0, 0, 1, 1, 2))
 
