@@ -67,6 +67,19 @@ class TestHalfVector:
             assert np.array_equal(vec.to_numpy(), [1.5, 2, 3])
         assert vec.to_text() == '[1.5,2.0,3.0]'
 
+    def test_from_text_zero_dimensions(self) -> None:
+        # TODO no error
+        with pytest.raises(ValueError, match='could not convert string to float'):
+            HalfVector.from_text('[]')
+
+    def test_from_text_open_bracket(self) -> None:
+        # TODO raise ValueError in 0.6.0
+        assert HalfVector.from_text('{1]')
+
+    def test_from_text_close_bracket(self) -> None:
+        # TODO raise ValueError in 0.6.0
+        assert HalfVector.from_text('[1}')
+
     def test_from_binary(self) -> None:
         data = struct.pack('>HH3e', 3, 0, 1.5, 2, 3)
         vec = HalfVector.from_binary(data)

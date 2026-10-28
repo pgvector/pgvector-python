@@ -103,6 +103,9 @@ class TestBit:
             assert np.array_equal(vec.to_numpy(), [True, False, True])
         assert vec.to_text() == '101'
 
+    def test_from_text_zero_length(self) -> None:
+        assert Bit.from_text('') == Bit([])
+
     def test_from_binary(self) -> None:
         data = struct.pack('>iB', 3, 5 << 5)
         vec = Bit.from_binary(data)
