@@ -1,5 +1,5 @@
 from getpass import getuser
-from pgvector import HalfVector, SparseVector, Vector
+from pgvector import Bit, HalfVector, SparseVector, Vector
 from pgvector.pg8000 import register_vector
 from pg8000.native import Connection
 from .conftest import numpy as np
@@ -36,6 +36,14 @@ class TestPg8000:
 
     def test_bit(self) -> None:
         embedding = '101'
+        embedding2 = None
+        conn.run('INSERT INTO pg8000_items (binary_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
+
+        res = conn.run('SELECT binary_embedding FROM pg8000_items ORDER BY id')
+        assert res == [['101'], [None]]
+
+    def test_bit_class(self) -> None:
+        embedding = Bit([True, False, True])
         embedding2 = None
         conn.run('INSERT INTO pg8000_items (binary_embedding) VALUES (:embedding), (:embedding2)', embedding=embedding, embedding2=embedding2)
 
