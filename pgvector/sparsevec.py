@@ -1,7 +1,7 @@
 from __future__ import annotations
 from struct import pack, unpack_from
 from typing import TYPE_CHECKING, Final, cast, overload
-from ._utils import is_sparse_array, ndarray
+from ._utils import is_ndarray, is_sparse_array, ndarray
 
 if TYPE_CHECKING:
     import numpy as np
@@ -136,6 +136,9 @@ class SparseVector:
         self._values = [float(v[1]) for v in elements]
 
     def _from_dense(self, value: list[float] | ndarray, /) -> None:
+        if is_ndarray(value) and value.ndim != 1:
+            raise ValueError('expected ndim to be 1')
+
         self._dim = len(value)
         self._indices = []
         self._values = []
