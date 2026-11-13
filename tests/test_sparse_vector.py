@@ -37,6 +37,15 @@ class TestSparseVector:
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
         assert vec.indices() == [0, 2, 4]
 
+    def test_init_ndarray_ndim(self) -> None:
+        if np is None:
+            pytest.skip('NumPy required')
+
+        for arr in (np.zeros((2, 2)), np.array([[1], [0], [2]]), np.array(5.0)):
+            with pytest.raises(ValueError) as error:
+                SparseVector(arr)
+            assert str(error.value) == 'expected ndim to be 1'
+
     def test_init_dict(self) -> None:
         vec = SparseVector({2: 2, 4: 3, 0: 1, 3: 0}, 6)
         assert vec.to_list() == [1, 0, 2, 0, 3, 0]
