@@ -823,6 +823,33 @@ Get a SciPy sparse array
 arr = vec.to_coo()
 ```
 
+### Bit Vectors
+
+Create a bit vector from a list of booleans
+
+```python
+bit = Bit([True, False, True])
+```
+
+Or a bit string
+
+```python
+bit = Bit("101")
+```
+
+Get a list
+
+```python
+lst = bit.to_list()
+```
+
+Get a NumPy array
+
+```python
+arr = bit.to_numpy()
+```
+
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-python/blob/master/CHANGELOG.md)
