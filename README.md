@@ -51,6 +51,7 @@ Or check out some examples:
 Create a migration to enable the extension
 
 ```python
+from django.db import migrations
 from pgvector.django import VectorExtension
 
 class Migration(migrations.Migration):
