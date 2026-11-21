@@ -1,6 +1,6 @@
 import asyncpg
 from getpass import getuser
-from pgvector import SparseVector
+from pgvector import Bit, SparseVector
 from pgvector.sqlalchemy import VECTOR, HALFVEC, BIT, SPARSEVEC, avg, sum
 import pytest
 from sqlalchemy import create_engine, event, insert, inspect, literal, select, text, MetaData, Table, Column, Index, Integer, ARRAY, Engine
@@ -517,6 +517,15 @@ class TestSqlalchemy:
     def test_literal_binds(self, engine: Engine) -> None:
         sql = select(Item).order_by(Item.embedding.l2_distance([1, 2, 3])).compile(engine, compile_kwargs={'literal_binds': True})
         assert "embedding <-> '[1.0,2.0,3.0]'" in str(sql)
+
+        sql = select(Item).order_by(Item.binary_embedding.hamming_distance('101')).compile(engine, compile_kwargs={'literal_binds': True})
+        assert "binary_embedding <~> '101'" in str(sql)
+
+        sql = select(Item).order_by(Item.binary_embedding.hamming_distance(Bit('101'))).compile(engine, compile_kwargs={'literal_binds': True})
+        assert "binary_embedding <~> '101'" in str(sql)
+
+        sql = select(Item).order_by(Item.binary_embedding.jaccard_distance('101')).compile(engine, compile_kwargs={'literal_binds': True})
+        assert "binary_embedding <%> '101'" in str(sql) or "binary_embedding <%%> '101'" in str(sql)
 
     def test_insert(self, engine: Engine) -> None:
         with Session(engine) as session:
