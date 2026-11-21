@@ -854,3 +854,14 @@ pip install --group dev
 createdb pgvector_example
 python3 example.py
 ```
+
+## Fork Attribution and Changes
+
+This repository is an attributed fork of [pgvector/pgvector-python](https://github.com/pgvector/pgvector-python) by Andrew Kane, licensed under the MIT License. All original copyright notices, license conditions, and upstream attribution are preserved.
+
+### Specific Changes in this Fork
+- **SQLAlchemy `BIT` literal binds and object support (`pgvector/sqlalchemy/bit.py`)**:
+  - Implemented `literal_processor` for `BIT` in SQLAlchemy to support compiling queries with `compile_kwargs={'literal_binds': True}`. Previously, while `VECTOR`, `HALFVEC`, and `SPARSEVEC` implemented `literal_processor`, `BIT` inherited the default from `PGBit` (which returns `None`), causing `sqlalchemy.exc.CompileError: No literal value renderer is available for literal value "'101'" with datatype BIT`.
+  - Added support in `BIT.process_bind_param` and `BIT.literal_processor` for `pgvector.Bit` instances by converting them to bit string text, allowing `Bit` objects to be passed cleanly across SQLAlchemy queries and expressions.
+  - Added regression test assertions to `test_literal_binds` in `tests/test_sqlalchemy.py`.
+
